@@ -3,12 +3,8 @@
 # ════════════════════════════════════════════════════════════
 
 name = "przypominamy-com"
+pages_build_output_dir = "."
 compatibility_date = "2026-03-01"
-
-# ── Pages build (static site, no build step) ──
-[build]
-command = ""
-output_directory = "."
 
 # ── Environment variables (non-secret) ──
 [vars]
