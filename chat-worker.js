@@ -20,9 +20,9 @@ TWOJA WIEDZA O PLATFORMIE:
 - Integracje: CRM, ERP, sklepy e-commerce, systemy rezerwacji
 
 CENNIK (orientacyjny):
-- Starter: ~0,09 zł/SMS, min. doładowanie 100 zł — dla małych firm
-- Business: ~0,08 zł/SMS, min. doładowanie 500 zł — pełne funkcje + API
-- Enterprise: od 0,07 zł/SMS — negocjowane, dedykowany opiekun, SLA, multi-konto
+- Starter: 0,15 zł/SMS, min. doładowanie 100 zł — dla małych firm
+- Business: 0,10 zł/SMS, min. doładowanie 500 zł — pełne funkcje + API
+- Enterprise: negocjowane — dedykowany opiekun, SLA, multi-konto
 
 ZASTOSOWANIA:
 - Medycyna: potwierdzenia i przypomnienia wizyt, odwoływanie
@@ -46,7 +46,7 @@ export default {
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         headers: {
-          'Access-Control-Allow-Origin': 'https://przypominamy.com',
+          'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'POST, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type',
         },
@@ -144,7 +144,7 @@ export default {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
-        'Access-Control-Allow-Origin': 'https://przypominamy.com',
+        'Access-Control-Allow-Origin': '*',
       },
     });
   },
@@ -155,7 +155,7 @@ function jsonError(msg, status) {
     status,
     headers: {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': 'https://przypominamy.com',
+      'Access-Control-Allow-Origin': '*',
     },
   });
 }
