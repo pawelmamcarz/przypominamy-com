@@ -1,0 +1,20 @@
+# Cloudflare Pages – Redirects
+# Format: source  destination  status_code
+
+# Old WordPress paths → new paths
+/uslugi/          /#uslugi         301
+/uslugi           /#uslugi         301
+/kontakt/         /#kontakt        301
+/kontakt          /#kontakt        301
+/cennik/          /#cennik         301
+/cennik           /#cennik         301
+
+# Panel redirect
+/panel            https://panel.przypominamy.com    302
+/login            https://panel.przypominamy.com    302
+
+# API docs
+/api-docs         https://przypominamy.com/wp-content/uploads/2021/06/przypominamy_api_document.pdf  302
+
+# SPA fallback
+/*                /index.html      200

@@ -1,0 +1,16 @@
+# Node / Wrangler
+node_modules/
+.wrangler/
+dist/
+
+# Preview screenshots (temp files)
+preview*.png
+
+# Secrets — NEVER commit these
+.dev.vars
+.env
+*.env
+
+# OS
+.DS_Store
+Thumbs.db

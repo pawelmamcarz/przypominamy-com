@@ -1,0 +1,47 @@
+# ════════════════════════════════════════════════════════════
+# Cloudflare Pages + Workers — przypominamy.com
+# ════════════════════════════════════════════════════════════
+
+name = "przypominamy-com"
+compatibility_date = "2026-03-01"
+
+# ── Pages build (static site, no build step) ──
+[build]
+command = ""
+output_directory = "."
+
+# ── Environment variables (non-secret) ──
+[vars]
+ENVIRONMENT = "production"
+SITE_NAME = "przypominamy.com"
+
+# ════════════════════════════════════════════════════════════
+# WORKERS — deploy separately with:
+#
+#   wrangler deploy chat-worker.js  --name przypominamy-chat
+#   wrangler deploy order-worker.js --name przypominamy-order
+#
+# Then route /api/chat and /api/order to them in the
+# Cloudflare Dashboard → Pages → Your project → Functions
+# (or via custom domain Worker routes)
+# ════════════════════════════════════════════════════════════
+
+# ── CHAT WORKER secrets ──
+# wrangler secret put ANTHROPIC_API_KEY --name przypominamy-chat
+
+# ── ORDER WORKER secrets ──
+# wrangler secret put ANTHROPIC_API_KEY --name przypominamy-order
+# wrangler secret put NOTIFY_EMAIL      --name przypominamy-order   # twój prywatny email na powiadomienia
+# wrangler secret put FROM_EMAIL        --name przypominamy-order   # nadawca emaila (np. oferta@przypominamy.com)
+
+# ── KV namespace (przechowywanie zamówień) ──
+# Utwórz: wrangler kv:namespace create ORDERS_KV
+# [[kv_namespaces]]
+# binding = "ORDERS_KV"
+# id = "WSTAW_ID_NAMESPACE"
+
+# ── D1 database (opcjonalnie, dla leadów) ──
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "przypominamy-leads"
+# database_id = "WSTAW_DATABASE_ID"
