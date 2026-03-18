@@ -14,7 +14,7 @@ const SYSTEM_PROMPT = `Jesteś pomocnym asystentem sprzedaży platformy Przypomi
 
 TWOJA WIEDZA O PLATFORMIE:
 - Usługi: wysyłka SMS (jednostronna i dwukierunkowa), MMS (z grafiką/wideo), IVR/TTS (wiadomości głosowe)
-- Kanały: wszystkie polskie sieci komórkowe (Plus, Orange, T-Mobile, Play), zasięg: Polska, Australia, UK, Czechy i inne kraje
+- Kanały: wszystkie polskie sieci komórkowe (Plus, Orange, T-Mobile, Play), zasięg: wszystkie kraje UE (27 państw) oraz Australia i UK
 - Panel: zarządzanie kampaniami, szablony z personalizacją ({Imię}, {Termin} itp.), import CSV, raporty w czasie rzeczywistym
 - API: REST API v1.7, tokeny Bearer, webhooks/callbacki, bulk import, dokumentacja PDF dostępna online
 - Integracje: CRM, ERP, sklepy e-commerce, systemy rezerwacji
@@ -104,28 +104,28 @@ export default {
     (async () => {
       const reader = anthropicRes.body.getReader();
       const decoder = new TextDecoder();
+      let buffer = '';
 
       try {
         while (true) {
           const { value, done } = await reader.read();
           if (done) break;
 
-          const chunk = decoder.decode(value, { stream: true });
+          // Buffer chunks — JSON may span multiple network reads
+          buffer += decoder.decode(value, { stream: true });
 
-          // Forward Anthropic SSE events as-is
-          for (const line of chunk.split('\n')) {
+          const lines = buffer.split('\n');
+          // Keep the last (potentially incomplete) line in the buffer
+          buffer = lines.pop();
+
+          for (const line of lines) {
             if (!line.startsWith('data: ')) continue;
             const data = line.slice(6).trim();
-            if (data === '[DONE]') {
-              await writer.write(encoder.encode('data: [DONE]\n\n'));
-              break;
-            }
+            if (!data) continue;
             try {
               const parsed = JSON.parse(data);
-              // Anthropic stream events: content_block_delta
               if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
                 const token = parsed.delta.text;
-                // Re-emit in a simplified format the frontend can parse
                 await writer.write(encoder.encode(
                   `data: ${JSON.stringify({ delta: { text: token } })}\n\n`
                 ));

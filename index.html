@@ -110,7 +110,7 @@
       letter-spacing: -.02em;
     }
     .hero-title em { font-style: normal; color: var(--yellow); }
-    .hero-desc { margin: 24px 0 40px; color: var(--light); font-size: 1.1rem; max-width: 520px; }
+    .hero-desc { margin: 24px 0 40px; color: var(--light); font-size: 1.1rem; max-width: 560px; }
     .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
     .hero-stats { display: flex; gap: 40px; margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--border); }
     .stat-num { font-size: 2rem; font-weight: 800; color: var(--yellow); }
@@ -293,7 +293,7 @@
 
     /* ── Clients ── */
     #klienci { overflow: hidden; }
-    .clients-track-wrap { margin-top: 48px; position: relative; }
+    .clients-track-wrap { margin-top: 56px; position: relative; }
     .clients-track-wrap::before, .clients-track-wrap::after {
       content: ''; position: absolute; top: 0; width: 120px; height: 100%; z-index: 2;
     }
@@ -317,11 +317,11 @@
     /* ── CTA Banner ── */
     .cta-section {
       background: linear-gradient(135deg, rgba(245,166,35,.15) 0%, rgba(245,166,35,.05) 100%);
-      border: 1px solid rgba(245,166,35,.2); border-radius: 20px;
+      border: 1px solid rgba(245,166,35,.2); border-radius: var(--radius);
       padding: 72px 48px; text-align: center; margin: 0 24px;
     }
     .cta-section h2 { font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 800; margin-bottom: 16px; }
-    .cta-section p { color: var(--light); font-size: 1.1rem; max-width: 520px; margin: 0 auto 40px; }
+    .cta-section p { color: var(--light); font-size: 1.1rem; max-width: 560px; margin: 0 auto 40px; }
     .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
     /* ── Pricing teaser ── */
@@ -343,12 +343,48 @@
     }
     .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.4); }
     .pricing-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+    .pricing-card .pricing-desc { color: var(--gray); font-size: .9rem; margin-top: 8px; }
     .pricing-card .price { font-size: 2.4rem; font-weight: 800; color: var(--yellow); margin: 20px 0 4px; }
+    .pricing-card .price-old {
+      font-size: 1.1rem; font-weight: 600; color: var(--gray);
+      text-decoration: line-through; margin-top: 20px; margin-bottom: -12px;
+    }
     .pricing-card .price-sub { color: var(--gray); font-size: .88rem; margin-bottom: 24px; }
     .pricing-card .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
     .pricing-card .pricing-features li { display: flex; align-items: center; gap: 10px; font-size: .9rem; color: var(--light); }
     .pricing-card .pricing-features li::before { content: '✓'; color: var(--yellow); font-weight: 700; }
     .pricing-card .btn { width: 100%; justify-content: center; }
+    .promo-banner {
+      display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
+      background: linear-gradient(135deg, rgba(229,62,62,.15), rgba(245,166,35,.12));
+      border: 1px solid rgba(229,62,62,.3); border-radius: var(--radius);
+      padding: 16px 24px; margin-top: 20px; margin-bottom: 8px; text-align: center;
+    }
+    .promo-banner .promo-text {
+      font-size: .92rem; font-weight: 600; color: var(--white);
+    }
+    .promo-banner .promo-text strong { color: #ff6b6b; }
+    .promo-countdown {
+      display: flex; gap: 6px; align-items: center;
+    }
+    .promo-countdown .cd-unit {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+      padding: 6px 10px; text-align: center; min-width: 48px;
+    }
+    .promo-countdown .cd-num {
+      font-size: 1.15rem; font-weight: 800; color: #ff6b6b; display: block; line-height: 1;
+    }
+    .promo-countdown .cd-label {
+      font-size: .6rem; color: var(--gray); text-transform: uppercase; letter-spacing: .04em; margin-top: 2px; display: block;
+    }
+    .promo-countdown .cd-sep { color: var(--gray); font-weight: 700; font-size: 1.1rem; }
+    .promo-badge {
+      display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: .68rem;
+      font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      background: rgba(229,62,62,.18); color: #ff6b6b; border: 1px solid rgba(229,62,62,.3);
+    }
+    @keyframes pulse-glow { 0%,100%{box-shadow:0 0 0 0 rgba(229,62,62,.3)} 50%{box-shadow:0 0 12px 4px rgba(229,62,62,.15)} }
+    .pricing-card.featured { animation: pulse-glow 3s ease-in-out infinite; }
 
     /* ── Contact ── */
     #kontakt { background: var(--dark); }
@@ -606,7 +642,7 @@
       </ul>
       <div class="nav-cta">
         <a href="https://panel.przypominamy.com" class="nav-login">Zaloguj się</a>
-        <a href="#kontakt" class="btn btn-primary">Zacznij teraz</a>
+        <a href="https://panel.przypominamy.com/register" class="btn btn-primary">Załóż konto</a>
       </div>
       <div class="hamburger" id="hamburger" role="button" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -628,11 +664,11 @@
           Przypominamy.com to profesjonalna platforma do masowej wysyłki SMS, MMS i wiadomości głosowych. Dwukierunkowa komunikacja z klientami w jednym miejscu.
         </p>
         <div class="hero-actions">
-          <a href="#kontakt" class="btn btn-primary">
+          <a href="https://panel.przypominamy.com/register" class="btn btn-primary">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h10M4 18h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            Zacznij bezpłatnie
+            Załóż konto — za darmo
           </a>
-          <a href="#uslugi" class="btn btn-outline">Zobacz ofertę</a>
+          <a href="#cennik" class="btn btn-outline">Zobacz ceny</a>
         </div>
         <div class="hero-stats">
           <div>
@@ -644,8 +680,8 @@
             <div class="stat-label">Wysłanych wiadomości</div>
           </div>
           <div>
-            <div class="stat-num">4</div>
-            <div class="stat-label">Kraje obsługi</div>
+            <div class="stat-num">30+</div>
+            <div class="stat-label">Krajów obsługi</div>
           </div>
           <div>
             <div class="stat-num">99%</div>
@@ -837,8 +873,8 @@
 <section id="funkcje">
   <div class="container">
     <div class="section-label"><span class="tag">Możliwości</span></div>
-    <h2 class="section-title">Wszystko czego potrzebujesz</h2>
-    <p class="section-sub">Panel zarządzania daje pełną kontrolę nad każdą kampanią — od szablonów po szczegółowe raporty.</p>
+    <h2 class="section-title">Pełna kontrola nad wysyłkami</h2>
+    <p class="section-sub">Raporty dostarczalności, planowanie kampanii, import baz numerów i integracja API — z jednego panelu.</p>
     <div class="features-wrap">
       <div class="feature-visual">
         <div style="font-size:.78rem;color:var(--gray);margin-bottom:16px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;">Raporty wysyłek — podgląd</div>
@@ -996,7 +1032,7 @@
     <h2 class="section-title">Zaufały nam wiodące marki</h2>
     <p class="section-sub">Od banków i sieci handlowych po media i branżę medyczną — platforma obsługuje firmy z całej Polski i rynków zagranicznych.</p>
   </div>
-  <div class="clients-track-wrap" style="margin-top:48px">
+  <div class="clients-track-wrap">
     <div class="clients-track">
       <!-- Set 1 -->
       <div class="client-logo">BPH Bank</div>
@@ -1008,7 +1044,7 @@
       <div class="client-logo">Cyfra+</div>
       <div class="client-logo">Cisco</div>
       <div class="client-logo">Alior Sync</div>
-      <div class="client-logo">INGW</div>
+      <div class="client-logo">ING</div>
       <div class="client-logo">Masterlease</div>
       <div class="client-logo">UBIK</div>
       <!-- Set 2 (duplicate for seamless loop) -->
@@ -1021,7 +1057,7 @@
       <div class="client-logo">Cyfra+</div>
       <div class="client-logo">Cisco</div>
       <div class="client-logo">Alior Sync</div>
-      <div class="client-logo">INGW</div>
+      <div class="client-logo">ING</div>
       <div class="client-logo">Masterlease</div>
       <div class="client-logo">UBIK</div>
     </div>
@@ -1032,12 +1068,26 @@
 <section id="cennik">
   <div class="container">
     <div class="section-label"><span class="tag">Cennik</span></div>
-    <h2 class="section-title">Elastyczne plany dla każdej firmy</h2>
-    <p class="section-sub">Płacisz tylko za to czego używasz. Brak opłat abonamentowych — rozliczenie za wysłane wiadomości.</p>
+    <h2 class="section-title">Bez abonamentu — płacisz za wysyłkę</h2>
+    <p class="section-sub">Doładowujesz konto wybraną kwotą, każdy SMS rozliczany osobno. Im większy wolumen, tym niższa cena za wiadomość.</p>
+    <div class="promo-banner">
+      <div class="promo-text" id="promoText">Promocja: <strong>do -40% na SMS</strong> — ceny obowiązują do końca miesiąca</div>
+      <div class="promo-countdown" id="promoCountdown">
+        <div class="cd-unit"><span class="cd-num" id="cdDays">00</span><span class="cd-label">dni</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit"><span class="cd-num" id="cdHours">00</span><span class="cd-label">godz</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit"><span class="cd-num" id="cdMins">00</span><span class="cd-label">min</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit"><span class="cd-num" id="cdSecs">00</span><span class="cd-label">sek</span></div>
+      </div>
+    </div>
     <div class="pricing-grid">
       <div class="pricing-card">
+        <span class="promo-badge">-25%</span>
         <h3>Starter</h3>
-        <p style="color:var(--gray);font-size:.9rem;margin-top:8px">Idealne dla małych firm i testowania platformy.</p>
+        <p class="pricing-desc">Idealne dla małych firm i testowania platformy.</p>
+        <div class="price-old">0,20 zł</div>
         <div class="price">0,15 zł</div>
         <div class="price-sub">za SMS · min. doładowanie 100 zł</div>
         <ul class="pricing-features">
@@ -1047,11 +1097,13 @@
           <li>Import CSV</li>
           <li>Wsparcie e-mail</li>
         </ul>
-        <a href="#kontakt" class="btn btn-outline">Zacznij teraz</a>
+        <a href="https://panel.przypominamy.com/register" class="btn btn-outline">Załóż konto</a>
       </div>
       <div class="pricing-card featured">
+        <span class="promo-badge">-40%</span>
         <h3>Business</h3>
-        <p style="color:var(--gray);font-size:.9rem;margin-top:8px">Dla firm z regularną komunikacją z klientami.</p>
+        <p class="pricing-desc">Dla firm z regularną komunikacją z klientami.</p>
+        <div class="price-old">0,17 zł</div>
         <div class="price">0,10 zł</div>
         <div class="price-sub">za SMS · min. doładowanie 500 zł</div>
         <ul class="pricing-features">
@@ -1063,11 +1115,11 @@
           <li>Raporty zaawansowane</li>
           <li>Wsparcie priorytetowe</li>
         </ul>
-        <a href="#kontakt" class="btn btn-primary">Skontaktuj się</a>
+        <a href="#kontakt" class="btn btn-primary" id="businessCta">Skontaktuj się — cena tylko do końca miesiąca</a>
       </div>
       <div class="pricing-card">
         <h3>Enterprise</h3>
-        <p style="color:var(--gray);font-size:.9rem;margin-top:8px">Dla dużych firm i operatorów z indywidualnymi potrzebami.</p>
+        <p class="pricing-desc">Dla dużych firm i operatorów z indywidualnymi potrzebami.</p>
         <div class="price">Indywid.</div>
         <div class="price-sub">wycena zależna od wolumenu</div>
         <ul class="pricing-features">
@@ -1088,14 +1140,14 @@
 <section style="padding:64px 0;">
   <div class="container">
     <div class="cta-section">
-      <h2>Gotowy żeby zacząć?</h2>
-      <p>Zarejestruj konto, załaduj listę numerów i wyślij pierwszą kampanię SMS w mniej niż 10 minut.</p>
+      <h2>Pierwsza kampania SMS w 10 minut</h2>
+      <p>Załóż konto, zaimportuj bazę numerów i uruchom wysyłkę — bez umów, bez abonamentu. <span id="ctaPromoNote">Ceny promocyjne tylko do końca miesiąca.</span></p>
       <div class="cta-actions">
-        <a href="#kontakt" class="btn btn-primary" style="font-size:1rem;padding:16px 36px">
-          Zacznij bezpłatnie →
+        <a href="https://panel.przypominamy.com/register" class="btn btn-primary" style="font-size:1rem;padding:16px 36px">
+          Załóż konto — za darmo →
         </a>
-        <a href="https://panel.przypominamy.com" class="btn btn-outline" style="font-size:1rem;padding:16px 36px">
-          Zaloguj się do panelu
+        <a href="#kontakt" class="btn btn-outline" style="font-size:1rem;padding:16px 36px">
+          Potrzebujesz wyceny? Napisz do nas
         </a>
       </div>
     </div>
@@ -1333,8 +1385,8 @@
         </a>
         <p>Profesjonalna platforma masowej komunikacji mobilnej — SMS, MMS i IVR dla firm z całej Polski i zagranicy.</p>
         <div class="footer-social">
-          <a href="#" class="social-btn" aria-label="LinkedIn">in</a>
-          <a href="#" class="social-btn" aria-label="Twitter">𝕏</a>
+          <a href="https://linkedin.com/company/przypominamy" class="social-btn" aria-label="LinkedIn" target="_blank" rel="noopener">in</a>
+          <a href="https://x.com/przypominamy" class="social-btn" aria-label="Twitter" target="_blank" rel="noopener">𝕏</a>
           <a href="mailto:support@przypominamy.com" class="social-btn" aria-label="E-mail">@</a>
         </div>
       </div>
@@ -1362,9 +1414,9 @@
         <h5>Firma</h5>
         <ul>
           <li><a href="#kontakt">Kontakt</a></li>
-          <li><a href="#">Regulamin</a></li>
-          <li><a href="#">Polityka prywatności</a></li>
-          <li><a href="#">RODO</a></li>
+          <li><a href="/regulamin">Regulamin</a></li>
+          <li><a href="/polityka-prywatnosci">Polityka prywatności</a></li>
+          <li><a href="/rodo">RODO</a></li>
           <li><a href="mailto:support@przypominamy.com">support@przypominamy.com</a></li>
         </ul>
       </div>
@@ -1372,9 +1424,9 @@
     <div class="footer-bottom">
       <p>© 2010–2026 <strong>Expertus / Mamcarz.com</strong>. Wszelkie prawa zastrzeżone.</p>
       <div style="display:flex;gap:20px">
-        <a href="#">Regulamin</a>
-        <a href="#">Polityka prywatności</a>
-        <a href="#">RODO</a>
+        <a href="/regulamin">Regulamin</a>
+        <a href="/polityka-prywatnosci">Polityka prywatności</a>
+        <a href="/rodo">RODO</a>
       </div>
     </div>
   </div>
@@ -1635,6 +1687,46 @@
       btn.style.background = 'linear-gradient(135deg,#e53e3e,#c53030)';
     }
   });
+
+  /* ══════════════════════════════════════
+     PROMO COUNTDOWN (end of current month)
+  ══════════════════════════════════════ */
+  function updateCountdown() {
+    const now = new Date();
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const diff = endOfMonth - now;
+    if (diff <= 0) {
+      document.getElementById('cdDays').textContent = '00';
+      document.getElementById('cdHours').textContent = '00';
+      document.getElementById('cdMins').textContent = '00';
+      document.getElementById('cdSecs').textContent = '00';
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cdDays').textContent = String(d).padStart(2, '0');
+    document.getElementById('cdHours').textContent = String(h).padStart(2, '0');
+    document.getElementById('cdMins').textContent = String(m).padStart(2, '0');
+    document.getElementById('cdSecs').textContent = String(s).padStart(2, '0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // Dynamic month name in promo banner
+  const monthNames = ['styczniowa','lutowa','marcowa','kwietniowa','majowa','czerwcowa','lipcowa','sierpniowa','wrześniowa','październikowa','listopadowa','grudniowa'];
+  const promoEl = document.getElementById('promoText');
+  if (promoEl) {
+    const m = monthNames[new Date().getMonth()];
+    promoEl.innerHTML = `Promocja ${m}: <strong>do -40% na SMS</strong> — ceny obowiązują do końca miesiąca`;
+  }
+  const monthGenitives = ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','września','października','listopada','grudnia'];
+  const mg = monthGenitives[new Date().getMonth()];
+  const bizCta = document.getElementById('businessCta');
+  if (bizCta) bizCta.textContent = `Skontaktuj się — cena tylko do końca ${mg}`;
+  const ctaNote = document.getElementById('ctaPromoNote');
+  if (ctaNote) ctaNote.textContent = `Ceny promocyjne tylko do końca ${mg}.`;
 
   function orderReset() {
     document.getElementById('orderForm').style.display = '';
