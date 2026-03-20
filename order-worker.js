@@ -35,9 +35,9 @@ DANE KLIENTA:
 - Dodatkowe uwagi: ${order.extra || 'brak'}
 
 CENNIK ORIENTACYJNY:
-- Starter: 0,09 zł/SMS (min. doładowanie 100 zł) — SMS, podstawowy panel
-- Business: 0,08 zł/SMS (min. doładowanie 500 zł) — SMS+MMS+IVR, API, raporty
-- Enterprise: od 0,07 zł/SMS (negocjowane) — dedykowany opiekun, SLA, multi-konto
+- Starter: 0,15 zł/SMS (min. doładowanie 100 zł) — SMS, podstawowy panel
+- Business: 0,10 zł/SMS (min. doładowanie 500 zł) — SMS+MMS+IVR, API, raporty
+- Enterprise: cena negocjowana od wolumenu — dedykowany opiekun, SLA, multi-konto
 
 INSTRUKCJE:
 1. Przywitaj klienta po imieniu

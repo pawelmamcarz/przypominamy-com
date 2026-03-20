@@ -128,7 +128,94 @@ Pełna instrukcja: https://support.mailchannels.com/hc/en-us/articles/1691895436
 
 ---
 
-## 7. Migracja z innych hostów
+## 7. API Gateway Worker (proxy SMSAPI.pl)
+
+API Gateway umożliwia klientom wysyłkę SMS/MMS/VMS przez `api.przypominamy.com/v1/*`.
+W tle korzysta z SMSAPI.pl jako dostawcy.
+
+### A. Utwórz KV namespace
+
+```bash
+wrangler kv:namespace create CLIENTS_KV
+# Skopiuj ID z outputu i wklej do api.toml w polu id = "..."
+```
+
+### B. Wdróż API Worker
+
+```bash
+wrangler deploy -c api.toml
+
+# Ustaw sekret — master token SMSAPI.pl:
+wrangler secret put SMSAPI_TOKEN --name przypominamy-api
+# Wklej Bearer token z https://ssl.smsapi.pl/react/oauth/manage
+```
+
+### C. Dodaj subdomenę API
+
+Cloudflare DNS → dodaj rekord:
+```
+CNAME   api   przypominamy-com.pages.dev   (proxy: ON)
+```
+
+Cloudflare automatycznie podepnie SSL.
+
+### D. Dodaj klienta (token API)
+
+```bash
+# Wygeneruj token (np. openssl rand -hex 32):
+TOKEN="tu_wklej_wygenerowany_token"
+
+# Dodaj do KV:
+wrangler kv:key put --namespace-id=XXXXX "token:$TOKEN" '{
+  "client_id": "acme-corp",
+  "name": "ACME Corporation",
+  "smsapi_token": null,
+  "webhook_url": "https://acme.com/webhooks/sms",
+  "rate_limit": 100,
+  "allowed_endpoints": ["sms", "sms/bulk", "mms", "vms", "hlr", "balance"],
+  "sender_name": "ACME"
+}'
+
+# Dodaj mapping klienta dla callbacków DLR:
+wrangler kv:key put --namespace-id=XXXXX "client:acme-corp" '{
+  "webhook_url": "https://acme.com/webhooks/sms"
+}'
+```
+
+### E. Testuj
+
+```bash
+# Health check
+curl https://api.przypominamy.com/v1/health
+
+# Wyślij SMS
+curl -X POST https://api.przypominamy.com/v1/sms \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"to": "+48600100200", "message": "Test z API Przypominamy.com"}'
+
+# Sprawdź saldo
+curl https://api.przypominamy.com/v1/balance \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### Endpointy API
+
+| Metoda | Endpoint | Opis |
+|--------|----------|------|
+| `POST` | `/v1/sms` | Wyślij SMS |
+| `POST` | `/v1/sms/bulk` | Masowa wysyłka SMS |
+| `POST` | `/v1/mms` | Wyślij MMS (SMIL) |
+| `POST` | `/v1/vms` | Wiadomość głosowa TTS |
+| `GET`  | `/v1/hlr?number=...` | Weryfikacja numeru |
+| `GET`  | `/v1/balance` | Saldo konta |
+| `POST` | `/v1/callback/:clientId` | DLR webhook (z SMSAPI) |
+| `POST/GET` | `/v1/incoming` | Przychodzący SMS |
+| `GET`  | `/v1/health` | Status API |
+
+---
+
+## 8. Migracja z innych hostów
 
 1. **DNS cut-over**: W Cloudflare DNS zastąp stare rekordy A/CNAME rekordami Pages
 2. **Stary hosting**: Możesz ustawić redirect 301 na starym serwerze do czasu propagacji TTL
@@ -144,6 +231,8 @@ Pełna instrukcja: https://support.mailchannels.com/hc/en-us/articles/1691895436
 | `chat-worker.js` | `/api/chat` — streaming AI chat |
 | `order-worker.js` | `/api/order` — AI oferta + email |
 | `email-worker.js` | Incoming email handler — AI auto-reply |
+| `api-worker.js` | `/v1/*` — API Gateway proxy SMSAPI.pl |
 | `_headers` | Security headers dla Pages |
 | `_redirects` | SPA redirects |
-| `wrangler.toml` | Cloudflare config |
+| `wrangler.toml` | Cloudflare Pages config |
+| `api.toml` | API Gateway worker config |

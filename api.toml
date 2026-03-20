@@ -1,0 +1,17 @@
+name = "przypominamy-api"
+main = "api-worker.js"
+compatibility_date = "2026-03-01"
+
+routes = [
+  { pattern = "api.przypominamy.com/*", zone_name = "przypominamy.com" }
+]
+
+[vars]
+ENVIRONMENT = "production"
+
+# KV namespace for client tokens, rate limits, and webhook configs
+# Create with: wrangler kv:namespace create CLIENTS_KV
+# Then paste the ID below
+[[kv_namespaces]]
+binding = "CLIENTS_KV"
+id = "INSERT_KV_NAMESPACE_ID"

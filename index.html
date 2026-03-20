@@ -3,16 +3,143 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Przypominamy.com – platforma masowej komunikacji SMS, MMS i IVR. Sprzedawaj więcej dzięki skutecznej komunikacji mobilnej z klientami." />
+  <meta name="description" content="Przypominamy.com – platforma masowej wysyłki SMS, MMS i wiadomości głosowych IVR/TTS. Dwukierunkowa komunikacja, API, 30+ krajów. Od 0,10 zł/SMS." />
+  <meta name="keywords" content="SMS, masowa wysyłka SMS, bramka SMS, API SMS, MMS, IVR, TTS, komunikacja mobilna, przypomnienia SMS, platforma SMS Polska" />
   <meta name="robots" content="index, follow" />
-  <meta property="og:title" content="Przypominamy.com – Komunikacja SMS/MMS/IVR" />
-  <meta property="og:description" content="Platforma masowej komunikacji mobilnej – SMS, MMS, wiadomości głosowe. Dwukierunkowa komunikacja, API, integracje." />
+  <meta name="author" content="Expertus / Mamcarz.com" />
+  <link rel="canonical" href="https://przypominamy.com/" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Przypominamy.com – Masowa wysyłka SMS, MMS i IVR" />
+  <meta property="og:description" content="Platforma do masowej komunikacji mobilnej. Wysyłaj SMS, MMS i wiadomości głosowe do 30+ krajów. API, dwukierunkowa komunikacja, raporty w czasie rzeczywistym." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://przypominamy.com" />
-  <title>Przypominamy.com – Sprzedawaj więcej dzięki komunikacji SMS</title>
+  <meta property="og:url" content="https://przypominamy.com/" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="pl_PL" />
+  <meta property="og:site_name" content="Przypominamy.com" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Przypominamy.com – Masowa wysyłka SMS, MMS i IVR" />
+  <meta name="twitter:description" content="Platforma do masowej komunikacji mobilnej. Od 0,10 zł/SMS. API, dwukierunkowa komunikacja, 30+ krajów." />
+  <meta name="twitter:image" content="https://przypominamy.com/preview-og.png" />
+
+  <title>Przypominamy.com – Masowa wysyłka SMS, MMS i IVR | Platforma komunikacji mobilnej</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- JSON-LD: Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Przypominamy.com",
+    "legalName": "Expertus / Mamcarz.com",
+    "url": "https://przypominamy.com",
+    "logo": "https://przypominamy.com/przypominamy-logo.png",
+    "email": "support@przypominamy.com",
+    "foundingDate": "2010",
+    "sameAs": [
+      "https://linkedin.com/company/przypominamy",
+      "https://x.com/przypominamy"
+    ],
+    "description": "Platforma masowej wysyłki SMS, MMS i wiadomości głosowych IVR/TTS. Dwukierunkowa komunikacja z klientami w 30+ krajach."
+  }
+  </script>
+
+  <!-- JSON-LD: SoftwareApplication (Product) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Przypominamy.com",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "url": "https://przypominamy.com",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Starter",
+        "price": "0.15",
+        "priceCurrency": "PLN",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": "0.15",
+          "priceCurrency": "PLN",
+          "unitText": "SMS"
+        },
+        "description": "Do 10 000 SMS miesięcznie, szablony, import CSV"
+      },
+      {
+        "@type": "Offer",
+        "name": "Business",
+        "price": "0.10",
+        "priceCurrency": "PLN",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": "0.10",
+          "priceCurrency": "PLN",
+          "unitText": "SMS"
+        },
+        "description": "SMS + MMS + IVR/TTS, własny nadpis, API, raporty zaawansowane"
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD: FAQ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Jak zacząć wysyłać SMS przez Przypominamy.com?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Załóż konto na panel.przypominamy.com, doładuj konto wybraną kwotą (min. 100 zł), przygotuj szablon wiadomości, zaimportuj listę numerów z pliku CSV i uruchom wysyłkę. Cały proces trwa około 10 minut."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Ile kosztuje wysyłka SMS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ceny zaczynają się od 0,10 zł za SMS w planie Business (min. doładowanie 500 zł) i 0,15 zł za SMS w planie Starter (min. doładowanie 100 zł). Brak abonamentu — płacisz tylko za wysłane wiadomości."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy platforma obsługuje wysyłki zagraniczne?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak, Przypominamy.com obsługuje wysyłki do wszystkich krajów UE (27 państw), Australii i Wielkiej Brytanii — łącznie ponad 30 krajów."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy jest dostępne API do integracji?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak, platforma udostępnia REST API v1.7 z tokenami Bearer do wysyłki SMS, MMS i IVR. Pełna dokumentacja dostępna jest w formacie PDF na stronie."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Jakie kanały komunikacji obsługuje platforma?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Platforma obsługuje trzy kanały: SMS (masowa wysyłka z dwukierunkową komunikacją), MMS (wiadomości z grafiką i wideo) oraz IVR/TTS (automatyczne połączenia głosowe z syntezatorem mowy)."
+        }
+      }
+    ]
+  }
+  </script>
+
   <style>
     /* ── Reset & Base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

@@ -1,6 +1,9 @@
 # Cloudflare Pages – Redirects
 # Format: source  destination  status_code
 
+# pages.dev → canonical domain
+https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
+
 # Old WordPress paths → new paths
 /uslugi/          /#uslugi         301
 /uslugi           /#uslugi         301
@@ -15,6 +18,12 @@
 
 # API docs
 /api-docs         https://przypominamy.com/wp-content/uploads/2021/06/przypominamy_api_document.pdf  302
+
+# Static files — serve as-is (before SPA fallback)
+/sitemap.xml      /sitemap.xml     200
+/robots.txt       /robots.txt      200
+/przypominamy-logo.png  /przypominamy-logo.png  200
+/xmlapi_en_przypominamy2020v17.pdf  /xmlapi_en_przypominamy2020v17.pdf  200
 
 # SPA fallback
 /*                /index.html      200

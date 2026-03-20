@@ -30,9 +30,9 @@ TWOJA WIEDZA:
 - Integracje: CRM, ERP, e-commerce, systemy rezerwacji
 
 CENNIK:
-- Starter: ~0,09 zł/SMS, min. doładowanie 100 zł
-- Business: ~0,08 zł/SMS, min. doładowanie 500 zł — pełne funkcje + API
-- Enterprise: od 0,07 zł/SMS — negocjowane, dedykowany opiekun
+- Starter: 0,15 zł/SMS, min. doładowanie 100 zł
+- Business: 0,10 zł/SMS, min. doładowanie 500 zł — pełne funkcje + API
+- Enterprise: cena negocjowana od wolumenu — dedykowany opiekun
 
 TYPOWE PYTANIA I ODPOWIEDZI:
 - Jak zacząć? → Rejestracja na panel.przypominamy.com, weryfikacja firmy, doładowanie
