@@ -19,6 +19,11 @@ https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
 # API docs
 /api-docs         https://przypominamy.com/wp-content/uploads/2021/06/przypominamy_api_document.pdf  302
 
+# Legal pages (pretty URLs → HTML files)
+/regulamin              /regulamin.html              200
+/polityka-prywatnosci   /polityka-prywatnosci.html   200
+/rodo                   /rodo.html                   200
+
 # Static files — serve as-is (before SPA fallback)
 /sitemap.xml      /sitemap.xml     200
 /robots.txt       /robots.txt      200

@@ -3,8 +3,9 @@ node_modules/
 .wrangler/
 dist/
 
-# Preview screenshots (temp files)
+# Preview screenshots (temp files, except OG image)
 preview*.png
+!preview-og.png
 
 # Secrets — NEVER commit these
 .dev.vars
