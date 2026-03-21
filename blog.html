@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Blog Przypominamy.com — porady o SMS marketingu, przypomnieniach SMS, integracji API SMS z CRM. Praktyczne poradniki dla firm i deweloperów." />
+  <meta name="keywords" content="blog SMS, SMS marketing porady, przypomnienia SMS, API SMS, bramka SMS Polska, masowa wysyłka SMS poradnik" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Doradztwo Paweł Mamcarz" />
+  <link rel="canonical" href="https://przypominamy.com/blog" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Blog — Przypominamy.com" />
+  <meta property="og:description" content="Porady o SMS marketingu, przypomnieniach SMS i integracji API. Praktyczne poradniki dla firm i deweloperów." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://przypominamy.com/blog" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <meta property="og:locale" content="pl_PL" />
+  <meta property="og:site_name" content="Przypominamy.com" />
+
+  <title>Blog — Przypominamy.com</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --white:#fff; --gray:#888; --light:#ccc; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .container { max-width:1000px; margin:0 auto; padding:0 24px; }
+    .content { padding:64px 0 96px; }
+    h1 { font-size:2rem; font-weight:800; margin-bottom:8px; }
+    .subtitle { color:var(--gray); font-size:1rem; margin-bottom:48px; }
+    .blog-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(290px, 1fr)); gap:28px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; transition:transform .2s, border-color .2s; }
+    .card:hover { transform:translateY(-4px); border-color:var(--yellow); }
+    .card-img { height:180px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,.6); font-size:.85rem; font-weight:600; letter-spacing:.03em; }
+    .card-img.grad-1 { background:linear-gradient(135deg, #1a1a3e 0%, #F5A623 100%); }
+    .card-img.grad-2 { background:linear-gradient(135deg, #0d2b45 0%, #22c1c3 100%); }
+    .card-img.grad-3 { background:linear-gradient(135deg, #1a1a1a 0%, #6a3093 50%, #F5A623 100%); }
+    .card-body { padding:24px; }
+    .card-date { font-size:.8rem; color:var(--gray); margin-bottom:8px; }
+    .card-title { font-size:1.1rem; font-weight:700; margin-bottom:10px; line-height:1.4; }
+    .card-title a { color:var(--white); }
+    .card-title a:hover { color:var(--yellow); text-decoration:none; }
+    .card-excerpt { font-size:.9rem; color:var(--light); margin-bottom:16px; }
+    .card-link { font-size:.9rem; font-weight:600; }
+    .footer-mini { border-top:1px solid var(--border); padding:28px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    @media(max-width:600px){
+      h1 { font-size:1.5rem; }
+      .blog-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/">&larr; Wróć na stronę główną</a>
+  </div>
+</div>
+
+<div class="container content">
+  <h1>Blog</h1>
+  <p class="subtitle">Porady, poradniki i case-studies o komunikacji SMS dla firm</p>
+
+  <div class="blog-grid">
+
+    <article class="card">
+      <div class="card-img grad-1">SMS &bull; MEDYCYNA</div>
+      <div class="card-body">
+        <p class="card-date">18 marca 2026</p>
+        <h2 class="card-title"><a href="/blog/sms-przypomnienia-wizyty-lekarz.html">Jak zmniejszyć liczbę nieodwołanych wizyt o 40% dzięki SMS</a></h2>
+        <p class="card-excerpt">Praktyczny przewodnik dla klinik i gabinetów lekarskich. Statystyki no-show, gotowe szablony wiadomości SMS i kalkulator zwrotu z inwestycji.</p>
+        <a class="card-link" href="/blog/sms-przypomnienia-wizyty-lekarz.html">Czytaj więcej &rarr;</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-img grad-2">SMS &bull; E-COMMERCE</div>
+      <div class="card-body">
+        <p class="card-date">12 marca 2026</p>
+        <h2 class="card-title"><a href="/blog/sms-marketing-ecommerce.html">SMS marketing w e-commerce — kompletny przewodnik 2026</a></h2>
+        <p class="card-excerpt">Kampanie promocyjne, powiadomienia transakcyjne, odzyskiwanie koszyków. Sprawdź, jak SMS podnosi konwersję w sklepach internetowych.</p>
+        <a class="card-link" href="/blog/sms-marketing-ecommerce.html">Czytaj więcej &rarr;</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-img grad-3">SMS &bull; DEVELOPERZY</div>
+      <div class="card-body">
+        <p class="card-date">5 marca 2026</p>
+        <h2 class="card-title"><a href="/blog/api-sms-integracja-crm.html">Integracja API SMS z CRM — od zera do wysyłki w 30 minut</a></h2>
+        <p class="card-excerpt">Techniczny poradnik krok po kroku: autoryzacja, wysyłka, webhooks, obsługa błędów. Przykłady w curl i Python.</p>
+        <a class="card-link" href="/blog/api-sms-integracja-crm.html">Czytaj więcej &rarr;</a>
+      </div>
+    </article>
+
+  </div>
+</div>
+
+<div class="footer-mini">
+  <div class="container">
+    &copy; 2010–2026 Doradztwo Paweł Mamcarz. Wszelkie prawa zastrzeżone. &middot; <a href="/">Strona główna</a> &middot; <a href="/regulamin">Regulamin</a> &middot; <a href="/polityka-prywatnosci">Polityka prywatności</a> &middot; <a href="/rodo">RODO</a>
+  </div>
+</div>
+
+</body>
+</html>

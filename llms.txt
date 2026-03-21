@@ -36,6 +36,16 @@ Właściciel: Doradztwo Paweł Mamcarz, ul. Jesionowa 18, 05-825 Grodzisk Mazowi
 - [Polityka prywatności](https://przypominamy.com/polityka-prywatnosci): Informacje o przetwarzaniu danych osobowych
 - [RODO](https://przypominamy.com/rodo): Klauzula informacyjna RODO
 
+## Blog
+
+- [Przypomnienia SMS w klinikach](https://przypominamy.com/blog/sms-przypomnienia-wizyty-lekarz): Jak zmniejszyć liczbę nieodwołanych wizyt o 40% dzięki automatycznym SMS — przewodnik dla klinik i gabinetów lekarskich
+- [SMS marketing w e-commerce](https://przypominamy.com/blog/sms-marketing-ecommerce): Kompletny przewodnik SMS/MMS marketingu dla sklepów internetowych — kampanie, konwersje, RODO
+- [Integracja API SMS z CRM](https://przypominamy.com/blog/api-sms-integracja-crm): Techniczny poradnik integracji REST API z systemami CRM — kod, webhooks, error handling
+
+## English Version
+
+- [English](https://przypominamy.com/en): Full English version of the platform website — pricing, features, API documentation
+
 ## Kontakt
 
 - E-mail: support@przypominamy.com
