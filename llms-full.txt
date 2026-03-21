@@ -1,0 +1,203 @@
+# Przypominamy.com — Platforma masowej komunikacji SMS, MMS i IVR
+
+> Przypominamy.com to polska platforma do masowej wysyłki SMS, MMS i wiadomości głosowych IVR/TTS. Działamy od 2010 roku, wysłaliśmy ponad 100 milionów wiadomości, obsługujemy ponad 30 krajów. Oferujemy dwukierunkową komunikację, REST API, raporty w czasie rzeczywistym. Ceny od 0,10 zł/SMS bez abonamentu. Właściciel: Doradztwo Paweł Mamcarz, NIP: 7122188089, Grodzisk Mazowiecki.
+
+---
+
+## Jak działa platforma?
+
+Trzy kroki do wysyłki:
+
+1. **Utwórz szablon** — przygotuj treść SMS, MMS lub scenariusz głosowy IVR. Użyj zmiennych {Imię}, {Kwota}, {Termin} do personalizacji.
+2. **Wybierz odbiorców** — zaimportuj listę numerów z pliku CSV lub użyj istniejącej bazy. Obsługujemy wszystkie polskie sieci: Plus, Orange, T-Mobile, Play.
+3. **Wyślij i monitoruj** — zaplanuj wysyłkę lub uruchom natychmiast. Śledź statusy dostarczenia i odpowiedzi klientów w czasie rzeczywistym.
+
+---
+
+## Usługi
+
+### SMS
+Masowa wysyłka SMS z personalizacją i dwukierunkową komunikacją. Wiadomości docierają w ciągu sekund.
+
+Funkcje:
+- Personalizacja: zmienne {Imię}, {Kwota}, {Termin} podstawiane automatycznie
+- Dwukierunkowa komunikacja — odbiorcy mogą odpisywać
+- Import listy numerów z pliku CSV
+- Własny nadpis nadawcy (Shortcode lub nazwa alfanumeryczna, np. "KLINIKA")
+- Godziny nieaktywne — automatyczna kontrola czasu wysyłki (np. 22:00–06:00)
+- SMS wieloczęściowe dla dłuższych wiadomości (powyżej 160 znaków)
+
+### MMS
+Wiadomości multimedialne z grafiką, wideo i tekstem.
+
+Funkcje:
+- Szablony SMIL — dowolna kombinacja obrazów, wideo i tekstu
+- Wysyłka do wszystkich polskich sieci
+- Kody rabatowe i bilety elektroniczne w formie grafiki
+- Pliki do 300 KB na MMS
+- Podgląd przed wysyłką
+- Wysyłki masowe lub indywidualne
+
+### IVR / TTS (wiadomości głosowe)
+Automatyczne połączenia głosowe z syntezatorem mowy.
+
+Funkcje:
+- Syntezator mowy TTS w języku polskim (4 głosy: Ewa, Jacek, Jan, Maja)
+- Scenariusze IVR — reakcja na naciśnięcie klawiszy telefonu
+- Obsługa telefonów stacjonarnych i komórkowych
+- Automatyczne ponawianie przy braku odpowiedzi (1-6 prób)
+- Raport przekierowań IVR
+- Nagrywanie sesji (opcjonalne)
+
+---
+
+## Cennik
+
+Brak abonamentu — płacisz tylko za wysłane wiadomości. Model prepaid: doładowujesz konto wybraną kwotą.
+
+### Plan Starter
+- **Cena: 0,15 zł za SMS**
+- Minimalne doładowanie: 100 zł
+- Do 10 000 SMS miesięcznie
+- Szablony SMS
+- Raportowanie podstawowe
+- Import kontaktów z CSV
+- Wsparcie e-mail
+
+### Plan Business
+- **Cena: 0,10 zł za SMS**
+- Minimalne doładowanie: 500 zł
+- Nieograniczone wysyłki SMS
+- SMS + MMS + IVR/TTS
+- Własny Shortcode / nadpis nadawcy
+- Dwukierunkowa komunikacja
+- Pełny dostęp do API
+- Raporty zaawansowane
+- Wsparcie priorytetowe
+
+### Plan Enterprise
+- **Cena: negocjowana od wolumenu**
+- Dedykowany opiekun klienta
+- SLA i gwarancja dostarczalności
+- Multi-konto i sub-konta
+- Integracja z systemami klienta (CRM, ERP)
+- Obsługa rynków zagranicznych (30+ krajów UE, Australia, UK)
+
+---
+
+## API
+
+REST API v1.7 z autoryzacją Bearer token. Pełna dokumentacja dostępna jako PDF.
+
+### Endpointy
+- `POST /sms.do` — wysyłka SMS (do 10 000 odbiorców na żądanie)
+- `POST /mms.do` — wysyłka MMS (format SMIL)
+- `POST /vms.do` — wiadomość głosowa TTS
+- `GET /hlr.do` — weryfikacja numeru telefonu
+- `GET /profile` — saldo konta
+
+### Funkcje API
+- Webhooks i callbacki — powiadomienia o statusie dostarczenia w czasie rzeczywistym
+- Import CSV i bulk API — wysyłka tysięcy wiadomości jednocześnie
+- Szablony z parametrami — personalizacja każdej wiadomości dynamicznie
+- Planowanie wysyłek — schedule z datą w formacie ISO 8601
+- Deduplikacja — parametr idx z 24h oknem
+- Tryb testowy — parametr test=1 (bez kosztów)
+
+### Przykład wywołania
+```
+POST https://panel.przypominamy.com/api/sms
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "to": "+48512345678",
+  "from": "KLINIKA",
+  "message": "Wizyta jutro o 10:00",
+  "schedule": "2026-03-21T08:00:00"
+}
+
+Odpowiedź:
+{
+  "id": "msg_abc123",
+  "status": "queued",
+  "parts": 1
+}
+```
+
+---
+
+## Zastosowania branżowe
+
+### Sektor medyczny
+Automatyczne przypomnienia o wizytach u lekarza, badaniach kontrolnych i szczepieniach. Zmniejszenie liczby nieodwołanych wizyt nawet o 40%.
+
+### Banki i finanse
+Przypomnienia o spłacie rat, powiadomienia o saldzie konta, komunikaty windykacyjne, informacje o promocjach kredytowych.
+
+### E-commerce i handel
+Potwierdzenia zamówień, powiadomienia o statusie dostawy, kody rabatowe w formie MMS, programy lojalnościowe i kampanie promocyjne.
+
+### Windykacja
+Skuteczne przypomnienia o zaległych płatnościach z dwukierunkową komunikacją. Klient może od razu dopytać o szczegóły faktury.
+
+### Media i rozrywka
+Powiadomienia o nowych treściach, przypomnienia o przedłużeniu subskrypcji, kampanie MMS z bogatą grafiką.
+
+### HR i firmy
+Informowanie pracowników o zmianach, przypomnienia o spotkaniach, potwierdzenia rezerwacji, komunikacja wewnętrzna.
+
+---
+
+## Najczęściej zadawane pytania (FAQ)
+
+### Jak zacząć wysyłać SMS przez Przypominamy.com?
+Załóż konto na panel.przypominamy.com, doładuj konto wybraną kwotą (min. 100 zł), przygotuj szablon wiadomości, zaimportuj listę numerów z pliku CSV i uruchom wysyłkę. Cały proces trwa około 10 minut.
+
+### Ile kosztuje wysyłka SMS?
+Ceny zaczynają się od 0,10 zł za SMS w planie Business (min. doładowanie 500 zł) i 0,15 zł za SMS w planie Starter (min. doładowanie 100 zł). Brak abonamentu — płacisz tylko za wysłane wiadomości.
+
+### Czy platforma obsługuje wysyłki zagraniczne?
+Tak, Przypominamy.com obsługuje wysyłki do wszystkich krajów UE (27 państw), Australii i Wielkiej Brytanii — łącznie ponad 30 krajów.
+
+### Czy jest dostępne API do integracji?
+Tak, platforma udostępnia REST API v1.7 z tokenami Bearer do wysyłki SMS, MMS i IVR. Pełna dokumentacja dostępna jest w formacie PDF na stronie.
+
+### Jakie kanały komunikacji obsługuje platforma?
+Platforma obsługuje trzy kanały: SMS (masowa wysyłka z dwukierunkową komunikacją), MMS (wiadomości z grafiką i wideo) oraz IVR/TTS (automatyczne połączenia głosowe z syntezatorem mowy).
+
+### Czy mogę używać własnej nazwy nadawcy?
+Tak, w planie Business i Enterprise możesz ustawić własny nadpis (np. nazwę firmy, max 11 znaków) lub dedykowany Shortcode numeryczny.
+
+### Jak działa dwukierunkowa komunikacja?
+Odbiorcy mogą odpowiadać na Twoje wiadomości SMS. Platforma zbiera odpowiedzi i prezentuje je w raporcie. Możesz też odbierać odpowiedzi przez API (webhook/callback).
+
+### Czy wysyłki mogą być zaplanowane na konkretną godzinę?
+Tak, możesz zaplanować kampanie z wyprzedzeniem. Możesz ustawić godziny nieaktywne (np. 22:00–06:00) — platforma automatycznie wstrzyma i wznowi wysyłkę.
+
+---
+
+## Klienci
+
+Z platformy korzystają m.in.: BPH Bank, Wonga, Signal Iduna, Peugeot, Auchan, Telewizja N, Cyfra+, Cisco, Alior Sync, ING, Masterlease, UBIK.
+
+---
+
+## Statystyki
+
+- 15+ lat na rynku (od 2010)
+- 100M+ wysłanych wiadomości
+- 30+ krajów obsługi
+- 99% dostępność platformy
+
+---
+
+## Kontakt
+
+- E-mail: support@przypominamy.com
+- Panel klienta: https://panel.przypominamy.com
+- Strona: https://przypominamy.com
+
+Doradztwo Paweł Mamcarz
+ul. Jesionowa 18, 05-825 Grodzisk Mazowiecki
+NIP: 7122188089

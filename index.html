@@ -143,6 +143,30 @@
           "@type": "Answer",
           "text": "Platforma obsługuje trzy kanały: SMS (masowa wysyłka z dwukierunkową komunikacją), MMS (wiadomości z grafiką i wideo) oraz IVR/TTS (automatyczne połączenia głosowe z syntezatorem mowy)."
         }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy mogę używać własnej nazwy nadawcy SMS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak, w planie Business i Enterprise możesz ustawić własny nadpis alfanumeryczny (np. nazwę firmy, max 11 znaków) lub dedykowany Shortcode numeryczny. W planie Starter wiadomości wysyłane są z domyślnego numeru platformy."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Jak działa dwukierunkowa komunikacja SMS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Odbiorcy mogą odpowiadać na Twoje wiadomości SMS. Platforma automatycznie zbiera odpowiedzi i prezentuje je w czytelnym raporcie. Możesz też odbierać odpowiedzi programowo przez REST API za pomocą webhooków (callbacków)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy wysyłki SMS mogą być zaplanowane na konkretną godzinę?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak, możesz zaplanować kampanie z wyprzedzeniem podając datę i godzinę wysyłki. Platforma umożliwia też ustawienie godzin nieaktywnych (np. 22:00–06:00) — wiadomości będą automatycznie wstrzymane i wznowione poza godzinami ciszy."
+        }
       }
     ]
   }

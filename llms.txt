@@ -1,0 +1,43 @@
+# Przypominamy.com
+
+> Przypominamy.com to polska platforma do masowej wysyłki SMS, MMS i wiadomości głosowych IVR/TTS. Działamy od 2010 roku, obsługujemy ponad 30 krajów (UE, Australia, UK). Oferujemy dwukierunkową komunikację, REST API v1.7, raporty w czasie rzeczywistym i integracje z CRM/ERP. Ceny od 0,10 zł/SMS bez abonamentu.
+
+Platforma jest skierowana do firm — od małych (plan Starter od 0,15 zł/SMS) po korporacje (Enterprise z indywidualną wyceną). Kluczowe branże: medycyna (przypomnienia o wizytach), e-commerce (statusy zamówień), finanse (przypomnienia o ratach), windykacja, HR i media.
+
+Właściciel: Doradztwo Paweł Mamcarz, ul. Jesionowa 18, 05-825 Grodzisk Mazowiecki, NIP: 7122188089.
+
+## Usługi
+
+- [SMS](https://przypominamy.com/#uslugi): Masowa wysyłka SMS z personalizacją ({Imię}, {Termin}), dwukierunkowa komunikacja, własny nadpis nadawcy, import CSV, planowanie wysyłek, SMS wieloczęściowe
+- [MMS](https://przypominamy.com/#uslugi): Wiadomości multimedialne z grafiką/wideo, szablony SMIL, kody rabatowe i bilety w formie grafiki, pliki do 300 KB
+- [IVR/TTS](https://przypominamy.com/#uslugi): Automatyczne połączenia głosowe z syntezatorem mowy (4 lektorzy: ewa, jacek, jan, maja), scenariusze IVR, ponawianie, obsługa telefonów stacjonarnych
+
+## Cennik
+
+- [Starter](https://przypominamy.com/#cennik): 0,15 zł/SMS, min. doładowanie 100 zł, do 10 000 SMS/miesiąc, szablony, import CSV, raportowanie podstawowe
+- [Business](https://przypominamy.com/#cennik): 0,10 zł/SMS, min. doładowanie 500 zł, SMS+MMS+IVR, własny shortcode, dwukierunkowa komunikacja, API, raporty zaawansowane
+- [Enterprise](https://przypominamy.com/#cennik): Cena negocjowana od wolumenu, dedykowany opiekun, SLA, multi-konto, obsługa rynków zagranicznych
+
+## API
+
+- [Dokumentacja API](https://przypominamy.com/xmlapi_en_przypominamy2020v17.pdf): REST API v1.7, tokeny Bearer, wysyłka SMS/MMS/IVR, webhooks/callbacki, bulk import, format JSON
+- [Jak działa](https://przypominamy.com/#jak-to-dziala): Utwórz szablon → Wybierz odbiorców (CSV) → Wyślij i monitoruj w czasie rzeczywistym
+
+## Zastosowania
+
+- [Medycyna](https://przypominamy.com/#zastosowania): Przypomnienia o wizytach, badaniach, szczepieniach — zmniejszenie nieodwołanych wizyt o 40%
+- [E-commerce](https://przypominamy.com/#zastosowania): Potwierdzenia zamówień, statusy dostawy, kody rabatowe MMS, programy lojalnościowe
+- [Finanse](https://przypominamy.com/#zastosowania): Przypomnienia o ratach, salda kont, windykacja z dwukierunkową komunikacją
+- [HR i firmy](https://przypominamy.com/#zastosowania): Komunikacja wewnętrzna, przypomnienia o spotkaniach, potwierdzenia rezerwacji
+
+## Informacje prawne
+
+- [Regulamin](https://przypominamy.com/regulamin): Warunki korzystania z platformy
+- [Polityka prywatności](https://przypominamy.com/polityka-prywatnosci): Informacje o przetwarzaniu danych osobowych
+- [RODO](https://przypominamy.com/rodo): Klauzula informacyjna RODO
+
+## Kontakt
+
+- E-mail: support@przypominamy.com
+- Panel klienta: https://panel.przypominamy.com
+- Strona: https://przypominamy.com
