@@ -1,0 +1,13 @@
+{
+  "name": "Przypominamy.com",
+  "short_name": "Przypominamy",
+  "description": "Platforma masowej wysyłki SMS, MMS i IVR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#F5A623",
+  "icons": [
+    { "src": "/favicon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

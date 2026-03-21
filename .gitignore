@@ -3,9 +3,13 @@ node_modules/
 .wrangler/
 dist/
 
-# Preview screenshots (temp files, except OG image)
+# Preview screenshots (temp, except OG image)
 preview*.png
 !preview-og.png
+
+# Generated favicons are committed
+!favicon-*.png
+!apple-touch-icon.png
 
 # Secrets — NEVER commit these
 .dev.vars
