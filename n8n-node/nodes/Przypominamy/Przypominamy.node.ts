@@ -4,6 +4,7 @@ import {
 	INodeType,
 	INodeTypeDescription,
 	IHttpRequestMethods,
+	JsonObject,
 	NodeApiError,
 } from 'n8n-workflow';
 
@@ -613,7 +614,7 @@ export class Przypominamy implements INodeType {
 					returnData.push({ json: { error: (error as Error).message } });
 					continue;
 				}
-				throw new NodeApiError(this.getNode(), error as Record<string, unknown>);
+				throw new NodeApiError(this.getNode(), { message: (error as Error).message } as unknown as JsonObject);
 			}
 		}
 

@@ -4,7 +4,7 @@
 # pages.dev → canonical domain
 https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
 
-# Old WordPress paths → new paths
+# Old WordPress paths → canonical (301 permanent)
 /uslugi/          /#uslugi         301
 /uslugi           /#uslugi         301
 /kontakt/         /#kontakt        301
@@ -12,12 +12,34 @@ https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
 /cennik/          /#cennik         301
 /cennik           /#cennik         301
 
+# Old WordPress case study / portfolio pages
+/casestudy/*      /                301
+/case-study/*     /                301
+/case-study/      /                301
+/casestudy/       /                301
+/portfolio/*      /                301
+/portfolio/       /                301
+
+# Old WordPress content paths
+/wp-content/*     /                301
+/wp-admin/*       /                301
+/wp-login.php     /                301
+/feed/*           /                301
+/feed             /                301
+
 # Panel redirect
 /panel            https://panel.przypominamy.com    302
 /login            https://panel.przypominamy.com    302
 
-# API docs
-/api-docs         https://przypominamy.com/wp-content/uploads/2021/06/przypominamy_api_document.pdf  302
+# API docs (old path → new)
+/api-docs         /xmlapi_en_przypominamy2020v17.pdf  301
+
+# Trailing slash normalization for legal pages
+/regulamin/             /regulamin       301
+/polityka-prywatnosci/  /polityka-prywatnosci  301
+/rodo/                  /rodo            301
+/integracje/            /integracje      301
+/en/                    /en              301
 
 # Legal pages (pretty URLs → HTML files)
 /regulamin              /regulamin.html              200

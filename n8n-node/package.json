@@ -13,20 +13,19 @@
     "messaging"
   ],
   "license": "MIT",
-  "homepage": "https://przypominamy.com",
+  "homepage": "https://przypominamy.com/integracje",
   "author": {
-    "name": "Przypominamy.com",
-    "email": "kontakt@przypominamy.com"
+    "name": "Doradztwo Paweł Mamcarz",
+    "email": "support@przypominamy.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/przypominamy/n8n-nodes-przypominamy.git"
+    "url": "https://github.com/pawelmamcarz/przypominamy-com.git"
   },
-  "main": "index.js",
+  "main": "dist/nodes/Przypominamy/Przypominamy.node.js",
   "scripts": {
-    "build": "tsc && gulp build:icons",
+    "build": "tsc",
     "dev": "tsc --watch",
-    "lint": "eslint nodes credentials --ext .ts",
     "prepublishOnly": "npm run build"
   },
   "files": [
@@ -43,8 +42,6 @@
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "eslint": "^8.56.0",
-    "gulp": "^4.0.2",
     "n8n-workflow": "^1.0.0",
     "typescript": "^5.3.0"
   },

@@ -2,7 +2,14 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /v1/
+Disallow: /wp-content/
+Disallow: /wp-admin/
+Disallow: /wp-login.php
+Disallow: /feed/
+Disallow: /casestudy/
+Disallow: /case-study/
 
 Sitemap: https://przypominamy.com/sitemap.xml
 
 # Canonical: https://przypominamy.com (non-www, HTTPS)
+# Panel (panel.przypominamy.com) should have its own robots.txt with Disallow: /
