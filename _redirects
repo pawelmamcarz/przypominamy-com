@@ -27,11 +27,9 @@ https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
 # English version
 /en                     /en.html                     200
 
-# Blog
-/blog                   /blog.html                   200
-/blog/sms-przypomnienia-wizyty-lekarz    /blog/sms-przypomnienia-wizyty-lekarz.html    200
-/blog/sms-marketing-ecommerce            /blog/sms-marketing-ecommerce.html            200
-/blog/api-sms-integracja-crm             /blog/api-sms-integracja-crm.html             200
+# Blog (index lives outside /blog/ dir to avoid Cloudflare trailing-slash redirect loop)
+/blog                   /blog-index.html             200
+/blog/                  /blog-index.html             200
 
 # Static files — serve as-is (before SPA fallback)
 /llms.txt         /llms.txt        200
