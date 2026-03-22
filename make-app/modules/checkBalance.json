@@ -1,0 +1,33 @@
+{
+  "label": "Check Balance",
+  "description": "Check the current account balance and account information.",
+  "actionType": "search",
+  "url": "/v1/balance",
+  "method": "GET",
+  "headers": {
+    "Authorization": "Bearer {{connection.apiKey}}",
+    "Content-Type": "application/json"
+  },
+  "parameters": [],
+  "response": {
+    "output": {
+      "success": "{{body.success}}",
+      "balance": "{{body.data.balance}}",
+      "currency": "{{body.data.currency}}",
+      "username": "{{body.data.username}}"
+    },
+    "error": {
+      "message": "{{body.error.message}}"
+    }
+  },
+  "samples": {
+    "response": {
+      "success": true,
+      "data": {
+        "balance": 125.50,
+        "currency": "PLN",
+        "username": "firma_xyz"
+      }
+    }
+  }
+}

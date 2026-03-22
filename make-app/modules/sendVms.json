@@ -1,0 +1,109 @@
+{
+  "label": "Send VMS",
+  "description": "Send a voice message (VMS) using text-to-speech.",
+  "actionType": "action",
+  "url": "/v1/vms",
+  "method": "POST",
+  "headers": {
+    "Authorization": "Bearer {{connection.apiKey}}",
+    "Content-Type": "application/json"
+  },
+  "parameters": [
+    {
+      "name": "to",
+      "type": "text",
+      "label": "Recipient Phone Number",
+      "help": "Phone number in international format, e.g. 48500600700",
+      "required": true
+    },
+    {
+      "name": "tts",
+      "type": "text",
+      "label": "Text to Speech",
+      "help": "Text that will be read aloud to the recipient.",
+      "required": true,
+      "multiline": true
+    },
+    {
+      "name": "tts_lector",
+      "type": "select",
+      "label": "Voice",
+      "help": "Select the text-to-speech voice.",
+      "required": false,
+      "default": "ewa",
+      "options": [
+        { "label": "Ewa (female)", "value": "ewa" },
+        { "label": "Maja (female)", "value": "maja" },
+        { "label": "Jacek (male)", "value": "jacek" },
+        { "label": "Jan (male)", "value": "jan" }
+      ]
+    },
+    {
+      "name": "tries",
+      "type": "integer",
+      "label": "Retry Attempts",
+      "help": "Number of call attempts if the recipient doesn't answer (1-6).",
+      "required": false,
+      "default": 1,
+      "validate": {
+        "min": 1,
+        "max": 6
+      }
+    },
+    {
+      "name": "from",
+      "type": "text",
+      "label": "Sender Name",
+      "help": "Registered sender name. Leave empty to use account default.",
+      "required": false
+    },
+    {
+      "name": "date",
+      "type": "date",
+      "label": "Schedule Date",
+      "help": "Schedule sending for a future date/time (ISO 8601).",
+      "required": false
+    }
+  ],
+  "body": {
+    "to": "{{parameters.to}}",
+    "tts": "{{parameters.tts}}",
+    "tts_lector": "{{parameters.tts_lector}}",
+    "tries": "{{parameters.tries}}",
+    "from": "{{parameters.from}}",
+    "date": "{{parameters.date}}"
+  },
+  "response": {
+    "output": {
+      "success": "{{body.success}}",
+      "count": "{{body.data.count}}",
+      "messages": "{{body.data.messages}}"
+    },
+    "error": {
+      "message": "{{body.error.message}}"
+    }
+  },
+  "samples": {
+    "parameters": {
+      "to": "48500600700",
+      "tts": "Dzien dobry. Przypominamy o wizycie jutro o godzinie dziesiątej.",
+      "tts_lector": "ewa",
+      "tries": 2
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "count": 1,
+        "messages": [
+          {
+            "id": "vms123",
+            "to": "48500600700",
+            "status": "queued",
+            "cost": 0.30,
+            "sent_at": "2026-03-22T10:00:00.000Z"
+          }
+        ]
+      }
+    }
+  }
+}

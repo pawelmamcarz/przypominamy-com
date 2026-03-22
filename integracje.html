@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Integracje Przypominamy.com — Zapier, Make (Integromat), n8n, WooCommerce. Podłącz SMS do swoich narzędzi w minuty." />
+  <meta name="keywords" content="integracja SMS Zapier, Make SMS, n8n SMS, WooCommerce SMS, API SMS integracje" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://przypominamy.com/integracje" />
+  <meta property="og:title" content="Integracje — Przypominamy.com" />
+  <meta property="og:description" content="Zapier, Make, n8n, WooCommerce — podłącz masową wysyłkę SMS do swoich narzędzi." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://przypominamy.com/integracje" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <title>Integracje — Przypominamy.com</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --white:#fff; --gray:#888; --light:#ccc; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .container { max-width:900px; margin:0 auto; padding:0 24px; }
+    .content { padding:64px 0 96px; }
+    h1 { font-size:2rem; font-weight:800; margin-bottom:8px; }
+    .subtitle { color:var(--gray); font-size:1rem; margin-bottom:48px; }
+    h2 { font-size:1.4rem; font-weight:700; margin:48px 0 16px; color:var(--yellow); }
+    h3 { font-size:1.1rem; font-weight:600; margin:24px 0 8px; }
+    p, li { color:var(--light); font-size:.95rem; margin-bottom:12px; }
+    ul { padding-left:24px; }
+    li { margin-bottom:8px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:24px; margin:32px 0; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; transition:border-color .2s; }
+    .card:hover { border-color:var(--yellow); }
+    .card-icon { font-size:2rem; margin-bottom:16px; }
+    .card h3 { margin:0 0 8px; color:var(--white); }
+    .card p { font-size:.9rem; color:var(--gray); margin-bottom:16px; }
+    .card-actions { display:flex; gap:12px; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:8px; font-weight:600; font-size:.88rem; border:none; cursor:pointer; transition:all .2s; }
+    .btn-primary { background:linear-gradient(135deg, var(--yellow), #FFBE44); color:#000; }
+    .btn-primary:hover { transform:translateY(-2px); text-decoration:none; }
+    .btn-outline { background:transparent; color:var(--white); border:1.5px solid var(--border); }
+    .btn-outline:hover { border-color:var(--yellow); color:var(--yellow); text-decoration:none; }
+    .api-section { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:32px; margin:32px 0; }
+    .api-section h3 { margin-top:0; color:var(--white); }
+    .endpoint { display:flex; gap:12px; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); font-size:.9rem; }
+    .endpoint:last-child { border-bottom:none; }
+    .method { background:var(--yellow); color:#000; padding:2px 10px; border-radius:4px; font-weight:700; font-size:.78rem; min-width:50px; text-align:center; }
+    .method.get { background:rgba(75,200,122,.2); color:#4bc87a; }
+    .path { color:var(--light); font-family:'Courier New',monospace; }
+    .desc { color:var(--gray); margin-left:auto; }
+    .footer-mini { border-top:1px solid var(--border); padding:28px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    @media(max-width:600px) { h1 { font-size:1.5rem; } .grid { grid-template-columns:1fr; } .endpoint { flex-wrap:wrap; } .desc { margin-left:0; } }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/">← Wróć na stronę główną</a>
+  </div>
+</div>
+
+<div class="container content">
+  <h1>Integracje</h1>
+  <p class="subtitle">Podłącz masową wysyłkę SMS do narzędzi, z których już korzystasz — bez pisania kodu.</p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <h3>Zapier</h3>
+      <p>Połącz Przypominamy.com z 7000+ aplikacji. Automatycznie wysyłaj SMS po wydarzeniach w CRM, sklepie, kalendarzu czy helpdesku.</p>
+      <div class="card-actions">
+        <a href="https://zapier.com/apps/przypominamy" class="btn btn-primary">Zainstaluj na Zapier</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🔄</div>
+      <h3>Make (Integromat)</h3>
+      <p>Twórz zaawansowane scenariusze automatyzacji z wieloma krokami. Wysyłaj SMS, MMS i IVR jako część większego workflow.</p>
+      <div class="card-actions">
+        <a href="https://www.make.com/en/integrations/przypominamy" class="btn btn-primary">Zainstaluj na Make</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🔧</div>
+      <h3>n8n</h3>
+      <p>Self-hosted automatyzacja z pełną kontrolą nad danymi. Community node do wysyłki SMS z dowolnego workflow n8n.</p>
+      <div class="card-actions">
+        <a href="https://www.npmjs.com/package/n8n-nodes-przypominamy" class="btn btn-outline">npm install</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🛒</div>
+      <h3>WooCommerce</h3>
+      <p>Automatyczne potwierdzenia zamówień, statusy dostawy i powiadomienia zwrotów — bezpośrednio z Twojego sklepu WordPress.</p>
+      <div class="card-actions">
+        <a href="/blog/sms-potwierdzenia-zamowien-woocommerce" class="btn btn-outline">Poradnik integracji</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>CRM / ERP</h3>
+      <p>Integruj z Pipedrive, HubSpot, Salesforce, Bitrix24 i innymi przez Zapier, Make lub bezpośrednio przez REST API.</p>
+      <div class="card-actions">
+        <a href="/blog/api-sms-integracja-crm" class="btn btn-outline">Poradnik API</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📅</div>
+      <h3>Kalendarze</h3>
+      <p>Google Calendar, Calendly, Booksy — automatyczne przypomnienia SMS o wizytach i spotkaniach.</p>
+      <div class="card-actions">
+        <a href="/blog/sms-przypomnienia-wizyty-lekarz" class="btn btn-outline">Poradnik kliniki</a>
+      </div>
+    </div>
+  </div>
+
+  <h2>Możliwości integracji</h2>
+
+  <h3>Akcje (wysyłaj wiadomości)</h3>
+  <ul>
+    <li><strong>Wyślij SMS</strong> — pojedynczy SMS z personalizacją, planowaniem i własnym nadpisem</li>
+    <li><strong>Wyślij SMS masowy</strong> — ta sama treść do wielu odbiorców (do 10 000) lub indywidualne wiadomości (do 100)</li>
+    <li><strong>Wyślij MMS</strong> — wiadomość multimedialna z grafiką (SMIL)</li>
+    <li><strong>Wyślij wiadomość głosową</strong> — TTS z wyborem lektora (ewa, jacek, jan, maja)</li>
+  </ul>
+
+  <h3>Triggery (reaguj na zdarzenia)</h3>
+  <ul>
+    <li><strong>Nowy SMS przychodzący</strong> — webhook aktywowany gdy odbiorca odpowie na Twoją wiadomość</li>
+    <li><strong>Raport dostarczenia (DLR)</strong> — webhook ze statusem: dostarczony, niedostarczony, wygasły</li>
+  </ul>
+
+  <h3>Wyszukiwania</h3>
+  <ul>
+    <li><strong>Sprawdź saldo</strong> — aktualny stan konta i waluta</li>
+    <li><strong>Weryfikuj numer (HLR)</strong> — sprawdź czy numer jest aktywny, operator, portowanie</li>
+  </ul>
+
+  <div class="api-section">
+    <h3>REST API — endpointy</h3>
+    <p style="color:var(--gray);margin-bottom:16px">Dla deweloperów: bezpośrednia integracja przez REST API z tokenem Bearer.</p>
+    <div class="endpoint">
+      <span class="method">POST</span>
+      <span class="path">/v1/sms</span>
+      <span class="desc">Wyślij SMS</span>
+    </div>
+    <div class="endpoint">
+      <span class="method">POST</span>
+      <span class="path">/v1/sms/bulk</span>
+      <span class="desc">Masowa wysyłka SMS</span>
+    </div>
+    <div class="endpoint">
+      <span class="method">POST</span>
+      <span class="path">/v1/mms</span>
+      <span class="desc">Wyślij MMS</span>
+    </div>
+    <div class="endpoint">
+      <span class="method">POST</span>
+      <span class="path">/v1/vms</span>
+      <span class="desc">Wiadomość głosowa TTS</span>
+    </div>
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="path">/v1/hlr?number=...</span>
+      <span class="desc">Weryfikacja numeru</span>
+    </div>
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="path">/v1/balance</span>
+      <span class="desc">Saldo konta</span>
+    </div>
+    <div class="endpoint">
+      <span class="method get">GET</span>
+      <span class="path">/v1/health</span>
+      <span class="desc">Status API</span>
+    </div>
+    <div style="margin-top:20px">
+      <a href="/xmlapi_en_przypominamy2020v17.pdf" target="_blank" class="btn btn-outline">Pobierz dokumentację API (PDF) →</a>
+    </div>
+  </div>
+
+  <h2>Jak zacząć?</h2>
+  <ol>
+    <li><strong>Załóż konto</strong> na <a href="https://panel.przypominamy.com/register">panel.przypominamy.com</a></li>
+    <li><strong>Wygeneruj token API</strong> w ustawieniach konta</li>
+    <li><strong>Podłącz integrację</strong> — wklej token w Zapier, Make lub n8n</li>
+    <li><strong>Skonfiguruj workflow</strong> — wybierz trigger i akcję</li>
+  </ol>
+  <p>Potrzebujesz pomocy? Napisz na <a href="mailto:support@przypominamy.com">support@przypominamy.com</a> lub <a href="/#kontakt">wypełnij formularz</a>.</p>
+</div>
+
+<div class="footer-mini">
+  <div class="container">
+    © 2010–2026 Doradztwo Paweł Mamcarz. Wszelkie prawa zastrzeżone. · <a href="/">Strona główna</a> · <a href="/blog">Blog</a> · <a href="/regulamin">Regulamin</a>
+  </div>
+</div>
+
+</body>
+</html>

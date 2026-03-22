@@ -1,0 +1,27 @@
+{
+  "label": "Przypominamy.com API",
+  "type": "apikey",
+  "parameters": [
+    {
+      "name": "apiKey",
+      "type": "text",
+      "label": "API Key",
+      "help": "Klucz API z panelu Przypominamy.com. Znajdziesz go w Ustawienia > API.",
+      "required": true
+    }
+  ],
+  "test": {
+    "url": "/v1/balance",
+    "method": "GET",
+    "headers": {
+      "Authorization": "Bearer {{parameters.apiKey}}",
+      "Content-Type": "application/json"
+    },
+    "response": {
+      "valid": "{{ifempty(body.success, false)}}",
+      "error": {
+        "message": "{{body.error.message}}"
+      }
+    }
+  }
+}

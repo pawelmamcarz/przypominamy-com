@@ -1,0 +1,119 @@
+{
+  "label": "Send SMS",
+  "description": "Send a single SMS message to a phone number.",
+  "actionType": "action",
+  "url": "/v1/sms",
+  "method": "POST",
+  "headers": {
+    "Authorization": "Bearer {{connection.apiKey}}",
+    "Content-Type": "application/json"
+  },
+  "parameters": [
+    {
+      "name": "to",
+      "type": "text",
+      "label": "Recipient Phone Number",
+      "help": "Phone number in international format, e.g. 48500600700",
+      "required": true
+    },
+    {
+      "name": "message",
+      "type": "text",
+      "label": "Message",
+      "help": "SMS message content. Standard SMS is 160 characters (70 for Unicode).",
+      "required": true,
+      "multiline": true
+    },
+    {
+      "name": "from",
+      "type": "text",
+      "label": "Sender Name",
+      "help": "Registered sender name (max 11 characters). Leave empty to use account default.",
+      "required": false
+    },
+    {
+      "name": "date",
+      "type": "date",
+      "label": "Schedule Date",
+      "help": "Schedule sending for a future date/time (ISO 8601 format). Leave empty for immediate sending.",
+      "required": false
+    },
+    {
+      "name": "encoding",
+      "type": "select",
+      "label": "Encoding",
+      "help": "Character encoding for the message.",
+      "required": false,
+      "default": "utf-8",
+      "options": [
+        { "label": "UTF-8 (supports Polish characters)", "value": "utf-8" },
+        { "label": "ISO-8859-1", "value": "iso-8859-1" }
+      ]
+    },
+    {
+      "name": "flash",
+      "type": "boolean",
+      "label": "Flash SMS",
+      "help": "Send as a flash SMS (displayed immediately on screen without being saved).",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "normalize",
+      "type": "boolean",
+      "label": "Normalize Number",
+      "help": "Automatically normalize the phone number format.",
+      "required": false,
+      "default": false
+    },
+    {
+      "name": "idx",
+      "type": "text",
+      "label": "External ID",
+      "help": "Your custom external identifier for this message.",
+      "required": false
+    }
+  ],
+  "body": {
+    "to": "{{parameters.to}}",
+    "message": "{{parameters.message}}",
+    "from": "{{parameters.from}}",
+    "date": "{{parameters.date}}",
+    "encoding": "{{parameters.encoding}}",
+    "flash": "{{parameters.flash}}",
+    "normalize": "{{parameters.normalize}}",
+    "idx": "{{parameters.idx}}"
+  },
+  "response": {
+    "output": {
+      "success": "{{body.success}}",
+      "count": "{{body.data.count}}",
+      "messages": "{{body.data.messages}}"
+    },
+    "error": {
+      "message": "{{body.error.message}}"
+    }
+  },
+  "samples": {
+    "parameters": {
+      "to": "48500600700",
+      "message": "Przypominamy o wizycie jutro o godz. 10:00."
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "count": 1,
+        "messages": [
+          {
+            "id": "abc123",
+            "to": "48500600700",
+            "status": "queued",
+            "cost": 0.15,
+            "parts": 1,
+            "sent_at": "2026-03-22T10:00:00.000Z"
+          }
+        ]
+      }
+    }
+  }
+}

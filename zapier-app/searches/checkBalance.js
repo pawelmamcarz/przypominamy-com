@@ -1,0 +1,41 @@
+'use strict';
+
+const API_BASE = 'https://api.przypominamy.com';
+
+const perform = async (z, bundle) => {
+  const response = await z.request({
+    url: `${API_BASE}/v1/balance`,
+    method: 'GET',
+  });
+
+  const result = response.data;
+  if (result.success && result.data) {
+    return [result.data];
+  }
+
+  return [result.data || result];
+};
+
+module.exports = {
+  key: 'checkBalance',
+  noun: 'Balance',
+  display: {
+    label: 'Check Account Balance',
+    description: 'Get the current account balance from Przypominamy.com.',
+    important: true,
+  },
+  operation: {
+    perform,
+    inputFields: [],
+    sample: {
+      balance: 125.50,
+      currency: 'PLN',
+      username: 'moja_firma',
+    },
+    outputFields: [
+      { key: 'balance', label: 'Balance', type: 'number' },
+      { key: 'currency', label: 'Currency', type: 'string' },
+      { key: 'username', label: 'Username', type: 'string' },
+    ],
+  },
+};

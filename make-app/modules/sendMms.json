@@ -1,0 +1,88 @@
+{
+  "label": "Send MMS",
+  "description": "Send an MMS message with multimedia content using SMIL markup.",
+  "actionType": "action",
+  "url": "/v1/mms",
+  "method": "POST",
+  "headers": {
+    "Authorization": "Bearer {{connection.apiKey}}",
+    "Content-Type": "application/json"
+  },
+  "parameters": [
+    {
+      "name": "to",
+      "type": "text",
+      "label": "Recipient Phone Number",
+      "help": "Phone number in international format, e.g. 48500600700",
+      "required": true
+    },
+    {
+      "name": "subject",
+      "type": "text",
+      "label": "Subject",
+      "help": "MMS message subject.",
+      "required": true
+    },
+    {
+      "name": "smil",
+      "type": "text",
+      "label": "SMIL Content",
+      "help": "SMIL markup defining the multimedia message layout and content.",
+      "required": true,
+      "multiline": true
+    },
+    {
+      "name": "from",
+      "type": "text",
+      "label": "Sender Name",
+      "help": "Registered sender name. Leave empty to use account default.",
+      "required": false
+    },
+    {
+      "name": "date",
+      "type": "date",
+      "label": "Schedule Date",
+      "help": "Schedule sending for a future date/time (ISO 8601).",
+      "required": false
+    }
+  ],
+  "body": {
+    "to": "{{parameters.to}}",
+    "subject": "{{parameters.subject}}",
+    "smil": "{{parameters.smil}}",
+    "from": "{{parameters.from}}",
+    "date": "{{parameters.date}}"
+  },
+  "response": {
+    "output": {
+      "success": "{{body.success}}",
+      "count": "{{body.data.count}}",
+      "messages": "{{body.data.messages}}"
+    },
+    "error": {
+      "message": "{{body.error.message}}"
+    }
+  },
+  "samples": {
+    "parameters": {
+      "to": "48500600700",
+      "subject": "Promocja",
+      "smil": "<smil><body><par><text src=\"message.txt\"/></par></body></smil>"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "count": 1,
+        "messages": [
+          {
+            "id": "mms123",
+            "to": "48500600700",
+            "status": "queued",
+            "cost": 0.50,
+            "sent_at": "2026-03-22T10:00:00.000Z"
+          }
+        ]
+      }
+    }
+  }
+}

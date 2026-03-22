@@ -24,6 +24,9 @@ https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
 /polityka-prywatnosci   /polityka-prywatnosci.html   200
 /rodo                   /rodo.html                   200
 
+# Integrations page
+/integracje             /integracje.html             200
+
 # English version
 /en                     /en.html                     200
 

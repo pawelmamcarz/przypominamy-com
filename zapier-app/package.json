@@ -1,0 +1,29 @@
+{
+  "name": "przypominamy-zapier",
+  "version": "1.0.0",
+  "description": "Przypominamy.com SMS API integration for Zapier",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --testTimeout 10000",
+    "validate": "zapier validate",
+    "build": "zapier build",
+    "push": "zapier push",
+    "promote": "zapier promote"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=6.14.0"
+  },
+  "dependencies": {
+    "zapier-platform-core": "15.*"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "zapier": {
+    "id": 0,
+    "key": "przypominamy-zapier"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}

@@ -36,6 +36,13 @@ Właściciel: Doradztwo Paweł Mamcarz, ul. Jesionowa 18, 05-825 Grodzisk Mazowi
 - [Polityka prywatności](https://przypominamy.com/polityka-prywatnosci): Informacje o przetwarzaniu danych osobowych
 - [RODO](https://przypominamy.com/rodo): Klauzula informacyjna RODO
 
+## Integracje
+
+- [Zapier](https://przypominamy.com/integracje): Integracja z 7000+ aplikacji — automatyczne SMS po wydarzeniach w CRM, e-commerce, kalendarzu
+- [Make (Integromat)](https://przypominamy.com/integracje): Zaawansowane scenariusze automatyzacji z SMS/MMS/IVR
+- [n8n](https://przypominamy.com/integracje): Self-hosted automatyzacja, community node do wysyłki SMS
+- [WooCommerce](https://przypominamy.com/blog/sms-potwierdzenia-zamowien-woocommerce): Automatyczne potwierdzenia zamówień przez SMS z WordPress
+
 ## Blog
 
 - [Przypomnienia SMS w klinikach](https://przypominamy.com/blog/sms-przypomnienia-wizyty-lekarz): Jak zmniejszyć liczbę nieodwołanych wizyt o 40% dzięki automatycznym SMS — przewodnik dla klinik i gabinetów lekarskich

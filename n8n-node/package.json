@@ -1,0 +1,54 @@
+{
+  "name": "n8n-nodes-przypominamy",
+  "version": "1.0.0",
+  "description": "n8n community node for Przypominamy.com SMS/MMS/VMS API",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "sms",
+    "mms",
+    "vms",
+    "przypominamy",
+    "poland",
+    "messaging"
+  ],
+  "license": "MIT",
+  "homepage": "https://przypominamy.com",
+  "author": {
+    "name": "Przypominamy.com",
+    "email": "kontakt@przypominamy.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/przypominamy/n8n-nodes-przypominamy.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && gulp build:icons",
+    "dev": "tsc --watch",
+    "lint": "eslint nodes credentials --ext .ts",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/PrzypominanyApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Przypominamy/Przypominamy.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^8.56.0",
+    "gulp": "^4.0.2",
+    "n8n-workflow": "^1.0.0",
+    "typescript": "^5.3.0"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "label": "Delivery Report",
+  "description": "Triggers when a delivery status report is received for a sent message.",
+  "actionType": "instant_trigger",
+  "type": "webhook",
+  "webhook": {
+    "type": "web",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "condition": "{{body.event == 'delivery_report'}}",
+    "response": {
+      "status": 200,
+      "body": "{\"status\": \"ok\"}"
+    }
+  },
+  "parameters": [],
+  "response": {
+    "output": [
+      {
+        "name": "event",
+        "type": "text",
+        "label": "Event Type"
+      },
+      {
+        "name": "message_id",
+        "type": "text",
+        "label": "Message ID"
+      },
+      {
+        "name": "to",
+        "type": "text",
+        "label": "Recipient Number"
+      },
+      {
+        "name": "status",
+        "type": "text",
+        "label": "Delivery Status",
+        "help": "One of: queued, sent, delivered, not_found, expired, failed, accepted, unknown, rejected, undelivered"
+      },
+      {
+        "name": "sent_at",
+        "type": "date",
+        "label": "Sent At"
+      },
+      {
+        "name": "done_at",
+        "type": "date",
+        "label": "Delivered/Failed At"
+      },
+      {
+        "name": "idx",
+        "type": "text",
+        "label": "External ID"
+      }
+    ]
+  },
+  "samples": {
+    "response": {
+      "event": "delivery_report",
+      "message_id": "abc123",
+      "to": "48500600700",
+      "status": "delivered",
+      "sent_at": "2026-03-22T10:00:00.000Z",
+      "done_at": "2026-03-22T10:00:05.000Z",
+      "idx": null
+    }
+  }
+}

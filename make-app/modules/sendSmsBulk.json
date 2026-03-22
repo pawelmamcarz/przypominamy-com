@@ -1,0 +1,142 @@
+{
+  "label": "Send Bulk SMS",
+  "description": "Send SMS messages to multiple recipients. Supports same message to many recipients or individual messages.",
+  "actionType": "action",
+  "url": "/v1/sms/bulk",
+  "method": "POST",
+  "headers": {
+    "Authorization": "Bearer {{connection.apiKey}}",
+    "Content-Type": "application/json"
+  },
+  "parameters": [
+    {
+      "name": "mode",
+      "type": "select",
+      "label": "Sending Mode",
+      "help": "Choose between sending the same message to multiple recipients or individual messages per recipient.",
+      "required": true,
+      "default": "same_message",
+      "options": [
+        { "label": "Same message to multiple recipients", "value": "same_message" },
+        { "label": "Individual messages per recipient", "value": "individual" }
+      ]
+    },
+    {
+      "name": "recipients",
+      "type": "array",
+      "label": "Recipients",
+      "help": "List of phone numbers (for 'Same message' mode). Max 10,000 recipients.",
+      "required": false,
+      "spec": {
+        "type": "text",
+        "label": "Phone Number"
+      }
+    },
+    {
+      "name": "message",
+      "type": "text",
+      "label": "Message",
+      "help": "Message content (for 'Same message' mode).",
+      "required": false,
+      "multiline": true
+    },
+    {
+      "name": "messages",
+      "type": "array",
+      "label": "Messages",
+      "help": "Array of individual messages (for 'Individual messages' mode). Max 100 messages.",
+      "required": false,
+      "spec": {
+        "type": "collection",
+        "spec": [
+          {
+            "name": "to",
+            "type": "text",
+            "label": "Recipient Phone Number",
+            "required": true
+          },
+          {
+            "name": "message",
+            "type": "text",
+            "label": "Message",
+            "required": true,
+            "multiline": true
+          },
+          {
+            "name": "from",
+            "type": "text",
+            "label": "Sender Name",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "from",
+      "type": "text",
+      "label": "Sender Name",
+      "help": "Registered sender name (for 'Same message' mode). Leave empty for account default.",
+      "required": false
+    },
+    {
+      "name": "date",
+      "type": "date",
+      "label": "Schedule Date",
+      "help": "Schedule sending for a future date/time (ISO 8601). Leave empty for immediate sending.",
+      "required": false
+    },
+    {
+      "name": "encoding",
+      "type": "select",
+      "label": "Encoding",
+      "required": false,
+      "default": "utf-8",
+      "options": [
+        { "label": "UTF-8", "value": "utf-8" },
+        { "label": "ISO-8859-1", "value": "iso-8859-1" }
+      ]
+    }
+  ],
+  "body": "{{if(parameters.mode == 'same_message', toJSON(set(emptyObject, 'recipients', parameters.recipients, 'message', parameters.message, 'from', parameters.from, 'date', parameters.date, 'encoding', parameters.encoding)), toJSON(set(emptyObject, 'messages', parameters.messages)))}}",
+  "response": {
+    "output": {
+      "success": "{{body.success}}",
+      "count": "{{body.data.count}}",
+      "messages": "{{body.data.messages}}"
+    },
+    "error": {
+      "message": "{{body.error.message}}"
+    }
+  },
+  "samples": {
+    "parameters": {
+      "mode": "same_message",
+      "recipients": ["48500600700", "48500600701"],
+      "message": "Przypominamy o spotkaniu."
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "count": 2,
+        "messages": [
+          {
+            "id": "abc123",
+            "to": "48500600700",
+            "status": "queued",
+            "cost": 0.15,
+            "parts": 1,
+            "sent_at": "2026-03-22T10:00:00.000Z"
+          },
+          {
+            "id": "abc124",
+            "to": "48500600701",
+            "status": "queued",
+            "cost": 0.15,
+            "parts": 1,
+            "sent_at": "2026-03-22T10:00:00.000Z"
+          }
+        ]
+      }
+    }
+  }
+}

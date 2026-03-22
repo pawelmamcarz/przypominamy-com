@@ -1,0 +1,53 @@
+{
+  "label": "Verify Number (HLR)",
+  "description": "Verify a phone number using HLR (Home Location Register) lookup. Returns number validity, porting status, and network info.",
+  "actionType": "search",
+  "url": "/v1/hlr",
+  "method": "GET",
+  "headers": {
+    "Authorization": "Bearer {{connection.apiKey}}",
+    "Content-Type": "application/json"
+  },
+  "parameters": [
+    {
+      "name": "number",
+      "type": "text",
+      "label": "Phone Number",
+      "help": "Phone number to verify in international format, e.g. 48500600700",
+      "required": true
+    }
+  ],
+  "qs": {
+    "number": "{{parameters.number}}"
+  },
+  "response": {
+    "output": {
+      "success": "{{body.success}}",
+      "number": "{{body.data.number}}",
+      "status": "{{body.data.status}}",
+      "ported": "{{body.data.ported}}",
+      "network": "{{body.data.network}}",
+      "country": "{{body.data.country}}",
+      "cost": "{{body.data.cost}}"
+    },
+    "error": {
+      "message": "{{body.error.message}}"
+    }
+  },
+  "samples": {
+    "parameters": {
+      "number": "48500600700"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "number": "48500600700",
+        "status": "active",
+        "ported": false,
+        "network": "Orange",
+        "country": "PL",
+        "cost": 0.05
+      }
+    }
+  }
+}

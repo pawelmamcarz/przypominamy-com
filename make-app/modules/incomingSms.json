@@ -1,0 +1,63 @@
+{
+  "label": "Incoming SMS",
+  "description": "Triggers when a new incoming SMS message is received.",
+  "actionType": "instant_trigger",
+  "type": "webhook",
+  "webhook": {
+    "type": "web",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "condition": "{{body.event == 'incoming_sms'}}",
+    "response": {
+      "status": 200,
+      "body": "{\"status\": \"ok\"}"
+    }
+  },
+  "parameters": [],
+  "response": {
+    "output": [
+      {
+        "name": "event",
+        "type": "text",
+        "label": "Event Type"
+      },
+      {
+        "name": "message_id",
+        "type": "text",
+        "label": "Message ID"
+      },
+      {
+        "name": "from",
+        "type": "text",
+        "label": "Sender Number"
+      },
+      {
+        "name": "to",
+        "type": "text",
+        "label": "Recipient Number"
+      },
+      {
+        "name": "message",
+        "type": "text",
+        "label": "Message Content"
+      },
+      {
+        "name": "received_at",
+        "type": "date",
+        "label": "Received At"
+      }
+    ]
+  },
+  "samples": {
+    "response": {
+      "event": "incoming_sms",
+      "message_id": "inc123",
+      "from": "48500600700",
+      "to": "48500600800",
+      "message": "TAK",
+      "received_at": "2026-03-22T10:00:00.000Z"
+    }
+  }
+}
