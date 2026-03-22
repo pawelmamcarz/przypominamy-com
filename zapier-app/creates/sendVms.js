@@ -48,7 +48,7 @@ module.exports = {
       {
         key: 'tts',
         label: 'Text to Speak',
-        type: 'text',
+        type: 'string',
         required: true,
         helpText:
           'The text that will be read aloud to the recipient using text-to-speech.',

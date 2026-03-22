@@ -60,7 +60,6 @@ module.exports = {
     label: 'Delivery Report (DLR)',
     description:
       'Triggers when a delivery report is received for a sent message.',
-    important: true,
   },
   operation: {
     type: 'hook',
@@ -80,13 +79,7 @@ module.exports = {
       { key: 'id', label: 'ID', type: 'string' },
       { key: 'message_id', label: 'Message ID', type: 'string' },
       { key: 'to', label: 'Recipient Number', type: 'string' },
-      {
-        key: 'status',
-        label: 'Delivery Status',
-        type: 'string',
-        helpText:
-          'Possible values: queued, sent, delivered, expired, failed, accepted, rejected, undelivered, unknown.',
-      },
+      { key: 'status', label: 'Delivery Status', type: 'string' },
       { key: 'sent_at', label: 'Sent At', type: 'datetime' },
       { key: 'done_at', label: 'Delivered At', type: 'datetime' },
     ],

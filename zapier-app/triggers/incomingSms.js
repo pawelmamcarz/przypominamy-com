@@ -62,7 +62,6 @@ module.exports = {
     label: 'New Incoming SMS',
     description:
       'Triggers when a new incoming SMS message is received on your Przypominamy.com number.',
-    important: true,
   },
   operation: {
     type: 'hook',
@@ -82,7 +81,7 @@ module.exports = {
       { key: 'id', label: 'ID', type: 'string' },
       { key: 'from', label: 'From Number', type: 'string' },
       { key: 'to', label: 'To Number', type: 'string' },
-      { key: 'message', label: 'Message Text', type: 'text' },
+      { key: 'message', label: 'Message Text', type: 'string' },
       { key: 'message_id', label: 'Message ID', type: 'string' },
       { key: 'received_at', label: 'Received At', type: 'datetime' },
     ],

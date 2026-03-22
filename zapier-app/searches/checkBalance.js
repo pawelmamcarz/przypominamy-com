@@ -22,11 +22,19 @@ module.exports = {
   display: {
     label: 'Check Account Balance',
     description: 'Get the current account balance from Przypominamy.com.',
-    important: true,
   },
   operation: {
     perform,
-    inputFields: [],
+    inputFields: [
+      {
+        key: 'currency',
+        label: 'Currency',
+        type: 'string',
+        default: 'PLN',
+        required: false,
+        helpText: 'Currency for the balance (default: PLN).',
+      },
+    ],
     sample: {
       balance: 125.50,
       currency: 'PLN',

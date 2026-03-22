@@ -54,7 +54,7 @@ module.exports = {
       {
         key: 'smil',
         label: 'SMIL Content',
-        type: 'text',
+        type: 'string',
         required: true,
         helpText:
           'SMIL markup defining the MMS content (images, text, audio layout).',

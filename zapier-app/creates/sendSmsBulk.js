@@ -52,7 +52,7 @@ module.exports = {
       {
         key: 'message',
         label: 'Message',
-        type: 'text',
+        type: 'string',
         required: true,
         helpText: 'The text content of the SMS message sent to all recipients.',
       },

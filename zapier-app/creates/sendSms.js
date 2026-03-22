@@ -32,7 +32,6 @@ module.exports = {
   display: {
     label: 'Send SMS',
     description: 'Send an SMS message to a phone number via Przypominamy.com.',
-    important: true,
   },
   operation: {
     perform,
@@ -48,7 +47,7 @@ module.exports = {
       {
         key: 'message',
         label: 'Message',
-        type: 'text',
+        type: 'string',
         required: true,
         helpText:
           'The text content of the SMS message. Standard SMS is 160 characters (70 for Unicode).',
