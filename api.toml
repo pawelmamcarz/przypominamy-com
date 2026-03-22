@@ -14,4 +14,4 @@ ENVIRONMENT = "production"
 # Then paste the ID below
 [[kv_namespaces]]
 binding = "CLIENTS_KV"
-id = "INSERT_KV_NAMESPACE_ID"
+id = "7a30a1292a914a9fbc6b83dabe57ef5a"
