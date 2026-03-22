@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Automatyczne potwierdzenia zamówień SMS w WooCommerce — integracja krok po kroku z API Przypominamy.com, webhook, kod PHP i szablony wiadomości per status zamówienia." />
+  <meta name="keywords" content="SMS WooCommerce, potwierdzenie zamówienia SMS, WooCommerce SMS plugin, automatyczny SMS sklep" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Zespół Przypominamy.com" />
+  <link rel="canonical" href="https://przypominamy.com/blog/sms-potwierdzenia-zamowien-woocommerce" />
+
+  <meta property="og:title" content="Automatyczne potwierdzenia zamówień przez SMS — integracja z WooCommerce" />
+  <meta property="og:description" content="Jak zintegrować WooCommerce z API Przypominamy.com i wysyłać automatyczne SMS-y o statusie zamówienia. Kod PHP, szablony i ROI." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://przypominamy.com/blog/sms-potwierdzenia-zamowien-woocommerce" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <meta property="og:locale" content="pl_PL" />
+  <meta property="og:site_name" content="Przypominamy.com" />
+
+  <title>Automatyczne potwierdzenia zamówień przez SMS — integracja z WooCommerce — Przypominamy.com</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Automatyczne potwierdzenia zamówień przez SMS — integracja z WooCommerce",
+    "description": "Jak zintegrować WooCommerce z API Przypominamy.com i wysyłać automatyczne SMS-y o statusie zamówienia. Kod PHP, szablony i ROI.",
+    "author": {
+      "@type": "Organization",
+      "name": "Zespół Przypominamy.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Doradztwo Paweł Mamcarz",
+      "url": "https://przypominamy.com"
+    },
+    "datePublished": "2026-05-11",
+    "dateModified": "2026-05-11",
+    "mainEntityOfPage": "https://przypominamy.com/blog/sms-potwierdzenia-zamowien-woocommerce",
+    "keywords": ["SMS WooCommerce", "potwierdzenie zamówienia SMS", "WooCommerce SMS plugin", "automatyczny SMS sklep"]
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --white:#fff; --gray:#888; --light:#ccc; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .container { max-width:800px; margin:0 auto; padding:0 24px; }
+    .content { padding:64px 0 96px; }
+    .breadcrumbs { font-size:.85rem; color:var(--gray); margin-bottom:24px; }
+    .breadcrumbs a { color:var(--gray); }
+    .breadcrumbs a:hover { color:var(--yellow); }
+    h1 { font-size:2rem; font-weight:800; margin-bottom:8px; line-height:1.3; }
+    .meta { color:var(--gray); font-size:.88rem; margin-bottom:40px; }
+    h2 { font-size:1.2rem; font-weight:700; margin:36px 0 12px; color:var(--yellow); }
+    h3 { font-size:1.05rem; font-weight:600; margin:24px 0 8px; }
+    p, li { color:var(--light); font-size:.95rem; margin-bottom:12px; }
+    ul, ol { padding-left:24px; }
+    li { margin-bottom:8px; }
+    strong { color:var(--white); }
+    .highlight-box { background:var(--surface); border-left:3px solid var(--yellow); padding:20px 24px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .highlight-box p { margin-bottom:4px; }
+    pre { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px 20px; overflow-x:auto; margin:16px 0; font-size:.88rem; line-height:1.5; color:var(--light); }
+    code { font-family:'Courier New',monospace; }
+    .cta-box { background:var(--surface); border:1px solid var(--yellow); border-radius:12px; padding:32px; text-align:center; margin:48px 0 24px; }
+    .cta-box h3 { color:var(--white); margin-top:0; }
+    .cta-box p { color:var(--light); }
+    .cta-btn { display:inline-block; background:var(--yellow); color:#000; font-weight:700; padding:12px 32px; border-radius:8px; margin-top:12px; font-size:.95rem; }
+    .cta-btn:hover { text-decoration:none; opacity:.9; }
+    .related { margin-top:48px; padding-top:32px; border-top:1px solid var(--border); }
+    .related h3 { color:var(--white); margin-bottom:16px; }
+    .related ul { list-style:none; padding:0; }
+    .related li { margin-bottom:10px; }
+    .footer-mini { border-top:1px solid var(--border); padding:28px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    @media(max-width:600px){
+      h1 { font-size:1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/blog">&larr; Blog</a>
+  </div>
+</div>
+
+<div class="container content">
+  <nav class="breadcrumbs">
+    <a href="/">Strona główna</a> &rsaquo; <a href="/blog">Blog</a> &rsaquo; SMS potwierdzenia zamówień WooCommerce
+  </nav>
+
+  <h1>Automatyczne potwierdzenia zamówień przez SMS — integracja z WooCommerce</h1>
+  <p class="meta">Zespół Przypominamy.com &middot; 11 maja 2026 &middot; 7 min czytania</p>
+
+  <p>Klient złożył zamówienie w Twoim sklepie internetowym. E-mail z potwierdzeniem trafił do folderu Spam albo został przeoczony wśród dziesiątek innych wiadomości. Klient nie wie, czy zamówienie zostało przyjęte, dzwoni na infolinię, traci zaufanie — a Ty tracisz czas i pieniądze. Rozwiązaniem jest <strong>automatyczne potwierdzenie zamówienia przez SMS</strong>, które dociera do klienta w ciągu kilku sekund z 98-procentową otwieralnością. W tym artykule pokażemy, jak zintegrować WooCommerce z API Przypominamy.com, aby SMS-y o statusie zamówienia wysyłały się automatycznie — bez ręcznej pracy i bez kosztownych wtyczek.</p>
+
+  <h2>Dlaczego SMS potwierdzenia zwiększają zaufanie klientów</h2>
+
+  <p>Badania Baymard Institute z 2025 roku wskazują, że <strong>68% klientów e-commerce</strong> oczekuje natychmiastowego potwierdzenia zamówienia. Jednocześnie średnia otwieralność e-maili transakcyjnych w Polsce wynosi zaledwie 45–55% — co oznacza, że niemal połowa klientów może nie zobaczyć potwierdzenia w skrzynce. SMS zmienia tę dynamikę fundamentalnie.</p>
+
+  <p>Korzyści z SMS-owych powiadomień o zamówieniach:</p>
+
+  <ul>
+    <li><strong>Natychmiastowość:</strong> SMS dociera w ciągu 3–5 sekund od zmiany statusu zamówienia. Klient ma pewność, że sklep działa i jego zamówienie jest obsługiwane.</li>
+    <li><strong>Redukcja zapytań do obsługi klienta:</strong> sklepy, które wdrożyły powiadomienia SMS, raportują spadek zapytań „gdzie jest moje zamówienie" o 35–50%.</li>
+    <li><strong>Wyższy wskaźnik powrotów:</strong> klient, który doświadczył profesjonalnej komunikacji SMS, jest o 23% bardziej skłonny do ponownego zakupu (dane Klaviyo, 2025).</li>
+    <li><strong>Mniej zwrotów z powodu nieodebranych paczek:</strong> SMS z informacją o dostawie zmniejsza liczbę nieodebranych przesyłek o 28%.</li>
+  </ul>
+
+  <h2>Architektura integracji: WooCommerce, webhook i API</h2>
+
+  <p>Integracja WooCommerce z Przypominamy.com opiera się na prostym schemacie: WooCommerce wykrywa zmianę statusu zamówienia, wywołuje funkcję PHP (hook), która wysyła żądanie HTTP do API Przypominamy.com, a API zleca wysyłkę SMS-a do klienta.</p>
+
+  <div class="highlight-box">
+    <p><strong>Schemat przepływu danych:</strong></p>
+    <p>1. Klient składa zamówienie w WooCommerce</p>
+    <p>2. WooCommerce zmienia status zamówienia (np. na „processing")</p>
+    <p>3. Hook PHP przechwytuje zmianę statusu</p>
+    <p>4. Funkcja PHP wysyła POST do API Przypominamy.com z numerem telefonu i treścią SMS</p>
+    <p>5. API kolejkuje wiadomość i zwraca potwierdzenie</p>
+    <p>6. SMS dociera do klienta w ciągu kilku sekund</p>
+  </div>
+
+  <p>Ten schemat nie wymaga żadnych wtyczek — wystarczy fragment kodu PHP dodany do pliku <code>functions.php</code> motywu potomnego lub do własnej wtyczki. Dzięki temu unikasz zależności od wtyczek zewnętrznych, które mogą przestać być aktualizowane lub kolidować z innymi rozszerzeniami.</p>
+
+  <h2>Krok po kroku: konfiguracja integracji</h2>
+
+  <h3>Krok 1: Załóż konto i pobierz klucz API</h3>
+  <p>Zarejestruj się na <a href="https://panel.przypominamy.com/register">panel.przypominamy.com</a>. Po zalogowaniu przejdź do zakładki <strong>Ustawienia &rarr; API</strong> i skopiuj swój klucz API. Klucz ma format <code>pk_live_xxxxxxxxxxxx</code> i jest unikalny dla Twojego konta.</p>
+
+  <h3>Krok 2: Przygotuj motyw potomny lub własną wtyczkę</h3>
+  <p>Nigdy nie edytuj pliku <code>functions.php</code> głównego motywu — zostanie nadpisany przy aktualizacji. Utwórz motyw potomny lub prostą wtyczkę. Oto minimalna struktura wtyczki:</p>
+
+  <pre><code>&lt;?php
+/**
+ * Plugin Name: Przypominamy.com SMS dla WooCommerce
+ * Description: Automatyczne powiadomienia SMS o zamówieniach
+ * Version: 1.0
+ * Author: Twoja Firma
+ */
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+// Klucz API — najlepiej przechowywać w wp-config.php
+// define( 'PRZYPOMINAMY_API_KEY', 'pk_live_xxxxxxxxxxxx' );
+
+define( 'PRZYPOMINAMY_API_URL',
+        'https://api.przypominamy.com/v1/sms/send' );</code></pre>
+
+  <h3>Krok 3: Podepnij hook do zmiany statusu zamówienia</h3>
+  <p>WooCommerce udostępnia hook <code>woocommerce_order_status_changed</code>, który jest wywoływany przy każdej zmianie statusu zamówienia. Oto kompletny kod obsługujący wysyłkę SMS:</p>
+
+  <pre><code>add_action( 'woocommerce_order_status_changed',
+            'przypominamy_send_order_sms', 10, 4 );
+
+function przypominamy_send_order_sms(
+    $order_id, $old_status, $new_status, $order
+) {
+    $phone = $order-&gt;get_billing_phone();
+    if ( empty( $phone ) ) return;
+
+    // Formatuj numer do formatu międzynarodowego
+    $phone = przypominamy_format_phone( $phone );
+
+    // Pobierz treść SMS na podstawie nowego statusu
+    $message = przypominamy_get_message(
+        $new_status, $order
+    );
+    if ( empty( $message ) ) return;
+
+    // Wyślij SMS przez API
+    $response = wp_remote_post( PRZYPOMINAMY_API_URL, [
+        'headers' =&gt; [
+            'Authorization' =&gt; 'Bearer '
+                             . PRZYPOMINAMY_API_KEY,
+            'Content-Type'  =&gt; 'application/json',
+        ],
+        'body' =&gt; json_encode( [
+            'to'      =&gt; $phone,
+            'message' =&gt; $message,
+            'sender'  =&gt; 'MojSklep',
+        ] ),
+        'timeout' =&gt; 15,
+    ] );
+
+    // Loguj błędy
+    if ( is_wp_error( $response ) ) {
+        error_log( 'Przypominamy SMS error: '
+                 . $response-&gt;get_error_message() );
+    }
+}</code></pre>
+
+  <h3>Krok 4: Funkcja formatowania numeru telefonu</h3>
+  <p>Klienci wpisują numery w różnych formatach. Funkcja poniżej normalizuje numer do formatu międzynarodowego z prefiksem +48:</p>
+
+  <pre><code>function przypominamy_format_phone( $phone ) {
+    // Usuń wszystko poza cyframi
+    $phone = preg_replace( '/[^0-9]/', '', $phone );
+
+    // Dodaj prefix +48, jeśli numer ma 9 cyfr
+    if ( strlen( $phone ) === 9 ) {
+        $phone = '48' . $phone;
+    }
+
+    // Usuń wiodące zera
+    $phone = ltrim( $phone, '0' );
+
+    return '+' . $phone;
+}</code></pre>
+
+  <h3>Krok 5: Szablony wiadomości per status zamówienia</h3>
+  <p>Kluczowa funkcja, która zwraca treść SMS na podstawie statusu zamówienia:</p>
+
+  <pre><code>function przypominamy_get_message( $status, $order ) {
+    $name     = $order-&gt;get_billing_first_name();
+    $order_id = $order-&gt;get_id();
+    $total    = $order-&gt;get_total();
+
+    $messages = [
+
+        'processing' =&gt;
+            "{$name}, dziekujemy za zamowienie "
+          . "nr {$order_id} ({$total} PLN). "
+          . "Realizujemy je i informujemy "
+          . "o kolejnych krokach. MojSklep",
+
+        'completed' =&gt;
+            "{$name}, zamowienie nr {$order_id} "
+          . "zostalo wyslane! Sledz przesylke: "
+          . "https://mojsklep.pl/tracking/{$order_id}"
+          . " MojSklep",
+
+        'on-hold' =&gt;
+            "{$name}, zamowienie nr {$order_id} "
+          . "oczekuje na platnosc {$total} PLN. "
+          . "Oplacone zamowienia realizujemy "
+          . "w 24h. MojSklep",
+
+        'refunded' =&gt;
+            "{$name}, zwrot za zamowienie "
+          . "nr {$order_id} ({$total} PLN) "
+          . "zostal zrealizowany. Srodki pojawia "
+          . "sie na koncie w 3-5 dni. MojSklep",
+    ];
+
+    return $messages[ $status ] ?? '';
+}</code></pre>
+
+  <p>Zauważ, że szablony celowo unikają polskich znaków diakrytycznych (np. „dziekujemy" zamiast „dziękujemy"), aby zmieścić treść w jednym SMS-ie w kodowaniu GSM 7-bit i zoptymalizować koszty. Przy 1000 zamówień miesięcznie różnica między 1 a 2 SMS-ami per wiadomość to oszczędność kilkudziesięciu złotych.</p>
+
+  <h2>Szablony wiadomości dla każdego statusu</h2>
+
+  <p>WooCommerce definiuje kilka standardowych statusów zamówienia. Oto rekomendowane szablony SMS dla każdego z nich:</p>
+
+  <ul>
+    <li><strong>Nowe zamówienie (processing):</strong> Potwierdzenie przyjęcia — imię klienta, numer zamówienia, kwota. Cel: budowanie zaufania.</li>
+    <li><strong>Oczekuje na płatność (on-hold):</strong> Informacja o konieczności opłacenia — kwota, link do płatności. Cel: przyspieszenie konwersji.</li>
+    <li><strong>Wysłane (completed):</strong> Powiadomienie o wysyłce — numer przesyłki, link do śledzenia. Cel: redukcja zapytań do obsługi.</li>
+    <li><strong>Zwrot (refunded):</strong> Potwierdzenie realizacji zwrotu — kwota, przewidywany czas zwrotu środków. Cel: zamknięcie procesu i zachowanie relacji.</li>
+    <li><strong>Anulowane (cancelled):</strong> Informacja o anulowaniu — numer zamówienia, ewentualna informacja o zwrocie środków.</li>
+  </ul>
+
+  <p>Nie musisz obsługiwać wszystkich statusów od razu. Zacznij od dwóch najważniejszych — <strong>processing</strong> (potwierdzenie zamówienia) i <strong>completed</strong> (wysyłka) — a pozostałe dodawaj stopniowo.</p>
+
+  <h2>Obsługa zwrotów i reklamacji przez SMS</h2>
+
+  <p>Zwroty to moment, w którym klient jest szczególnie wrażliwy na komunikację. Brak informacji o statusie zwrotu generuje frustrację i negatywne opinie. Automatyczny SMS w momencie zmiany statusu na „refunded" daje klientowi pewność, że proces został uruchomiony.</p>
+
+  <p>Rozbudowany scenariusz obsługi zwrotów może wyglądać następująco:</p>
+
+  <ol>
+    <li><strong>Klient inicjuje zwrot</strong> — SMS: „Otrzymaliśmy Twój wniosek o zwrot zamówienia nr {ID}. Rozpatrzymy go w ciągu 48h."</li>
+    <li><strong>Zwrot zaakceptowany</strong> — SMS: „Zwrot zamówienia nr {ID} został zaakceptowany. Prosimy o odesłanie produktu na adres: {adres magazynu}."</li>
+    <li><strong>Produkt otrzymany</strong> — SMS: „Otrzymaliśmy zwracany produkt z zamówienia nr {ID}. Środki ({kwota} PLN) zostaną zwrócone w ciągu 5 dni roboczych."</li>
+    <li><strong>Środki zwrócone</strong> — SMS: „Zwrot {kwota} PLN za zamówienie nr {ID} został zrealizowany. Dziękujemy za cierpliwość."</li>
+  </ol>
+
+  <p>Każdy z tych statusów można obsłużyć dodając niestandardowe statusy zamówienia w WooCommerce (za pomocą funkcji <code>register_post_status</code>) i rozszerzając tablicę <code>$messages</code> w funkcji <code>przypominamy_get_message</code>.</p>
+
+  <h2>Koszty i ROI integracji</h2>
+
+  <p>Przyjmijmy scenariusz dla sklepu realizującego 2000 zamówień miesięcznie i wysyłającego 3 SMS-y per zamówienie (potwierdzenie, wysyłka, dostawa):</p>
+
+  <ul>
+    <li><strong>Liczba SMS-ów:</strong> 2000 x 3 = 6000 / miesiąc</li>
+    <li><strong>Koszt SMS (plan Business):</strong> 0,10 zł / SMS</li>
+    <li><strong>Koszt miesięczny:</strong> 600 zł</li>
+  </ul>
+
+  <p>Korzyści finansowe:</p>
+
+  <ul>
+    <li><strong>Redukcja zapytań do obsługi klienta o 40%:</strong> przy 800 zapytaniach miesięcznie i koszcie obsługi 8 zł/zapytanie, oszczędność wynosi 2560 zł.</li>
+    <li><strong>Redukcja nieodebranych paczek o 28%:</strong> przy 60 nieodebranych paczkach miesięcznie (koszt zwrotu 25 zł), oszczędność wynosi 420 zł.</li>
+    <li><strong>Wzrost retencji klientów o 23%:</strong> przy średniej wartości klienta 150 zł i 400 powracających klientach, dodatkowy przychód wynosi 13 800 zł.</li>
+  </ul>
+
+  <div class="highlight-box">
+    <p><strong>Łączny ROI:</strong> Inwestycja 600 zł miesięcznie generuje oszczędności i dodatkowy przychód rzędu 16 780 zł. Zwrot z inwestycji: <strong>ponad 2700%</strong>.</p>
+  </div>
+
+  <h2>Najczęstsze błędy przy integracji</h2>
+
+  <p>Na podstawie doświadczeń naszych klientów, oto błędy, które warto unikać:</p>
+
+  <ul>
+    <li><strong>Brak formatowania numeru telefonu:</strong> WooCommerce przechowuje numer w formacie podanym przez klienta (np. „502 123 456", „+48502123456", „0048502123456"). Bez normalizacji API odrzuci nieprawidłowy format.</li>
+    <li><strong>Wysyłka SMS przy każdej zmianie statusu:</strong> Klient nie potrzebuje SMS-a o przejściu z „pending" do „processing" i z „processing" do „completed" w ciągu 5 minut. Filtruj statusy — wysyłaj tylko istotne zmiany.</li>
+    <li><strong>Brak obsługi błędów:</strong> Jeśli API zwróci błąd (np. wyczerpany limit, nieprawidłowy numer), kod powinien to zalogować, a nie wstrzymać realizację zamówienia.</li>
+    <li><strong>Przechowywanie klucza API w kodzie:</strong> Klucz API powinien znajdować się w <code>wp-config.php</code> jako stała (<code>define</code>) lub w zmiennej środowiskowej, a nie w kodzie wtyczki commitowanym do repozytorium.</li>
+    <li><strong>Polskie znaki w treści:</strong> Jeden znak diakrytyczny przełącza kodowanie z GSM na UCS-2 i podwaja lub potraja koszt wiadomości. Świadomie decyduj, czy chcesz polskie znaki.</li>
+  </ul>
+
+  <h2>Testowanie integracji</h2>
+
+  <p>Przed uruchomieniem na produkcji przetestuj integrację w bezpieczny sposób:</p>
+
+  <ol>
+    <li><strong>Ustaw klucz testowy:</strong> API Przypominamy.com udostępnia klucz sandbox (<code>pk_test_xxxxxxxxxxxx</code>), który symuluje wysyłkę bez dostarczania SMS-ów i bez naliczania kosztów.</li>
+    <li><strong>Złóż testowe zamówienie:</strong> przejdź przez pełny proces zakupowy w swoim sklepie i zmień status ręcznie w panelu WooCommerce.</li>
+    <li><strong>Sprawdź logi:</strong> w panelu Przypominamy.com, w zakładce „Historia wysyłek", zobaczysz wszystkie żądania API — zarówno udane, jak i odrzucone.</li>
+    <li><strong>Przełącz na klucz produkcyjny:</strong> po pomyślnych testach zamień klucz na <code>pk_live_</code> i wyślij pierwszy prawdziwy SMS na swój numer.</li>
+  </ol>
+
+  <h2>Podsumowanie</h2>
+
+  <p>Automatyczne SMS-y o statusie zamówienia to jedno z najprostszych usprawnień, które realnie poprawiają doświadczenie klienta i redukują koszty obsługi sklepu internetowego. Integracja WooCommerce z API Przypominamy.com wymaga jednego pliku PHP, kilkudziesięciu linii kodu i 30 minut pracy programisty. W zamian zyskujesz <strong>natychmiastowe powiadomienia SMS</strong> o każdym istotnym etapie zamówienia, niższe koszty obsługi klienta i wyższy wskaźnik powrotów. Zacznij od dwóch statusów — potwierdzenie i wysyłka — a resztę dodawaj iteracyjnie.</p>
+
+  <div class="cta-box">
+    <h3>Zintegruj swój WooCommerce z SMS w 30 minut</h3>
+    <p>Załóż konto, pobierz klucz API i zacznij wysyłać potwierdzenia zamówień SMS już dziś.</p>
+    <a href="https://panel.przypominamy.com/register" class="cta-btn">Załóż darmowe konto</a>
+  </div>
+
+  <div class="related">
+    <h3>Przeczytaj również</h3>
+    <ul>
+      <li><a href="/blog/api-sms-integracja-crm.html">Integracja API SMS z CRM — od zera do wysyłki w 30 minut</a></li>
+      <li><a href="/blog/sms-marketing-ecommerce.html">SMS marketing w e-commerce — kompletny przewodnik 2026</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer-mini">
+  <div class="container">
+    &copy; 2010–2026 Doradztwo Paweł Mamcarz. Wszelkie prawa zastrzeżone. &middot; <a href="/">Strona główna</a> &middot; <a href="/blog">Blog</a> &middot; <a href="/regulamin">Regulamin</a> &middot; <a href="/polityka-prywatnosci">Polityka prywatności</a>
+  </div>
+</div>
+
+</body>
+</html>

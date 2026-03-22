@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="RODO a wysyłka SMS — jakie zgody są wymagane, czym różni się RODO od Prawa telekomunikacyjnego, jak zbierać zgody i prowadzić rejestr. Praktyczny poradnik przed pierwszą kampanią SMS." />
+  <meta name="keywords" content="RODO SMS, zgoda na SMS marketing, prawo telekomunikacyjne SMS, SMS RODO zgodność" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Zespół Przypominamy.com" />
+  <link rel="canonical" href="https://przypominamy.com/blog/rodo-wysylka-sms" />
+
+  <meta property="og:title" content="RODO a wysyłka SMS — co musisz wiedzieć przed pierwszą kampanią" />
+  <meta property="og:description" content="Jakie zgody są wymagane do wysyłki SMS? Różnica między RODO a Prawem telekomunikacyjnym, double opt-in, rejestr zgód i kary za naruszenia." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://przypominamy.com/blog/rodo-wysylka-sms" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <meta property="og:locale" content="pl_PL" />
+  <meta property="og:site_name" content="Przypominamy.com" />
+
+  <title>RODO a wysyłka SMS — co musisz wiedzieć przed pierwszą kampanią — Przypominamy.com</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "RODO a wysyłka SMS — co musisz wiedzieć przed pierwszą kampanią",
+    "description": "Jakie zgody są wymagane do wysyłki SMS? Różnica między RODO a Prawem telekomunikacyjnym, double opt-in, rejestr zgód i kary za naruszenia.",
+    "author": {
+      "@type": "Organization",
+      "name": "Zespół Przypominamy.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Doradztwo Paweł Mamcarz",
+      "url": "https://przypominamy.com"
+    },
+    "datePublished": "2026-04-21",
+    "dateModified": "2026-04-21",
+    "mainEntityOfPage": "https://przypominamy.com/blog/rodo-wysylka-sms",
+    "keywords": ["RODO SMS", "zgoda na SMS marketing", "prawo telekomunikacyjne SMS", "SMS RODO zgodność"]
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --white:#fff; --gray:#888; --light:#ccc; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .container { max-width:800px; margin:0 auto; padding:0 24px; }
+    .content { padding:64px 0 96px; }
+    .breadcrumbs { font-size:.85rem; color:var(--gray); margin-bottom:24px; }
+    .breadcrumbs a { color:var(--gray); }
+    .breadcrumbs a:hover { color:var(--yellow); }
+    h1 { font-size:2rem; font-weight:800; margin-bottom:8px; line-height:1.3; }
+    .meta { color:var(--gray); font-size:.88rem; margin-bottom:40px; }
+    h2 { font-size:1.2rem; font-weight:700; margin:36px 0 12px; color:var(--yellow); }
+    h3 { font-size:1.05rem; font-weight:600; margin:24px 0 8px; }
+    p, li { color:var(--light); font-size:.95rem; margin-bottom:12px; }
+    ul, ol { padding-left:24px; }
+    li { margin-bottom:8px; }
+    strong { color:var(--white); }
+    .highlight-box { background:var(--surface); border-left:3px solid var(--yellow); padding:20px 24px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .highlight-box p { margin-bottom:4px; }
+    pre { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px 20px; overflow-x:auto; margin:16px 0; font-size:.88rem; line-height:1.5; color:var(--light); }
+    code { font-family:'Courier New',monospace; }
+    .cta-box { background:var(--surface); border:1px solid var(--yellow); border-radius:12px; padding:32px; text-align:center; margin:48px 0 24px; }
+    .cta-box h3 { color:var(--white); margin-top:0; }
+    .cta-box p { color:var(--light); }
+    .cta-btn { display:inline-block; background:var(--yellow); color:#000; font-weight:700; padding:12px 32px; border-radius:8px; margin-top:12px; font-size:.95rem; }
+    .cta-btn:hover { text-decoration:none; opacity:.9; }
+    .related { margin-top:48px; padding-top:32px; border-top:1px solid var(--border); }
+    .related h3 { color:var(--white); margin-bottom:16px; }
+    .related ul { list-style:none; padding:0; }
+    .related li { margin-bottom:10px; }
+    .footer-mini { border-top:1px solid var(--border); padding:28px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    @media(max-width:600px){
+      h1 { font-size:1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/blog">&larr; Blog</a>
+  </div>
+</div>
+
+<div class="container content">
+  <nav class="breadcrumbs">
+    <a href="/">Strona główna</a> &rsaquo; <a href="/blog">Blog</a> &rsaquo; RODO a wysyłka SMS
+  </nav>
+
+  <h1>RODO a wysyłka SMS — co musisz wiedzieć przed pierwszą kampanią</h1>
+  <p class="meta">Zespół Przypominamy.com &middot; 21 kwietnia 2026 &middot; 6 min czytania</p>
+
+  <p>Planując pierwszą kampanię SMS, większość firm koncentruje się na treści wiadomości i bazie odbiorców. Tymczasem kluczowym krokiem, którego nie wolno pominąć, jest <strong>zapewnienie zgodności z przepisami o ochronie danych osobowych</strong>. Wysyłka SMS-ów bez odpowiednich podstaw prawnych może skutkować karami sięgającymi milionów złotych, a także utratą reputacji firmy. W tym artykule wyjaśniamy, jakie przepisy regulują wysyłkę SMS w Polsce, jakie zgody są wymagane i jak zorganizować proces, aby działać w pełni legalnie.</p>
+
+  <h2>Dwa filary prawne: RODO i Prawo telekomunikacyjne</h2>
+
+  <p>Wysyłka SMS-ów w celach marketingowych podlega jednocześnie dwóm regulacjom prawnym, które nakładają na nadawcę odrębne obowiązki. Zrozumienie różnicy między nimi jest fundamentalne dla prawidłowego prowadzenia kampanii.</p>
+
+  <p><strong>RODO (Rozporządzenie o Ochronie Danych Osobowych)</strong> reguluje przetwarzanie danych osobowych — w przypadku SMS-ów chodzi przede wszystkim o numer telefonu, który jest daną osobową. RODO wymaga posiadania <strong>podstawy prawnej przetwarzania</strong>, takiej jak zgoda osoby (art. 6 ust. 1 lit. a), realizacja umowy (art. 6 ust. 1 lit. b) lub prawnie uzasadniony interes administratora (art. 6 ust. 1 lit. f).</p>
+
+  <p><strong>Prawo telekomunikacyjne (art. 172)</strong> nakłada dodatkowy wymóg: wysyłka komunikatów marketingowych za pomocą automatycznych systemów (w tym SMS) wymaga <strong>uprzedniej zgody abonenta</strong>. Ta zgoda jest odrębna od zgody wymaganej przez RODO i musi być wyrażona w sposób jednoznaczny.</p>
+
+  <div class="highlight-box">
+    <p><strong>Kluczowa zasada:</strong> Do wysyłki SMS marketingowego potrzebujesz dwóch niezależnych zgód — jednej na gruncie RODO (przetwarzanie numeru telefonu w celach marketingowych) i drugiej na gruncie Prawa telekomunikacyjnego (zgoda na kontakt za pomocą automatycznych systemów wywołujących). W praktyce obie zgody można pobrać jednocześnie, ale muszą to być osobne checkboxy w formularzu.</p>
+  </div>
+
+  <h2>SMS transakcyjny a SMS marketingowy — zasadnicza różnica</h2>
+
+  <p>Nie każdy SMS wymaga zgody marketingowej. Przepisy rozróżniają dwa typy wiadomości, które podlegają innym zasadom:</p>
+
+  <p><strong>SMS transakcyjny</strong> to wiadomość bezpośrednio związana z realizacją usługi lub umowy — na przykład potwierdzenie zamówienia, przypomnienie o wizycie, informacja o statusie przesyłki czy powiadomienie o płatności. Takie wiadomości są wysyłane na podstawie <strong>realizacji umowy</strong> (art. 6 ust. 1 lit. b RODO) i nie wymagają odrębnej zgody marketingowej. Klient, składając zamówienie lub umawiając wizytę, oczekuje takich powiadomień.</p>
+
+  <p><strong>SMS marketingowy</strong> to wiadomość promująca produkt, usługę, markę lub zachęcająca do zakupu — na przykład informacja o promocji, kod rabatowy czy zaproszenie na wydarzenie. Taki SMS wymaga pełnego zestawu zgód: zgody RODO na przetwarzanie danych w celach marketingowych oraz zgody z Prawa telekomunikacyjnego na kontakt za pomocą automatycznych systemów.</p>
+
+  <p>Granica między tymi kategoriami nie zawsze jest oczywista. SMS z przypomnieniem o kończącej się subskrypcji to komunikat transakcyjny. Ale SMS z ofertą przedłużenia subskrypcji w promocyjnej cenie to już komunikat marketingowy. W razie wątpliwości bezpieczniej jest traktować wiadomość jako marketingową i posiadać odpowiednie zgody.</p>
+
+  <h2>Jak prawidłowo zbierać zgody</h2>
+
+  <p>Sposób pobrania zgody ma kluczowe znaczenie dla jej ważności prawnej. Zgoda musi spełniać cztery warunki określone w RODO: musi być <strong>dobrowolna, konkretna, świadoma i jednoznaczna</strong>. Oto sprawdzone metody zbierania zgód:</p>
+
+  <h3>Formularze z oddzielnymi checkboxami</h3>
+  <p>Najczęstsza i najbezpieczniejsza metoda. W formularzu rejestracji, zamówienia lub zapisu na newsletter umieszczasz dwa oddzielne, niezaznaczone domyślnie checkboxy:</p>
+
+  <ul>
+    <li><strong>Checkbox 1 (RODO):</strong> „Wyrażam zgodę na przetwarzanie mojego numeru telefonu przez [nazwa firmy] w celach marketingowych zgodnie z RODO."</li>
+    <li><strong>Checkbox 2 (Prawo telekomunikacyjne):</strong> „Wyrażam zgodę na otrzymywanie informacji handlowych drogą SMS od [nazwa firmy] zgodnie z art. 172 Prawa telekomunikacyjnego."</li>
+  </ul>
+
+  <p>Checkboxy nie mogą być zaznaczone domyślnie — TSUE wielokrotnie potwierdził, że milczenie lub brak działania nie stanowi zgody (wyrok w sprawie Planet49, C-673/17).</p>
+
+  <h3>Double opt-in (podwójna weryfikacja)</h3>
+  <p>Metoda double opt-in polega na potwierdzeniu zgody po jej pierwszym wyrażeniu. Po zaznaczeniu checkboxów w formularzu system wysyła SMS weryfikacyjny, np.: „Aby potwierdzić zapis na powiadomienia SMS od [firma], odpisz TAK." Dopiero po otrzymaniu odpowiedzi „TAK" numer jest dodawany do bazy marketingowej. <strong>Double opt-in nie jest wymagany prawnie w Polsce</strong>, ale stanowi najlepszą praktykę branżową, ponieważ eliminuje ryzyko zapisania błędnego numeru i daje niepodważalny dowód wyrażenia zgody.</p>
+
+  <h3>Zgoda ustna z nagraniem</h3>
+  <p>W przypadku zapisów telefonicznych (np. podczas rozmowy z konsultantem) zgoda może być wyrażona ustnie, ale musi być nagrana. Konsultant powinien odczytać pełną treść klauzuli zgody, a klient musi wyraźnie potwierdzić zgodę. Nagranie stanowi dowód w razie kontroli UODO.</p>
+
+  <h2>Obowiązek informacyjny — co musisz przekazać odbiorcy</h2>
+
+  <p>RODO nakłada na administratora danych obowiązek poinformowania osoby, której dane dotyczą, o szeregu kwestii (art. 13 RODO). W momencie zbierania numeru telefonu musisz przekazać odbiorcy następujące informacje:</p>
+
+  <ul>
+    <li>Tożsamość i dane kontaktowe administratora danych (nazwa firmy, adres, e-mail).</li>
+    <li>Cele przetwarzania i podstawa prawna (marketing bezpośredni na podstawie zgody).</li>
+    <li>Odbiorcy danych — jeśli korzystasz z platformy SMS (np. Przypominamy.com), musisz wskazać, że dane są powierzane podmiotowi przetwarzającemu.</li>
+    <li>Okres przechowywania danych — np. „do czasu wycofania zgody".</li>
+    <li>Prawa osoby, której dane dotyczą: prawo dostępu, sprostowania, usunięcia, ograniczenia przetwarzania, przenoszenia danych, wniesienia sprzeciwu.</li>
+    <li>Prawo do wycofania zgody w dowolnym momencie.</li>
+    <li>Prawo do wniesienia skargi do organu nadzorczego (UODO).</li>
+  </ul>
+
+  <p>W praktyce te informacje umieszcza się w polityce prywatności, do której link podajesz przy formularzu zgody. Nie musisz umieszczać pełnej klauzuli informacyjnej bezpośrednio w checkboxie.</p>
+
+  <h2>Prawo do wycofania zgody — mechanizm STOP</h2>
+
+  <p>Każdy odbiorca SMS-ów marketingowych musi mieć możliwość łatwego i natychmiastowego wycofania zgody. Standardem branżowym jest mechanizm <strong>STOP</strong>: odbiorca wysyła SMS o treści „STOP" na numer nadawcy, a system automatycznie usuwa go z listy wysyłkowej.</p>
+
+  <p>Platforma Przypominamy.com obsługuje mechanizm STOP automatycznie — każdy numer, z którego przychodzi wiadomość „STOP", jest natychmiast blokowany i nie otrzymuje kolejnych wiadomości marketingowych. Informacja o możliwości wycofania zgody powinna znajdować się w każdej wiadomości marketingowej, na przykład: <em>„Rezygnacja: wyślij STOP na ten numer."</em></p>
+
+  <p>Po wycofaniu zgody administrator ma obowiązek <strong>niezwłocznie zaprzestać wysyłki</strong> i usunąć dane, chyba że istnieje inna podstawa prawna do ich przetwarzania. W praktyce oznacza to usunięcie numeru z listy marketingowej w ciągu 24 godzin.</p>
+
+  <h2>Rejestr zgód — Twój dowód w razie kontroli</h2>
+
+  <p>RODO wymaga, aby administrator potrafił <strong>wykazać</strong>, że zgoda została wyrażona (zasada rozliczalności, art. 5 ust. 2). Oznacza to konieczność prowadzenia rejestru zgód, który zawiera:</p>
+
+  <ul>
+    <li>Numer telefonu osoby, która wyraziła zgodę.</li>
+    <li>Datę i godzinę wyrażenia zgody.</li>
+    <li>Treść klauzuli zgody, na którą osoba wyraziła zgodę.</li>
+    <li>Źródło zgody (formularz na stronie, rozmowa telefoniczna, formularz papierowy).</li>
+    <li>Adres IP (w przypadku formularzy online) lub identyfikator sesji.</li>
+    <li>Datę wycofania zgody (jeśli nastąpiło).</li>
+  </ul>
+
+  <p>Panel Przypominamy.com automatycznie rejestruje wszystkie zgody i rezygnacje z datą, godziną i źródłem. Dane te są dostępne do eksportu w razie kontroli UODO lub reklamacji klienta.</p>
+
+  <h2>Kary za naruszenia — ile ryzykujesz</h2>
+
+  <p>Naruszenie przepisów dotyczących wysyłki SMS może skutkować sankcjami z dwóch źródeł:</p>
+
+  <ul>
+    <li><strong>UODO (RODO):</strong> kary administracyjne do 20 mln EUR lub 4% rocznego obrotu globalnego — w zależności od tego, która kwota jest wyższa. W Polsce UODO nakładał już kary rzędu kilkuset tysięcy złotych za wysyłkę marketingową bez ważnej zgody.</li>
+    <li><strong>UKE (Prawo telekomunikacyjne):</strong> kary do 3% rocznego przychodu przedsiębiorcy. UKE regularnie prowadzi postępowania dotyczące niechcianych SMS-ów i połączeń telefonicznych.</li>
+    <li><strong>Roszczenia cywilne:</strong> osoba, która otrzymała niechcianą wiadomość, może dochodzić odszkodowania na drodze cywilnej za naruszenie dóbr osobistych.</li>
+  </ul>
+
+  <p>W 2025 roku UODO nałożył kilka kar na firmy prowadzące kampanie SMS bez wymaganych zgód. Najwyższa z nich wyniosła ponad 400 000 zł — a dotyczyła stosunkowo niewielkiej bazy odbiorców.</p>
+
+  <h2>Checklist przed pierwszą kampanią SMS</h2>
+
+  <p>Zanim wyślesz pierwszą kampanię SMS, upewnij się, że spełniasz wszystkie poniższe wymogi:</p>
+
+  <ol>
+    <li><strong>Posiadasz ważne zgody</strong> — zarówno na gruncie RODO, jak i Prawa telekomunikacyjnego, zebrane oddzielnie, dobrowolnie i świadomie.</li>
+    <li><strong>Prowadzisz rejestr zgód</strong> — z datą, treścią klauzuli, źródłem i identyfikatorem osoby.</li>
+    <li><strong>Spełniłeś obowiązek informacyjny</strong> — polityka prywatności jest aktualna i dostępna.</li>
+    <li><strong>Masz mechanizm STOP</strong> — odbiorca może łatwo wycofać zgodę, a system natychmiast blokuje dalszą wysyłkę.</li>
+    <li><strong>Podpisałeś umowę powierzenia</strong> — z dostawcą platformy SMS (Przypominamy.com udostępnia gotowy wzór umowy powierzenia).</li>
+    <li><strong>Treść wiadomości zawiera identyfikację nadawcy</strong> — odbiorca musi wiedzieć, kto wysyła SMS.</li>
+    <li><strong>Nie wysyłasz przed 8:00 i po 22:00</strong> — choć prawo nie precyzuje godzin, te ramy są przyjętą normą i mogą być brane pod uwagę przy ocenie naruszenia.</li>
+    <li><strong>Baza jest aktualna</strong> — usunąłeś numery, które wycofały zgodę, oraz numery nieaktywne.</li>
+  </ol>
+
+  <h2>Podsumowanie</h2>
+
+  <p>Zgodność z RODO i Prawem telekomunikacyjnym to nie biurokratyczny obowiązek, lecz fundament wiarygodnej komunikacji SMS. Firmy, które dbają o prawidłowe zbieranie i dokumentowanie zgód, budują zaufanie klientów i unikają kosztownych kar. Pamiętaj: <strong>dwa oddzielne checkboxy, rejestr zgód, mechanizm STOP i umowa powierzenia</strong> — to cztery filary legalnej kampanii SMS. Platforma Przypominamy.com automatyzuje większość tych procesów, pozwalając Ci skupić się na tym, co najważniejsze — skutecznej komunikacji z klientami.</p>
+
+  <div class="cta-box">
+    <h3>Prowadź kampanie SMS zgodne z RODO</h3>
+    <p>Przypominamy.com automatycznie zarządza zgodami, rejestrem i mechanizmem STOP. Załóż konto i zacznij legalnie.</p>
+    <a href="https://panel.przypominamy.com/register" class="cta-btn">Załóż darmowe konto</a>
+  </div>
+
+  <div class="related">
+    <h3>Przeczytaj również</h3>
+    <ul>
+      <li><a href="/blog/sms-marketing-ecommerce.html">SMS marketing w e-commerce — kompletny przewodnik 2026</a></li>
+      <li><a href="/blog/windykacja-sms.html">Windykacja SMS — jak skutecznie przypominać o płatnościach</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer-mini">
+  <div class="container">
+    &copy; 2010–2026 Doradztwo Paweł Mamcarz. Wszelkie prawa zastrzeżone. &middot; <a href="/">Strona główna</a> &middot; <a href="/blog">Blog</a> &middot; <a href="/regulamin">Regulamin</a> &middot; <a href="/polityka-prywatnosci">Polityka prywatności</a>
+  </div>
+</div>
+
+</body>
+</html>

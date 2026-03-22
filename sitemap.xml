@@ -55,6 +55,42 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://przypominamy.com/blog/windykacja-sms</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://przypominamy.com/blog/sms-vs-email-open-rate</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://przypominamy.com/blog/konfiguracja-ivr-tts</loc>
+    <lastmod>2026-04-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://przypominamy.com/blog/rodo-wysylka-sms</loc>
+    <lastmod>2026-04-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://przypominamy.com/blog/personalizacja-sms-szablony</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://przypominamy.com/blog/sms-potwierdzenia-zamowien-woocommerce</loc>
+    <lastmod>2026-05-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://przypominamy.com/xmlapi_en_przypominamy2020v17.pdf</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>

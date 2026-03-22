@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Personalizacja SMS zwiększa konwersję nawet o 45%. Poznaj zmienne, szablony wiadomości, segmentację odbiorców i A/B testy — praktyczny poradnik z przykładami dla różnych branż." />
+  <meta name="keywords" content="personalizacja SMS, szablony SMS, zmienne SMS, segmentacja odbiorców SMS" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Zespół Przypominamy.com" />
+  <link rel="canonical" href="https://przypominamy.com/blog/personalizacja-sms-szablony" />
+
+  <meta property="og:title" content="Personalizacja SMS — zmienne, szablony i segmentacja odbiorców" />
+  <meta property="og:description" content="Jak personalizować wiadomości SMS, aby zwiększyć konwersję? Zmienne, szablony, segmentacja bazy i A/B testy — poradnik z przykładami." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://przypominamy.com/blog/personalizacja-sms-szablony" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <meta property="og:locale" content="pl_PL" />
+  <meta property="og:site_name" content="Przypominamy.com" />
+
+  <title>Personalizacja SMS — zmienne, szablony i segmentacja odbiorców — Przypominamy.com</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Personalizacja SMS — zmienne, szablony i segmentacja odbiorców",
+    "description": "Jak personalizować wiadomości SMS, aby zwiększyć konwersję? Zmienne, szablony, segmentacja bazy i A/B testy — poradnik z przykładami.",
+    "author": {
+      "@type": "Organization",
+      "name": "Zespół Przypominamy.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Doradztwo Paweł Mamcarz",
+      "url": "https://przypominamy.com"
+    },
+    "datePublished": "2026-05-01",
+    "dateModified": "2026-05-01",
+    "mainEntityOfPage": "https://przypominamy.com/blog/personalizacja-sms-szablony",
+    "keywords": ["personalizacja SMS", "szablony SMS", "zmienne SMS", "segmentacja odbiorców SMS"]
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --white:#fff; --gray:#888; --light:#ccc; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .container { max-width:800px; margin:0 auto; padding:0 24px; }
+    .content { padding:64px 0 96px; }
+    .breadcrumbs { font-size:.85rem; color:var(--gray); margin-bottom:24px; }
+    .breadcrumbs a { color:var(--gray); }
+    .breadcrumbs a:hover { color:var(--yellow); }
+    h1 { font-size:2rem; font-weight:800; margin-bottom:8px; line-height:1.3; }
+    .meta { color:var(--gray); font-size:.88rem; margin-bottom:40px; }
+    h2 { font-size:1.2rem; font-weight:700; margin:36px 0 12px; color:var(--yellow); }
+    h3 { font-size:1.05rem; font-weight:600; margin:24px 0 8px; }
+    p, li { color:var(--light); font-size:.95rem; margin-bottom:12px; }
+    ul, ol { padding-left:24px; }
+    li { margin-bottom:8px; }
+    strong { color:var(--white); }
+    .highlight-box { background:var(--surface); border-left:3px solid var(--yellow); padding:20px 24px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .highlight-box p { margin-bottom:4px; }
+    pre { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px 20px; overflow-x:auto; margin:16px 0; font-size:.88rem; line-height:1.5; color:var(--light); }
+    code { font-family:'Courier New',monospace; }
+    .cta-box { background:var(--surface); border:1px solid var(--yellow); border-radius:12px; padding:32px; text-align:center; margin:48px 0 24px; }
+    .cta-box h3 { color:var(--white); margin-top:0; }
+    .cta-box p { color:var(--light); }
+    .cta-btn { display:inline-block; background:var(--yellow); color:#000; font-weight:700; padding:12px 32px; border-radius:8px; margin-top:12px; font-size:.95rem; }
+    .cta-btn:hover { text-decoration:none; opacity:.9; }
+    .related { margin-top:48px; padding-top:32px; border-top:1px solid var(--border); }
+    .related h3 { color:var(--white); margin-bottom:16px; }
+    .related ul { list-style:none; padding:0; }
+    .related li { margin-bottom:10px; }
+    .footer-mini { border-top:1px solid var(--border); padding:28px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    @media(max-width:600px){
+      h1 { font-size:1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/blog">&larr; Blog</a>
+  </div>
+</div>
+
+<div class="container content">
+  <nav class="breadcrumbs">
+    <a href="/">Strona główna</a> &rsaquo; <a href="/blog">Blog</a> &rsaquo; Personalizacja SMS — szablony i zmienne
+  </nav>
+
+  <h1>Personalizacja SMS — zmienne, szablony i segmentacja odbiorców</h1>
+  <p class="meta">Zespół Przypominamy.com &middot; 1 maja 2026 &middot; 6 min czytania</p>
+
+  <p>Wiadomość SMS, która zaczyna się od imienia odbiorcy i zawiera konkretną informację dotyczącą jego sprawy, osiąga znacznie wyższe wskaźniki zaangażowania niż generyczny komunikat wysłany do całej bazy. Według badań Salesforce z 2025 roku <strong>personalizowane SMS-y generują o 29% wyższy CTR</strong> (click-through rate) i o 45% wyższą konwersję w porównaniu z wiadomościami niepersonalizowanymi. W tym artykule pokażemy, jak wykorzystać zmienne, szablony i segmentację odbiorców w platformie Przypominamy.com, aby maksymalnie zwiększyć skuteczność komunikacji SMS.</p>
+
+  <h2>Dlaczego personalizacja SMS ma znaczenie</h2>
+
+  <p>SMS to kanał o wyjątkowej otwieralności — 98% wiadomości jest odczytywanych, najczęściej w ciągu 3 minut od doręczenia. Przy tak wysokiej widoczności każdy detal treści wpływa na reakcję odbiorcy. Wiadomość, która mówi „Panie Tomaszu, Pana zamówienie nr 4821 zostało wysłane" budzi zaufanie i daje poczucie indywidualnego traktowania. Wiadomość „Twoje zamówienie zostało wysłane" jest poprawna, ale anonimowa.</p>
+
+  <p>Personalizacja działa na kilku poziomach psychologicznych. Po pierwsze, <strong>przyciąga uwagę</strong> — imię w treści powoduje, że odbiorca identyfikuje wiadomość jako skierowaną do niego osobiście, a nie jako spam masowy. Po drugie, <strong>zwiększa relevancję</strong> — kwota do zapłaty, termin wizyty czy nazwa produktu to informacje, których odbiorca aktywnie szuka. Po trzecie, <strong>buduje relację</strong> — regularne, trafne komunikaty tworzą skojarzenie marki z profesjonalizmem i dbałością o klienta.</p>
+
+  <h2>Zmienne w szablonach SMS — jak działają</h2>
+
+  <p>Zmienne to oznaczone pola w szablonie wiadomości, które w momencie wysyłki są automatycznie zastępowane danymi konkretnego odbiorcy. W platformie Przypominamy.com zmienne zapisujemy w nawiasach klamrowych. Oto najczęściej używane zmienne:</p>
+
+  <ul>
+    <li><strong>{Imie}</strong> — imię odbiorcy, pobierane z bazy kontaktów. System automatycznie zamienia pierwszą literę na wielką.</li>
+    <li><strong>{Nazwisko}</strong> — nazwisko odbiorcy, przydatne w komunikacji formalnej (np. windykacja, korespondencja urzędowa).</li>
+    <li><strong>{Kwota}</strong> — kwota do zapłaty, saldo rachunku lub wartość zamówienia. Formatowana z dwoma miejscami po przecinku i symbolem waluty.</li>
+    <li><strong>{Termin}</strong> — data wizyty, termin płatności, data dostawy. Wyświetlana w formacie DD.MM.RRRR lub „jutro", „pojutrze" — w zależności od konfiguracji.</li>
+    <li><strong>{Link}</strong> — skrócony link do płatności, potwierdzenia, śledzenia przesyłki lub innej strony. System automatycznie skraca URL i monitoruje kliknięcia.</li>
+    <li><strong>{NrZamowienia}</strong> — numer zamówienia, faktury lub sprawy.</li>
+    <li><strong>{Firma}</strong> — nazwa firmy nadawcy, przydatna, gdy jedno konto obsługuje kilka marek.</li>
+  </ul>
+
+  <div class="highlight-box">
+    <p><strong>Przykład szablonu:</strong></p>
+    <p>{Imie}, przypominamy o wizycie {Termin} o godz. {Godzina}. Aby potwierdzić, odpisz TAK. Aby odwołać, odpisz NIE. {Firma}</p>
+  </div>
+
+  <p>Jeśli zmienna nie ma wartości dla danego odbiorcy (np. brak imienia w bazie), system zastępuje ją wartością domyślną, którą definiujesz w ustawieniach szablonu — na przykład zamiast „{Imie}" pojawi się „Szanowny Kliencie". Dzięki temu żadna wiadomość nie wychodzi z pustymi polami.</p>
+
+  <h2>Tworzenie szablonów w panelu Przypominamy.com</h2>
+
+  <p>Panel Przypominamy.com oferuje edytor szablonów z podglądem na żywo. Proces tworzenia szablonu wygląda następująco:</p>
+
+  <ol>
+    <li><strong>Przejdź do zakładki Szablony</strong> i kliknij „Nowy szablon".</li>
+    <li><strong>Nadaj nazwę wewnętrzną</strong> — np. „Przypomnienie wizyta 24h" lub „Promocja Black Friday". Nazwa jest widoczna tylko dla Ciebie.</li>
+    <li><strong>Wpisz treść wiadomości</strong> — używaj zmiennych w nawiasach klamrowych. Edytor podświetla zmienne na żółto i pokazuje podgląd z przykładowymi danymi.</li>
+    <li><strong>Ustaw wartości domyślne</strong> — dla każdej zmiennej możesz zdefiniować tekst zastępczy na wypadek braku danych.</li>
+    <li><strong>Sprawdź liczbę znaków</strong> — licznik w edytorze pokazuje, ile znaków zajmuje wiadomość i ile SMS-ów zostanie wysłanych (1 SMS = 160 znaków GSM lub 70 znaków z polskimi znakami).</li>
+    <li><strong>Wyślij SMS testowy</strong> — na swój numer, aby zobaczyć, jak wiadomość wygląda na telefonie.</li>
+  </ol>
+
+  <h2>Limity znaków i SMS wieloczęściowe</h2>
+
+  <p>Zrozumienie limitów znaków jest kluczowe dla kontroli kosztów. Standard GSM 03.38 definiuje dwa tryby kodowania:</p>
+
+  <ul>
+    <li><strong>GSM 7-bit (alfabet podstawowy):</strong> 160 znaków na SMS. Obejmuje litery łacińskie, cyfry, podstawowe znaki specjalne. Nie obejmuje polskich znaków diakrytycznych (ą, ć, ę, ł, ń, ó, ś, ź, ż).</li>
+    <li><strong>UCS-2 (Unicode):</strong> 70 znaków na SMS. Aktywowany automatycznie, gdy wiadomość zawiera choćby jeden polski znak diakrytyczny.</li>
+  </ul>
+
+  <p>Wiadomości dłuższe niż limit jednego SMS-a są łączone w SMS-y wieloczęściowe. W trybie GSM są to 153 znaki na część (7 znaków na nagłówek łączący), a w trybie UCS-2 — 67 znaków na część. Każda część jest naliczana jako osobny SMS.</p>
+
+  <div class="highlight-box">
+    <p><strong>Wskazówka kosztowa:</strong> Wiadomość po polsku z diakrytykami o długości 150 znaków to 3 SMS-y (3 x 67 znaków UCS-2). Ta sama treść bez diakrytyków (np. „Dzien dobry" zamiast „Dzień dobry") to 1 SMS (160 znaków GSM). Różnica w koszcie: trzykrotna. Edytor Przypominamy.com pokazuje oba warianty, abyś mógł świadomie wybrać.</p>
+  </div>
+
+  <h2>Segmentacja odbiorców — wysyłaj trafniej</h2>
+
+  <p>Personalizacja to nie tylko zmienne w treści — to także wysyłka odpowiedniego komunikatu do odpowiedniej grupy. Segmentacja bazy odbiorców pozwala dzielić kontakty na grupy według różnych kryteriów i kierować do każdej grupy dedykowany przekaz.</p>
+
+  <h3>Kryteria segmentacji dostępne w Przypominamy.com</h3>
+
+  <ul>
+    <li><strong>Branża / typ klienta:</strong> pacjenci, klienci e-commerce, dłużnicy, pracownicy — każda grupa wymaga innego tonu i treści komunikacji.</li>
+    <li><strong>Historia interakcji:</strong> klienci, którzy kliknęli link w ostatnim SMS-ie, vs. ci, którzy nie otworzyli żadnej wiadomości od 3 miesięcy.</li>
+    <li><strong>Wartość klienta:</strong> segmentacja według łącznej wartości zamówień (VIP, regularny, jednorazowy).</li>
+    <li><strong>Lokalizacja:</strong> wysyłka ofert regionalnych (np. promocja w oddziale w Krakowie tylko do klientów z okolicy).</li>
+    <li><strong>Etap lejka:</strong> nowy lead, klient po pierwszym zakupie, klient powracający, klient nieaktywny.</li>
+    <li><strong>Tagi niestandardowe:</strong> dowolne etykiety, które sam przypisujesz kontaktom (np. „zapisany na webinar", „zainteresowany planem Business").</li>
+  </ul>
+
+  <h2>A/B testy treści SMS</h2>
+
+  <p>Nie zgaduj, co działa — testuj. A/B testy SMS polegają na wysłaniu dwóch wariantów wiadomości do losowych podgrup bazy i porównaniu wyników. Platforma Przypominamy.com umożliwia tworzenie testów A/B bezpośrednio w panelu wysyłki.</p>
+
+  <p>Typowe elementy do testowania:</p>
+
+  <ul>
+    <li><strong>Ton komunikacji:</strong> formalny („Szanowny Panie Kowalski") vs. bezpośredni („Cześć Tomek!").</li>
+    <li><strong>Długość wiadomości:</strong> krótki SMS (1 część) vs. dłuższy z większą ilością szczegółów (2 części).</li>
+    <li><strong>Call-to-action:</strong> „Kliknij tutaj" vs. „Sprawdź szczegóły" vs. „Odbierz rabat".</li>
+    <li><strong>Pora wysyłki:</strong> rano (9:00) vs. po południu (14:00) vs. wieczorem (18:00).</li>
+    <li><strong>Obecność zmiennych:</strong> wiadomość z imieniem vs. bez imienia — aby zmierzyć realny wpływ personalizacji na Twoją bazę.</li>
+  </ul>
+
+  <p>Rekomendujemy testowanie na grupie minimum 500 odbiorców per wariant, aby wyniki były statystycznie istotne. Po zebraniu danych (zwykle wystarczą 24 godziny) wybierasz zwycięski wariant i wysyłasz go do reszty bazy.</p>
+
+  <h2>Przykłady szablonów dla różnych branż</h2>
+
+  <h3>Medycyna</h3>
+  <div class="highlight-box">
+    <p>{Imie}, przypominamy o wizycie u dr. {Lekarz} w dniu {Termin} o {Godzina}. Prosimy o przybycie 10 min wczesniej. Odwolanie: odpisz NIE. {Firma}</p>
+  </div>
+
+  <h3>E-commerce</h3>
+  <div class="highlight-box">
+    <p>{Imie}, Twoje zamowienie {NrZamowienia} zostalo wyslane! Sledz przesylke: {Link}. Dostawa {Termin}. Pozdrawiamy, {Firma}</p>
+  </div>
+
+  <h3>Finanse i windykacja</h3>
+  <div class="highlight-box">
+    <p>Informujemy, ze termin platnosci faktury {NrFaktury} na kwote {Kwota} PLN uplywa {Termin}. Zaplac: {Link}. {Firma}</p>
+  </div>
+
+  <h3>HR i rekrutacja</h3>
+  <div class="highlight-box">
+    <p>{Imie}, potwierdzamy rozmowe rekrutacyjna {Termin} o {Godzina}, {Adres}. Pytania? Zadzwon: {Telefon}. {Firma}</p>
+  </div>
+
+  <h3>Usługi (serwis, warsztaty, salony)</h3>
+  <div class="highlight-box">
+    <p>{Imie}, Twoja rezerwacja w {Firma} — {Termin}, godz. {Godzina}. Potwierdz: TAK / Odwolaj: NIE. Do zobaczenia!</p>
+  </div>
+
+  <p>Zwróć uwagę, że przykłady branży medycznej i e-commerce celowo unikają polskich znaków diakrytycznych, aby zmieścić się w jednym SMS-ie w kodowaniu GSM 7-bit i zminimalizować koszty. To kompromis, który warto rozważyć — zwłaszcza przy dużych wolumenach wysyłek.</p>
+
+  <h2>Podsumowanie</h2>
+
+  <p>Personalizacja SMS to nie luksus, lecz standard skutecznej komunikacji. Zmienne dynamiczne, inteligentne szablony i precyzyjna segmentacja odbiorców pozwalają wysyłać wiadomości, które odbiorcy traktują jako przydatne informacje, a nie niechciany spam. Zacznij od prostych zmiennych — {Imie} i {Termin} — a następnie rozbudowuj szablony o kolejne dane i segmenty. Regularne A/B testy pomogą Ci optymalizować treść i czas wysyłki, aby każdy wydany grosz na SMS przynosił maksymalny zwrot.</p>
+
+  <div class="cta-box">
+    <h3>Twórz spersonalizowane szablony SMS w minutę</h3>
+    <p>Edytor Przypominamy.com z podglądem na żywo, zmiennymi i licznikiem znaków. Wypróbuj za darmo.</p>
+    <a href="https://panel.przypominamy.com/register" class="cta-btn">Załóż darmowe konto</a>
+  </div>
+
+  <div class="related">
+    <h3>Przeczytaj również</h3>
+    <ul>
+      <li><a href="/blog/sms-przypomnienia-wizyty-lekarz.html">Jak zmniejszyć liczbę nieodwołanych wizyt o 40% dzięki SMS</a></li>
+      <li><a href="/blog/sms-marketing-ecommerce.html">SMS marketing w e-commerce — kompletny przewodnik 2026</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer-mini">
+  <div class="container">
+    &copy; 2010–2026 Doradztwo Paweł Mamcarz. Wszelkie prawa zastrzeżone. &middot; <a href="/">Strona główna</a> &middot; <a href="/blog">Blog</a> &middot; <a href="/regulamin">Regulamin</a> &middot; <a href="/polityka-prywatnosci">Polityka prywatności</a>
+  </div>
+</div>
+
+</body>
+</html>

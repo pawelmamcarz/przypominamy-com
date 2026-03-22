@@ -30,6 +30,12 @@ https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
 # Blog (index lives outside /blog/ dir to avoid Cloudflare trailing-slash redirect loop)
 /blog                   /blog-index.html             200
 /blog/                  /blog-index.html             200
+/blog/windykacja-sms                          /blog/windykacja-sms.html                         200
+/blog/sms-vs-email-open-rate                  /blog/sms-vs-email-open-rate.html                 200
+/blog/konfiguracja-ivr-tts                    /blog/konfiguracja-ivr-tts.html                   200
+/blog/rodo-wysylka-sms                        /blog/rodo-wysylka-sms.html                       200
+/blog/personalizacja-sms-szablony             /blog/personalizacja-sms-szablony.html            200
+/blog/sms-potwierdzenia-zamowien-woocommerce  /blog/sms-potwierdzenia-zamowien-woocommerce.html 200
 
 # Static files — serve as-is (before SPA fallback)
 /llms.txt         /llms.txt        200
