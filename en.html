@@ -10,6 +10,7 @@
   <link rel="canonical" href="https://przypominamy.com/en" />
   <link rel="alternate" hreflang="pl" href="https://przypominamy.com/" />
   <link rel="alternate" hreflang="en" href="https://przypominamy.com/en" />
+  <link rel="alternate" hreflang="x-default" href="https://przypominamy.com/" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Przypominamy.com – Bulk SMS, MMS & IVR Messaging" />
@@ -807,7 +808,9 @@
         <li><a href="#how-it-works">How it works</a></li>
         <li><a href="#use-cases">Use cases</a></li>
         <li><a href="#api">API</a></li>
+        <li><a href="/integracje">Integrations</a></li>
         <li><a href="#pricing">Pricing</a></li>
+        <li><a href="/blog">Blog</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
       <div class="nav-cta">
@@ -1662,11 +1665,15 @@
     return new Date().toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
   }
 
+  function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
   function appendMsg(role, text) {
     const msgs = document.getElementById('chatMessages');
     const div = document.createElement('div');
     div.className = `msg ${role}`;
-    div.innerHTML = `<div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div><div class="msg-time">${formatTime()}</div>`;
+    div.innerHTML = `<div class="msg-bubble">${escapeHtml(text).replace(/\n/g,'<br>')}</div><div class="msg-time">${formatTime()}</div>`;
     msgs.appendChild(div);
     msgs.scrollTop = msgs.scrollHeight;
     return div;
@@ -1699,6 +1706,7 @@
 
     appendMsg('user', text);
     chatHistory.push({ role: 'user', content: text });
+    if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
     showTyping();
 
     try {
@@ -1733,8 +1741,8 @@
                 const parsed = JSON.parse(data);
                 const delta = parsed.delta?.text || parsed.choices?.[0]?.delta?.content || '';
                 fullText += delta;
-                bubble.innerHTML = fullText.replace(/\n/g, '<br>');
-                document.getElementById('chatMessages').scrollTop = 99999;
+                bubble.innerHTML = escapeHtml(fullText).replace(/\n/g, '<br>');
+                document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
               } catch {}
             }
           }
@@ -1802,11 +1810,11 @@
       const usecase = document.getElementById('o_usecase').value || '—';
       document.getElementById('orderSummary').innerHTML = `
         <strong style="color:var(--white)">Order summary:</strong><br>
-        👤 ${name} · ${company} · ${industry}<br>
-        📧 ${email}<br>
+        👤 ${escapeHtml(name)} · ${escapeHtml(company)} · ${escapeHtml(industry)}<br>
+        📧 ${escapeHtml(email)}<br>
         📋 Services: <strong style="color:var(--yellow)">${services.join(', ')}</strong><br>
         📊 Volume: <strong style="color:var(--yellow)">${selectedVolume}</strong> msg/month<br>
-        💬 Description: ${usecase}
+        💬 Description: ${escapeHtml(usecase)}
       `;
       setOrderStep(3);
     }

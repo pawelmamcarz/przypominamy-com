@@ -257,6 +257,7 @@ async function handleSmsBulk(body, smsapiToken, client) {
       return jsonError('Maksymalnie 100 wiadomości na żądanie (dla indywidualnych treści)', 422);
     }
 
+    const CHUNK = 50;
     const promises = body.messages.map(msg => {
       if (!msg.to || !msg.message) return Promise.resolve(null);
       const params = new URLSearchParams();
@@ -264,11 +265,17 @@ async function handleSmsBulk(body, smsapiToken, client) {
       params.set('message', msg.message);
       params.set('encoding', 'utf-8');
       params.set('details', '1');
-      applyCommonParams(params, msg, client);
+      const err = applyCommonParams(params, msg, client);
+      if (err) return Promise.resolve({ ok: false, status: 422, message: err });
       return smsapiRequest('POST', '/sms.do', params, smsapiToken);
     });
 
-    const results = await Promise.all(promises);
+    // Process in chunks to avoid upstream rate limits
+    const results = [];
+    for (let i = 0; i < promises.length; i += CHUNK) {
+      const chunk = await Promise.all(promises.slice(i, i + CHUNK));
+      results.push(...chunk);
+    }
     const allMessages = results.map((r, i) => {
       const msg = body.messages[i];
       if (!r) {
@@ -443,6 +450,13 @@ async function handleIncoming(request, env, ctx) {
 
 // ─── Main Router ─────────────────────────────────────────────
 
+const HEALTH_RESPONSE = JSON.stringify({
+  status: 'ok',
+  service: 'Przypominamy.com API',
+  version: '1.0',
+  endpoints: ['/v1/sms', '/v1/sms/bulk', '/v1/mms', '/v1/vms', '/v1/hlr', '/v1/balance'],
+});
+
 // Endpoint name lookup for permission check
 const ENDPOINT_MAP = {
   '/v1/sms': 'sms',
@@ -466,11 +480,9 @@ export default {
 
     // Health check
     if (path === '/v1/health' || path === '/v1') {
-      return jsonResp({
-        status: 'ok',
-        service: 'Przypominamy.com API',
-        version: '1.0',
-        endpoints: ['/v1/sms', '/v1/sms/bulk', '/v1/mms', '/v1/vms', '/v1/hlr', '/v1/balance'],
+      return new Response(HEALTH_RESPONSE, {
+        status: 200,
+        headers: { 'Content-Type': 'application/json', ...CORS_HEADERS },
       });
     }
 

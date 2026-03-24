@@ -15,10 +15,7 @@ https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
 # Old WordPress case study / portfolio pages
 /casestudy/*      /                301
 /case-study/*     /                301
-/case-study/      /                301
-/casestudy/       /                301
 /portfolio/*      /                301
-/portfolio/       /                301
 
 # Old WordPress content paths
 /wp-content/*     /                301
@@ -62,20 +59,7 @@ https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
 /blog/personalizacja-sms-szablony             /blog/personalizacja-sms-szablony.html            200
 /blog/sms-potwierdzenia-zamowien-woocommerce  /blog/sms-potwierdzenia-zamowien-woocommerce.html 200
 
-# Static files — serve as-is (before SPA fallback)
-/llms.txt         /llms.txt        200
-/llms-full.txt    /llms-full.txt   200
-/sitemap.xml      /sitemap.xml     200
-/robots.txt       /robots.txt      200
-/przypominamy-logo.png  /przypominamy-logo.png  200
-/apple-touch-icon.png   /apple-touch-icon.png  200
-/favicon-32.png         /favicon-32.png        200
-/favicon-16.png         /favicon-16.png        200
-/favicon-192.png        /favicon-192.png       200
-/favicon-512.png        /favicon-512.png       200
-/site.webmanifest       /site.webmanifest      200
-/preview-og.png         /preview-og.png        200
-/xmlapi_en_przypominamy2020v17.pdf  /xmlapi_en_przypominamy2020v17.pdf  200
+# Static files — Cloudflare Pages serves these automatically before SPA fallback
 
 # SPA fallback
 /*                /index.html      200

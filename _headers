@@ -10,9 +10,6 @@
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
 
-/index.html
-  Cache-Control: public, max-age=0, must-revalidate
-
 /sitemap.xml
   Cache-Control: public, max-age=86400
   Content-Type: application/xml
@@ -30,20 +27,20 @@
   Content-Type: text/plain; charset=utf-8
 
 /przypominamy-logo.png
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=2592000, immutable
 
 /apple-touch-icon.png
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=2592000, immutable
 
 /favicon-*.png
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=2592000, immutable
 
 /site.webmanifest
   Cache-Control: public, max-age=86400
   Content-Type: application/manifest+json
 
 /preview-og.png
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=2592000, immutable
 
 /xmlapi_en_przypominamy2020v17.pdf
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=2592000, immutable
