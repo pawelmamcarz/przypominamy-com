@@ -267,6 +267,41 @@
     .nav-login:hover { color: var(--yellow); }
     .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
     .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: all .3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .nav-mobile {
+      display: none; padding: 8px 0 20px;
+      border-top: 1px solid var(--border);
+      background: rgba(10,10,10,.98);
+    }
+    nav.open .nav-mobile { display: block; }
+    .nav-mobile ul { list-style: none; display: flex; flex-direction: column; }
+    .nav-mobile ul li a {
+      display: block; padding: 13px 0; color: var(--light); font-weight: 500; font-size: .95rem;
+      border-bottom: 1px solid rgba(255,255,255,.06); transition: color .2s;
+    }
+    .nav-mobile ul li a:hover { color: var(--yellow); }
+    .nav-mobile .mobile-cta { display: flex; gap: 10px; padding-top: 16px; flex-wrap: wrap; }
+    .nav-mobile .mobile-cta .btn { flex: 1; min-width: 130px; justify-content: center; padding: 12px 20px; font-size: .88rem; }
+    .form-error {
+      display: none; align-items: center; gap: 8px;
+      background: rgba(229,62,62,.1); border: 1px solid rgba(229,62,62,.3);
+      border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;
+      font-size: .88rem; color: #ff6b6b;
+    }
+    .form-error.visible { display: flex; }
+    #back-top {
+      position: fixed; bottom: 100px; left: 28px; z-index: 9990;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--light); cursor: pointer; display: none;
+      align-items: center; justify-content: center;
+      transition: all .2s; box-shadow: 0 4px 16px rgba(0,0,0,.4);
+    }
+    #back-top.visible { display: flex; }
+    #back-top:hover { border-color: var(--yellow); color: var(--yellow); transform: translateY(-2px); }
+    @media (max-width: 768px) { #back-top { left: 16px; bottom: 100px; } }
 
     /* ── Hero ── */
     .hero {
@@ -817,8 +852,26 @@
         <a href="https://panel.przypominamy.com" class="nav-login">Sign in</a>
         <a href="https://panel.przypominamy.com/register" class="btn btn-primary">Create account</a>
       </div>
-      <div class="hamburger" id="hamburger" role="button" aria-label="Menu">
+      <div class="hamburger" id="hamburger" role="button" aria-label="Menu" aria-expanded="false">
         <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <div class="container">
+      <ul>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#use-cases">Use cases</a></li>
+        <li><a href="#api">API</a></li>
+        <li><a href="/integracje">Integrations</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="mobile-cta">
+        <a href="https://panel.przypominamy.com" class="btn btn-outline">Sign in</a>
+        <a href="https://panel.przypominamy.com/register" class="btn btn-primary">Create account</a>
       </div>
     </div>
   </div>
@@ -1394,6 +1447,7 @@
 
           <!-- STEP 1: Contact info -->
           <div class="order-page active" id="op1">
+            <div class="form-error" id="err1">⚠ Please fill in the required fields: full name, email and company name.</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
               <div class="form-group">
                 <label for="o_name">Full name *</label>
@@ -1434,6 +1488,7 @@
 
           <!-- STEP 2: Services + volume -->
           <div class="order-page" id="op2">
+            <div class="form-error" id="err2">⚠ Please select at least one service and your estimated volume.</div>
             <div class="form-group">
               <label>Which services are you interested in? *</label>
               <div class="service-checkboxes">
@@ -1605,7 +1660,37 @@
   </div>
 </footer>
 
+<button id="back-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 15l-6-6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
 <script>
+  /* ══════════════════════════════════════
+     MOBILE NAV
+  ══════════════════════════════════════ */
+  const hamburger = document.getElementById('hamburger');
+  const mainNav = document.querySelector('nav');
+  hamburger.addEventListener('click', () => {
+    const isOpen = mainNav.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen);
+  });
+  document.querySelectorAll('.nav-mobile a').forEach(a => {
+    a.addEventListener('click', () => {
+      mainNav.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  /* ══════════════════════════════════════
+     BACK TO TOP
+  ══════════════════════════════════════ */
+  const backTop = document.getElementById('back-top');
+  window.addEventListener('scroll', () => {
+    backTop.classList.toggle('visible', window.scrollY > 600);
+  }, { passive: true });
+
   /* ══════════════════════════════════════
      SCROLL-SPY + FADE ANIMATIONS
   ══════════════════════════════════════ */
@@ -1788,20 +1873,26 @@
     });
   }
 
+  function showFormError(id, show) {
+    document.getElementById(id).classList.toggle('visible', show);
+  }
+
   function orderNext(from) {
     if (from === 1) {
       const name = document.getElementById('o_name').value.trim();
       const email = document.getElementById('o_email').value.trim();
       const company = document.getElementById('o_company').value.trim();
       if (!name || !email || !company) {
-        alert('Please fill in the required fields: full name, email and company.');
+        showFormError('err1', true);
+        document.getElementById('o_name').focus();
         return;
       }
+      showFormError('err1', false);
       setOrderStep(2);
     } else if (from === 2) {
       const services = [...document.querySelectorAll('input[name=services]:checked')].map(c => c.value);
-      if (services.length === 0) { alert('Please select at least one service.'); return; }
-      if (!selectedVolume) { alert('Please select your estimated messaging volume.'); return; }
+      if (services.length === 0 || !selectedVolume) { showFormError('err2', true); return; }
+      showFormError('err2', false);
       // Build summary
       const name = document.getElementById('o_name').value;
       const email = document.getElementById('o_email').value;
