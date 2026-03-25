@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SMS przypomnienia z Google Calendar — automatyczne powiadomienia SMS przed spotkaniami. Konfigurowalny czas, personalizacja, potwierdzenie udzialu." />
+  <meta name="keywords" content="Google Calendar SMS, przypomnienie SMS spotkanie, Google Calendar powiadomienia SMS, SMS przed spotkaniem, kalendarz SMS" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://przypominamy.com/integracje/google-calendar" />
+  <meta property="og:title" content="SMS przypomnienia z Google Calendar — automatyczne powiadomienia" />
+  <meta property="og:description" content="Automatyczne SMS przed spotkaniem z Google Calendar. Konfigurowalne czasy, personalizacja, potwierdzenie udzialu SMS-em." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://przypominamy.com/integracje/google-calendar" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <title>SMS przypomnienia z Google Calendar — automatyczne powiadomienia | Przypominamy.com</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --white:#fff; --gray:#888; --light:#ccc; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .container { max-width:960px; margin:0 auto; padding:0 24px; }
+    .breadcrumbs { padding:16px 0 0; font-size:.85rem; color:var(--gray); }
+    .breadcrumbs a { color:var(--gray); }
+    .breadcrumbs a:hover { color:var(--yellow); }
+    .hero { padding:64px 0 56px; text-align:center; }
+    .hero-logos { display:flex; align-items:center; justify-content:center; gap:24px; margin-bottom:32px; }
+    .hero-logo-box { display:inline-flex; align-items:center; justify-content:center; padding:16px 28px; border-radius:12px; font-weight:700; font-size:1rem; }
+    .logo-przypominamy { background:rgba(245,166,35,.15); color:var(--yellow); border:1px solid var(--yellow); }
+    .logo-partner { background:rgba(66,133,244,.12); color:#4285F4; border:1px solid #4285F4; }
+    .hero-plus { font-size:1.5rem; color:var(--gray); font-weight:300; }
+    .hero h1 { font-size:2.2rem; font-weight:800; margin-bottom:16px; line-height:1.3; }
+    .hero h1 em { font-style:normal; color:var(--yellow); }
+    .hero .subtitle { color:var(--gray); font-size:1.05rem; max-width:640px; margin:0 auto 32px; }
+    .hero-cta { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border-radius:8px; font-weight:600; font-size:.92rem; border:none; cursor:pointer; transition:all .2s; }
+    .btn-primary { background:linear-gradient(135deg, var(--yellow), #FFBE44); color:#000; }
+    .btn-primary:hover { transform:translateY(-2px); text-decoration:none; }
+    .btn-outline { background:transparent; color:var(--white); border:1.5px solid var(--border); }
+    .btn-outline:hover { border-color:var(--yellow); color:var(--yellow); text-decoration:none; }
+    section { padding:56px 0; }
+    section h2 { font-size:1.5rem; font-weight:700; text-align:center; margin-bottom:40px; }
+    section h2 em { font-style:normal; color:var(--yellow); }
+    .benefits-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:24px; }
+    .benefit-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; transition:border-color .2s; }
+    .benefit-card:hover { border-color:var(--yellow); }
+    .benefit-card .icon { font-size:1.8rem; margin-bottom:12px; }
+    .benefit-card h3 { font-size:1.05rem; font-weight:600; margin-bottom:8px; }
+    .benefit-card p { font-size:.9rem; color:var(--gray); margin:0; }
+    .steps { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:32px; margin-top:32px; }
+    .step { text-align:center; }
+    .step-number { display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:50%; background:var(--yellow); color:#000; font-weight:800; font-size:1.2rem; margin-bottom:16px; }
+    .step h3 { font-size:1rem; font-weight:600; margin-bottom:8px; }
+    .step p { font-size:.9rem; color:var(--gray); }
+    .use-cases { max-width:640px; margin:0 auto; }
+    .use-case { display:flex; align-items:flex-start; gap:16px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px 24px; margin-bottom:12px; transition:border-color .2s; }
+    .use-case:hover { border-color:var(--yellow); }
+    .use-case .uc-icon { font-size:1.5rem; flex-shrink:0; margin-top:2px; }
+    .use-case h4 { font-size:.95rem; font-weight:600; margin-bottom:4px; }
+    .use-case p { font-size:.85rem; color:var(--gray); margin:0; }
+    .faq { max-width:720px; margin:0 auto; }
+    .faq details { background:var(--surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; transition:border-color .2s; }
+    .faq details[open] { border-color:var(--yellow); }
+    .faq summary { padding:18px 24px; font-weight:600; font-size:.95rem; cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; }
+    .faq summary::-webkit-details-marker { display:none; }
+    .faq summary::after { content:'+'; font-size:1.2rem; color:var(--yellow); transition:transform .2s; }
+    .faq details[open] summary::after { content:'-'; }
+    .faq .answer { padding:0 24px 20px; font-size:.9rem; color:var(--light); line-height:1.7; }
+    .related { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:16px; margin-top:24px; }
+    .related a { display:block; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px; text-align:center; color:var(--white); font-weight:600; font-size:.92rem; transition:border-color .2s; }
+    .related a:hover { border-color:var(--yellow); text-decoration:none; color:var(--yellow); }
+    .cta-section { text-align:center; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:48px 32px; margin:40px 0; }
+    .cta-section h2 { margin-bottom:16px; }
+    .cta-section p { color:var(--gray); margin-bottom:28px; font-size:.95rem; }
+    .cta-section .hero-cta { justify-content:center; }
+    .footer-mini { border-top:1px solid var(--border); padding:28px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    @media(max-width:600px) { .hero h1 { font-size:1.5rem; } .benefits-grid, .steps { grid-template-columns:1fr; } .hero-logos { flex-direction:column; gap:12px; } .related { grid-template-columns:1fr 1fr; } }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Jak polaczac Google Calendar z wysylka SMS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Polaczenie dziala przez Zapier lub Make. Tworzysz automatyzacje: trigger to nowe wydarzenie w Google Calendar, akcja to wyslanie SMS przez Przypominamy.com. Mozesz ustawic opoznienie, np. SMS 24h lub 2h przed rozpoczeciem wydarzenia."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy moge ustawic wiele przypomnien dla jednego wydarzenia?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak. Mozesz skonfigurowac kilka przypomnien z roznymi opoznieniami — np. 24h przed spotkaniem i 2h przed spotkaniem. Kazde przypomnienie moze miec inna tresc SMS."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy uczestnicy moga potwierdzic udzial SMS-em?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak. Mozesz dodac do SMS-a instrukcje odpowiedzi, np. 'Odpowiedz TAK aby potwierdzic lub NIE aby odwolac'. Odpowiedzi sa zbierane przez webhook i moga automatycznie aktualizowac status w kalendarzu."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy obslugujecie wiele kalendarzy?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak. Mozesz podlaczac wiele kalendarzy Google — osobisty, firmowy, zespolowy. Kazdy kalendarz moze miec inne ustawienia przypomnien i inne szablony SMS."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Dla jakich branz to rozwiazanie jest najlepsze?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SMS z Google Calendar to idealne rozwiazanie dla klinik i gabinetow lekarskich, salonow beauty i fryzjerskich, biur rachunkowych, kancelarii prawnych, firm konsultingowych, trenerow personalnych i kazdej firmy uslugowej przyjmujacej klientow na wizyty."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/integracje">← Wszystkie integracje</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="breadcrumbs">
+    <a href="/">Strona glowna</a> &rsaquo; <a href="/integracje">Integracje</a> &rsaquo; Google Calendar
+  </div>
+</div>
+
+<div class="container hero">
+  <div class="hero-logos">
+    <div class="hero-logo-box logo-przypominamy">Przypominamy.com</div>
+    <span class="hero-plus">+</span>
+    <div class="hero-logo-box logo-partner">Google Calendar</div>
+  </div>
+  <h1>Automatyczne <em>SMS przypomnienia</em> z Google Calendar</h1>
+  <p class="subtitle">Klienci dostaja SMS przed spotkaniem. Konfigurowalne czasy, personalizacja tresci, potwierdzenie udzialu odpowiedzia na SMS.</p>
+  <div class="hero-cta">
+    <a href="https://panel.przypominamy.com/register" class="btn btn-primary">Zaloz konto</a>
+    <a href="#jak-to-dziala" class="btn btn-outline">Dowiedz sie wiecej</a>
+  </div>
+</div>
+
+<div class="container">
+  <section>
+    <h2>Korzysci z integracji <em>Google Calendar + SMS</em></h2>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="icon">&#9200;</div>
+        <h3>SMS przed spotkaniem — konfigurowalne czasy</h3>
+        <p>Ustaw przypomnienie 24h, 2h lub 30 minut przed spotkaniem. Mozesz laczyc wiele przypomnien — np. 24h i 2h przed wizyta jednoczesnie.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#128197;</div>
+        <h3>Obsluga wielu kalendarzy</h3>
+        <p>Podlacz kalendarze: osobisty, firmowy, zespolowy. Kazdy moze miec inne szablony SMS i inne czasy przypomnien. Idealne dla firm z wieloma specjalistami.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#9999;&#65039;</div>
+        <h3>Personalizacja tresci SMS</h3>
+        <p>Uzywaj zmiennych z wydarzenia: {tytul}, {data}, {godzina}, {lokalizacja}, {opis}. Kazdy SMS dopasowany do konkretnego spotkania.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#9989;</div>
+        <h3>Potwierdzenie udzialu SMS-em</h3>
+        <p>Klient odpowiada TAK lub NIE. Automatycznie wiesz kto przyjdzie, a kto nie — mozesz wypelnic wolne terminy innymi klientami.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#128268;</div>
+        <h3>Integracja przez Zapier lub Make</h3>
+        <p>Polaczenie bez kodowania. Wizualny edytor automatyzacji pozwala skonfigurowac wszystko w 5 minut w przegladarce.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#127973;</div>
+        <h3>Idealny dla firm uslugowych</h3>
+        <p>Kliniki, salony beauty, biura rachunkowe, kancelarie prawne, firmy konsultingowe — kazda firma przyjmujaca klientow na wizyty skorzysta.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="jak-to-dziala">
+    <h2>Jak to <em>dziala</em>?</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Polacz Google Calendar z Zapier/Make</h3>
+        <p>Zaloguj sie na Zapier lub Make i autoryzuj dostep do Google Calendar. Wybierz kalendarz, z ktorego chcesz wysylac przypomnienia.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Dodaj akcje Przypominamy.com</h3>
+        <p>Jako akcje wybierz "Wyslij SMS" przez Przypominamy.com. Skonfiguruj szablon z polami z wydarzenia i ustaw opoznienie wysylki.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Klienci dostaja SMS automatycznie</h3>
+        <p>Kazde nowe wydarzenie w kalendarzu automatycznie triggeruje SMS. Klient dostaje przypomnienie o ustalonej porze przed spotkaniem.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Dla kogo jest ta <em>integracja</em>?</h2>
+    <div class="use-cases">
+      <div class="use-case">
+        <span class="uc-icon">&#129658;</span>
+        <div>
+          <h4>Kliniki i gabinety lekarskie</h4>
+          <p>Przypomnienia o wizytach lekarskich zmniejszaja no-show o 30-40%. Pacjent moze potwierdzic lub przeniesc termin SMS-em.</p>
+        </div>
+      </div>
+      <div class="use-case">
+        <span class="uc-icon">&#128135;</span>
+        <div>
+          <h4>Salony beauty i fryzjerskie</h4>
+          <p>SMS z przypomnieniem o zabiegu, manicure czy strzyzeniu. Klientki cenia sobie profesjonalna komunikacje SMS.</p>
+        </div>
+      </div>
+      <div class="use-case">
+        <span class="uc-icon">&#128188;</span>
+        <div>
+          <h4>Biura rachunkowe i kancelarie</h4>
+          <p>Przypomnienia o spotkaniach z ksiegowym, prawnikiem lub doradca. SMS dociera nawet gdy klient nie sprawdza maila.</p>
+        </div>
+      </div>
+      <div class="use-case">
+        <span class="uc-icon">&#127947;&#65039;</span>
+        <div>
+          <h4>Trenerzy i konsultanci</h4>
+          <p>SMS przed sesja treningowa, konsultacja online lub warsztatem. Potwierdzenie udzialu pozwala lepiej planowac dzien.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Najczesciej zadawane <em>pytania</em></h2>
+    <div class="faq">
+      <details>
+        <summary>Jak polaczac Google Calendar z wysylka SMS?</summary>
+        <div class="answer">Polaczenie dziala przez Zapier lub Make (dawniej Integromat). Tworzysz automatyzacje: trigger to nowe wydarzenie w Google Calendar, akcja to wyslanie SMS przez Przypominamy.com. Mozesz ustawic opoznienie — np. SMS 24h lub 2h przed rozpoczeciem wydarzenia. Cala konfiguracja zajmuje 5-10 minut.</div>
+      </details>
+      <details>
+        <summary>Czy moge ustawic wiele przypomnien dla jednego wydarzenia?</summary>
+        <div class="answer">Tak. Mozesz skonfigurowac kilka przypomnien z roznymi opoznieniami — np. pierwsze SMS 24h przed spotkaniem ("Przypominamy o jutrzejszej wizycie"), a drugie 2h przed ("Za 2 godziny Twoja wizyta"). Kazde przypomnienie moze miec inna tresc i format.</div>
+      </details>
+      <details>
+        <summary>Czy uczestnicy moga potwierdzic udzial SMS-em?</summary>
+        <div class="answer">Tak. Mozesz dodac do SMS-a instrukcje odpowiedzi, np. "Odpowiedz TAK aby potwierdzic lub NIE aby odwolac". Odpowiedzi sa zbierane przez webhook Przypominamy.com i moga automatycznie aktualizowac status w kalendarzu lub wyslac powiadomienie do Ciebie.</div>
+      </details>
+      <details>
+        <summary>Czy obslugujecie wiele kalendarzy?</summary>
+        <div class="answer">Tak. Mozesz podlaczac wiele kalendarzy Google — osobisty, firmowy, zespolowy. Kazdy kalendarz moze miec inne ustawienia przypomnien i inne szablony SMS. To szczegolnie przydatne w firmach, gdzie kilku specjalistow przyjmuje klientow na rozne uslugi.</div>
+      </details>
+      <details>
+        <summary>Dla jakich branz to rozwiazanie jest najlepsze?</summary>
+        <div class="answer">SMS przypomnienia z Google Calendar sprawdzaja sie wszedzie tam, gdzie klienci umawiani sa na wizyty: kliniki i gabinety lekarskie, salony beauty i fryzjerskie, biura rachunkowe, kancelarie prawne, firmy konsultingowe, trenerzy personalni, studia fotograficzne, warsztaty samochodowe i wiele wiecej.</div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Powiazane <em>integracje</em></h2>
+    <div class="related">
+      <a href="/integracje/booksy">Booksy</a>
+      <a href="/integracje/woocommerce">WooCommerce</a>
+      <a href="/integracje/zapier">Zapier</a>
+      <a href="/integracje/hubspot">HubSpot CRM</a>
+    </div>
+  </section>
+
+  <div class="cta-section">
+    <h2>Zacznij wysylac <em>SMS przypomnienia</em> z Google Calendar</h2>
+    <p>Zmniejsz nieobecnosci klientow i popraw organizacje pracy dzieki automatycznym powiadomieniom SMS.</p>
+    <div class="hero-cta">
+      <a href="https://panel.przypominamy.com/register" class="btn btn-primary">Zaloz konto</a>
+      <a href="mailto:support@przypominamy.com" class="btn btn-outline">Skontaktuj sie</a>
+    </div>
+  </div>
+</div>
+
+<div class="footer-mini">
+  <div class="container">
+    &copy; 2010&ndash;2026 Doradztwo Pawel Mamcarz. Wszelkie prawa zastrzezone. &middot; <a href="/">Strona glowna</a> &middot; <a href="/integracje">Integracje</a> &middot; <a href="/regulamin">Regulamin</a> &middot; <a href="/polityka-prywatnosci">Polityka prywatnosci</a>
+  </div>
+</div>
+
+</body>
+</html>

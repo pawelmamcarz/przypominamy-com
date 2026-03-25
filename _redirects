@@ -43,8 +43,13 @@ https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
 /polityka-prywatnosci   /polityka-prywatnosci.html   200
 /rodo                   /rodo.html                   200
 
-# Integrations page
+# Integrations
 /integracje             /integracje.html             200
+/integracje/booksy              /integracje/booksy.html              200
+/integracje/woocommerce         /integracje/woocommerce.html         200
+/integracje/zapier              /integracje/zapier.html              200
+/integracje/hubspot             /integracje/hubspot.html             200
+/integracje/google-calendar     /integracje/google-calendar.html     200
 
 # English version
 /en                     /en.html                     200

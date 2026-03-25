@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Integracja Przypominamy.com z HubSpot CRM — wysylaj SMS z poziomu kontaktu, automatyczne kampanie SMS w workflow, dwukierunkowa komunikacja." />
+  <meta name="keywords" content="HubSpot SMS, SMS CRM, HubSpot integracja SMS, SMS z HubSpot, kampanie SMS HubSpot" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://przypominamy.com/integracje/hubspot" />
+  <meta property="og:title" content="Integracja SMS z HubSpot CRM — komunikacja z kontaktami przez SMS" />
+  <meta property="og:description" content="Wysylaj SMS z poziomu kontaktu w HubSpot, automatyzuj kampanie w workflow, odbieraj odpowiedzi w timeline." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://przypominamy.com/integracje/hubspot" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <title>Integracja SMS z HubSpot CRM — komunikacja z kontaktami przez SMS | Przypominamy.com</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --white:#fff; --gray:#888; --light:#ccc; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .container { max-width:960px; margin:0 auto; padding:0 24px; }
+    .breadcrumbs { padding:16px 0 0; font-size:.85rem; color:var(--gray); }
+    .breadcrumbs a { color:var(--gray); }
+    .breadcrumbs a:hover { color:var(--yellow); }
+    .hero { padding:64px 0 56px; text-align:center; }
+    .hero-logos { display:flex; align-items:center; justify-content:center; gap:24px; margin-bottom:32px; }
+    .hero-logo-box { display:inline-flex; align-items:center; justify-content:center; padding:16px 28px; border-radius:12px; font-weight:700; font-size:1rem; }
+    .logo-przypominamy { background:rgba(245,166,35,.15); color:var(--yellow); border:1px solid var(--yellow); }
+    .logo-partner { background:rgba(255,122,69,.12); color:#FF7A45; border:1px solid #FF7A45; }
+    .hero-plus { font-size:1.5rem; color:var(--gray); font-weight:300; }
+    .hero h1 { font-size:2.2rem; font-weight:800; margin-bottom:16px; line-height:1.3; }
+    .hero h1 em { font-style:normal; color:var(--yellow); }
+    .hero .subtitle { color:var(--gray); font-size:1.05rem; max-width:640px; margin:0 auto 32px; }
+    .hero-cta { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border-radius:8px; font-weight:600; font-size:.92rem; border:none; cursor:pointer; transition:all .2s; }
+    .btn-primary { background:linear-gradient(135deg, var(--yellow), #FFBE44); color:#000; }
+    .btn-primary:hover { transform:translateY(-2px); text-decoration:none; }
+    .btn-outline { background:transparent; color:var(--white); border:1.5px solid var(--border); }
+    .btn-outline:hover { border-color:var(--yellow); color:var(--yellow); text-decoration:none; }
+    section { padding:56px 0; }
+    section h2 { font-size:1.5rem; font-weight:700; text-align:center; margin-bottom:40px; }
+    section h2 em { font-style:normal; color:var(--yellow); }
+    .benefits-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:24px; }
+    .benefit-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; transition:border-color .2s; }
+    .benefit-card:hover { border-color:var(--yellow); }
+    .benefit-card .icon { font-size:1.8rem; margin-bottom:12px; }
+    .benefit-card h3 { font-size:1.05rem; font-weight:600; margin-bottom:8px; }
+    .benefit-card p { font-size:.9rem; color:var(--gray); margin:0; }
+    .steps { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:32px; margin-top:32px; }
+    .step { text-align:center; }
+    .step-number { display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:50%; background:var(--yellow); color:#000; font-weight:800; font-size:1.2rem; margin-bottom:16px; }
+    .step h3 { font-size:1rem; font-weight:600; margin-bottom:8px; }
+    .step p { font-size:.9rem; color:var(--gray); }
+    .faq { max-width:720px; margin:0 auto; }
+    .faq details { background:var(--surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; transition:border-color .2s; }
+    .faq details[open] { border-color:var(--yellow); }
+    .faq summary { padding:18px 24px; font-weight:600; font-size:.95rem; cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; }
+    .faq summary::-webkit-details-marker { display:none; }
+    .faq summary::after { content:'+'; font-size:1.2rem; color:var(--yellow); transition:transform .2s; }
+    .faq details[open] summary::after { content:'-'; }
+    .faq .answer { padding:0 24px 20px; font-size:.9rem; color:var(--light); line-height:1.7; }
+    .related { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:16px; margin-top:24px; }
+    .related a { display:block; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px; text-align:center; color:var(--white); font-weight:600; font-size:.92rem; transition:border-color .2s; }
+    .related a:hover { border-color:var(--yellow); text-decoration:none; color:var(--yellow); }
+    .cta-section { text-align:center; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:48px 32px; margin:40px 0; }
+    .cta-section h2 { margin-bottom:16px; }
+    .cta-section p { color:var(--gray); margin-bottom:28px; font-size:.95rem; }
+    .cta-section .hero-cta { justify-content:center; }
+    .footer-mini { border-top:1px solid var(--border); padding:28px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    @media(max-width:600px) { .hero h1 { font-size:1.5rem; } .benefits-grid, .steps { grid-template-columns:1fr; } .hero-logos { flex-direction:column; gap:12px; } .related { grid-template-columns:1fr 1fr; } }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Jak polaczac HubSpot z Przypominamy.com?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Integracja odbywa sie przez Zapier lub bezposrednio przez API. W Zapier wystarczy polaczac konto HubSpot jako trigger i Przypominamy.com jako akcje. Dla zaawansowanych uzytkownikow dostepna jest bezposrednia integracja przez REST API i webhooks HubSpot."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy moge wysylac SMS z poziomu kontaktu w HubSpot?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak. Dzieki integracji mozesz wysylac SMS bezposrednio z karty kontaktu w HubSpot. Wiadomosc jest automatycznie logowana w timeline kontaktu, wiec caly zespol widzi historie komunikacji."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy odpowiedzi SMS sa widoczne w HubSpot?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak. Dwukierunkowa integracja pozwala na odbiorcze odpowiedzi SMS, ktore sa automatycznie dodawane do timeline kontaktu w HubSpot. Dzieki temu cala komunikacja SMS jest widoczna w jednym miejscu."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy moge uzywac pol HubSpot w tresci SMS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak. Mozesz personalizowac tresc SMS uzywajac dowolnych pol kontaktu z HubSpot: {firstname}, {lastname}, {company}, {deal_amount}, {lifecycle_stage} i wielu innych. Personalizacja zwieksza skutecznosc komunikacji."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy moge tworzyc automatyczne kampanie SMS w HubSpot Workflows?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak. Mozesz dodac akcje wysylki SMS do dowolnego workflow HubSpot. Przyklady: SMS powitalny po rejestracji, przypomnienie o spotkaniu, follow-up po zamknieciu deala, ankieta NPS po zakonczeniu projektu."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/integracje">← Wszystkie integracje</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="breadcrumbs">
+    <a href="/">Strona glowna</a> &rsaquo; <a href="/integracje">Integracje</a> &rsaquo; HubSpot CRM
+  </div>
+</div>
+
+<div class="container hero">
+  <div class="hero-logos">
+    <div class="hero-logo-box logo-przypominamy">Przypominamy.com</div>
+    <span class="hero-plus">+</span>
+    <div class="hero-logo-box logo-partner">HubSpot CRM</div>
+  </div>
+  <h1>Komunikacja <em>SMS</em> z kontaktami HubSpot CRM</h1>
+  <p class="subtitle">Wysylaj SMS z poziomu kontaktu, automatyzuj kampanie w workflow i sledz odpowiedzi w timeline. Pelna integracja CRM + SMS.</p>
+  <div class="hero-cta">
+    <a href="https://panel.przypominamy.com/register" class="btn btn-primary">Zaloz konto</a>
+    <a href="#jak-to-dziala" class="btn btn-outline">Dowiedz sie wiecej</a>
+  </div>
+</div>
+
+<div class="container">
+  <section>
+    <h2>Korzysci z integracji <em>HubSpot + SMS</em></h2>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="icon">&#128100;</div>
+        <h3>SMS z poziomu kontaktu w HubSpot</h3>
+        <p>Wysylaj SMS bezposrednio z karty kontaktu. Wiadomosc logowana w timeline, caly zespol widzi historie komunikacji SMS z klientem.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#9881;&#65039;</div>
+        <h3>Automatyczne kampanie SMS w workflow</h3>
+        <p>Dodaj akcje "Wyslij SMS" do dowolnego workflow HubSpot. SMS powitalny, follow-up, przypomnienie o spotkaniu — wszystko automatycznie.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#127919;</div>
+        <h3>Segmentacja: SMS do wybranych list</h3>
+        <p>Wysylaj kampanie SMS do konkretnych list kontaktow HubSpot. Segmentuj po lifecycle stage, branzy, lokalizacji czy dowolnej wlasciwosci.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#128260;</div>
+        <h3>Dwukierunkowa: odpowiedzi w timeline</h3>
+        <p>Odpowiedzi klientow na SMS-y automatycznie laduja w timeline kontaktu HubSpot. Pelna historia dwukierunkowej komunikacji SMS w jednym miejscu.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#9999;&#65039;</div>
+        <h3>Personalizacja z pol HubSpot</h3>
+        <p>Uzywaj dowolnych pol kontaktu w tresci SMS: {firstname}, {company}, {deal_amount}, {lifecycle_stage}. Spersonalizowane wiadomosci maja wyzszy response rate.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#128202;</div>
+        <h3>Raporty: dostarczalnosc i konwersje</h3>
+        <p>Sledz ile SMS-ow dostarczono, ile odpowiedzi otrzymano i jaka jest konwersja. Pelna analityka w panelu Przypominamy.com z eksportem do HubSpot.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="jak-to-dziala">
+    <h2>Jak to <em>dziala</em>?</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Polacz HubSpot z Przypominamy.com</h3>
+        <p>Przez Zapier lub bezposrednio API. W Zapier wybierz HubSpot jako trigger i Przypominamy.com jako akcje. Konfiguracja zajmuje 5 minut.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Skonfiguruj szablony i workflow</h3>
+        <p>Stworz szablony SMS z polami personalizacji HubSpot. Dodaj akcje SMS do istniejacych lub nowych workflow w HubSpot.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Wysylaj i sledz wyniki</h3>
+        <p>SMS-y wysylaja sie automatycznie. Odpowiedzi laduja w timeline kontaktu. Raporty dostarczalnosci dostepne w panelu Przypominamy.com.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Najczesciej zadawane <em>pytania</em></h2>
+    <div class="faq">
+      <details>
+        <summary>Jak polaczac HubSpot z Przypominamy.com?</summary>
+        <div class="answer">Integracja odbywa sie przez Zapier lub bezposrednio przez API. W Zapier wystarczy polaczac konto HubSpot jako trigger i Przypominamy.com jako akcje. Dla zaawansowanych uzytkownikow dostepna jest bezposrednia integracja przez REST API i webhooks HubSpot. Obie metody nie wymagaja zaawansowanych umiejetnosci programistycznych.</div>
+      </details>
+      <details>
+        <summary>Czy moge wysylac SMS z poziomu kontaktu w HubSpot?</summary>
+        <div class="answer">Tak. Dzieki integracji mozesz wysylac SMS bezposrednio z karty kontaktu w HubSpot. Wiadomosc jest automatycznie logowana w timeline kontaktu, wiec caly zespol widzi historie komunikacji. To idealne rozwiazanie dla zespolow sprzedazowych i obslugi klienta.</div>
+      </details>
+      <details>
+        <summary>Czy odpowiedzi SMS sa widoczne w HubSpot?</summary>
+        <div class="answer">Tak. Dwukierunkowa integracja pozwala na odbiorcze odpowiedzi SMS, ktore sa automatycznie dodawane do timeline kontaktu w HubSpot. Dzieki temu cala komunikacja SMS jest widoczna w jednym miejscu — obok emaili, rozmow telefonicznych i notatek.</div>
+      </details>
+      <details>
+        <summary>Czy moge uzywac pol HubSpot w tresci SMS?</summary>
+        <div class="answer">Tak. Mozesz personalizowac tresc SMS uzywajac dowolnych pol kontaktu z HubSpot: {firstname}, {lastname}, {company}, {deal_amount}, {lifecycle_stage} i wielu innych. Personalizacja SMS zwieksza open rate i response rate o 20-30% w porownaniu z generycznymi wiadomosciami.</div>
+      </details>
+      <details>
+        <summary>Czy moge tworzyc automatyczne kampanie SMS w HubSpot Workflows?</summary>
+        <div class="answer">Tak. Mozesz dodac akcje wysylki SMS do dowolnego workflow HubSpot. Przyklady zastosowan: SMS powitalny po rejestracji, przypomnienie o spotkaniu 24h wczesniej, follow-up po zamknieciu deala, ankieta NPS po zakonczeniu projektu, powiadomienie o nowej ofercie dla gorących leadow.</div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Powiazane <em>integracje</em></h2>
+    <div class="related">
+      <a href="/integracje/booksy">Booksy</a>
+      <a href="/integracje/woocommerce">WooCommerce</a>
+      <a href="/integracje/zapier">Zapier</a>
+      <a href="/integracje/google-calendar">Google Calendar</a>
+    </div>
+  </section>
+
+  <div class="cta-section">
+    <h2>Dodaj kanal <em>SMS</em> do swojego HubSpot CRM</h2>
+    <p>Zwieksz skutecznosc komunikacji z kontaktami. SMS ma 98% open rate — 5x wiecej niz email.</p>
+    <div class="hero-cta">
+      <a href="https://panel.przypominamy.com/register" class="btn btn-primary">Zaloz konto</a>
+      <a href="mailto:support@przypominamy.com" class="btn btn-outline">Skontaktuj sie</a>
+    </div>
+  </div>
+</div>
+
+<div class="footer-mini">
+  <div class="container">
+    &copy; 2010&ndash;2026 Doradztwo Pawel Mamcarz. Wszelkie prawa zastrzezone. &middot; <a href="/">Strona glowna</a> &middot; <a href="/integracje">Integracje</a> &middot; <a href="/regulamin">Regulamin</a> &middot; <a href="/polityka-prywatnosci">Polityka prywatnosci</a>
+  </div>
+</div>
+
+</body>
+</html>

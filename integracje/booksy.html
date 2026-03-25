@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Integracja Przypominamy.com z Booksy — automatyczne przypomnienia SMS o wizytach. Zmniejsz no-show o 40%, potwierdzenia SMS-em." />
+  <meta name="keywords" content="Booksy SMS, przypomnienie o wizycie SMS, Booksy integracja, automatyczne SMS Booksy, salon beauty SMS" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://przypominamy.com/integracje/booksy" />
+  <meta property="og:title" content="Integracja SMS z Booksy — automatyczne przypomnienia o wizytach" />
+  <meta property="og:description" content="Podlacz Booksy do Przypominamy.com i automatycznie wysylaj przypomnienia SMS o wizytach. Zmniejsz no-show o 40%." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://przypominamy.com/integracje/booksy" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <title>Integracja SMS z Booksy — automatyczne przypomnienia o wizytach | Przypominamy.com</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --white:#fff; --gray:#888; --light:#ccc; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .container { max-width:960px; margin:0 auto; padding:0 24px; }
+    .breadcrumbs { padding:16px 0 0; font-size:.85rem; color:var(--gray); }
+    .breadcrumbs a { color:var(--gray); }
+    .breadcrumbs a:hover { color:var(--yellow); }
+    .hero { padding:64px 0 56px; text-align:center; }
+    .hero-logos { display:flex; align-items:center; justify-content:center; gap:24px; margin-bottom:32px; }
+    .hero-logo-box { display:inline-flex; align-items:center; justify-content:center; padding:16px 28px; border-radius:12px; font-weight:700; font-size:1rem; }
+    .logo-przypominamy { background:rgba(245,166,35,.15); color:var(--yellow); border:1px solid var(--yellow); }
+    .logo-partner { background:rgba(255,255,255,.08); color:var(--white); border:1px solid var(--border); }
+    .hero-plus { font-size:1.5rem; color:var(--gray); font-weight:300; }
+    .hero h1 { font-size:2.2rem; font-weight:800; margin-bottom:16px; line-height:1.3; }
+    .hero h1 em { font-style:normal; color:var(--yellow); }
+    .hero .subtitle { color:var(--gray); font-size:1.05rem; max-width:640px; margin:0 auto 32px; }
+    .hero-cta { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border-radius:8px; font-weight:600; font-size:.92rem; border:none; cursor:pointer; transition:all .2s; }
+    .btn-primary { background:linear-gradient(135deg, var(--yellow), #FFBE44); color:#000; }
+    .btn-primary:hover { transform:translateY(-2px); text-decoration:none; }
+    .btn-outline { background:transparent; color:var(--white); border:1.5px solid var(--border); }
+    .btn-outline:hover { border-color:var(--yellow); color:var(--yellow); text-decoration:none; }
+    section { padding:56px 0; }
+    section h2 { font-size:1.5rem; font-weight:700; text-align:center; margin-bottom:40px; }
+    section h2 em { font-style:normal; color:var(--yellow); }
+    .benefits-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:24px; }
+    .benefit-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; transition:border-color .2s; }
+    .benefit-card:hover { border-color:var(--yellow); }
+    .benefit-card .icon { font-size:1.8rem; margin-bottom:12px; }
+    .benefit-card h3 { font-size:1.05rem; font-weight:600; margin-bottom:8px; }
+    .benefit-card p { font-size:.9rem; color:var(--gray); margin:0; }
+    .steps { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:32px; margin-top:32px; }
+    .step { text-align:center; }
+    .step-number { display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:50%; background:var(--yellow); color:#000; font-weight:800; font-size:1.2rem; margin-bottom:16px; }
+    .step h3 { font-size:1rem; font-weight:600; margin-bottom:8px; }
+    .step p { font-size:.9rem; color:var(--gray); }
+    .faq { max-width:720px; margin:0 auto; }
+    .faq details { background:var(--surface); border:1px solid var(--border); border-radius:10px; margin-bottom:12px; transition:border-color .2s; }
+    .faq details[open] { border-color:var(--yellow); }
+    .faq summary { padding:18px 24px; font-weight:600; font-size:.95rem; cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; }
+    .faq summary::-webkit-details-marker { display:none; }
+    .faq summary::after { content:'+'; font-size:1.2rem; color:var(--yellow); transition:transform .2s; }
+    .faq details[open] summary::after { content:'-'; }
+    .faq .answer { padding:0 24px 20px; font-size:.9rem; color:var(--light); line-height:1.7; }
+    .related { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:16px; margin-top:24px; }
+    .related a { display:block; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px; text-align:center; color:var(--white); font-weight:600; font-size:.92rem; transition:border-color .2s; }
+    .related a:hover { border-color:var(--yellow); text-decoration:none; color:var(--yellow); }
+    .cta-section { text-align:center; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:48px 32px; margin:40px 0; }
+    .cta-section h2 { margin-bottom:16px; }
+    .cta-section p { color:var(--gray); margin-bottom:28px; font-size:.95rem; }
+    .cta-section .hero-cta { justify-content:center; }
+    .footer-mini { border-top:1px solid var(--border); padding:28px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    @media(max-width:600px) { .hero h1 { font-size:1.5rem; } .benefits-grid, .steps { grid-template-columns:1fr; } .hero-logos { flex-direction:column; gap:12px; } .related { grid-template-columns:1fr 1fr; } }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Czym jest integracja Przypominamy.com z Booksy?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Integracja pozwala automatycznie wysylac przypomnienia SMS do klientow, ktorzy zarezerwowali wizyte przez Booksy. System laczy sie z Twoim kontem Booksy przez API i wysyla wiadomosci o konfigurowalnych porach przed wizyta."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Ile kosztuje wysylka SMS do klientow z Booksy?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Koszt jednego SMS-a zaczyna sie od 0,065 zl netto w planie Business. W planie Starter cena wynosi 0,15 zl netto za SMS. Im wiekszy wolumen, tym nizsza cena jednostkowa."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy klienci moga potwierdzac wizyty SMS-em?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak. Mozesz skonfigurowac dwukierunkowa komunikacje — klient odpowiada TAK lub NIE na SMS-a, a system aktualizuje status rezerwacji w Booksy."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Jak skonfigurowac automatyczne przypomnienia?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Po polaczeniu kont Booksy i Przypominamy.com, w panelu ustawiasz szablon SMS z polami personalizacji, wybierasz czasy wysylki (np. 24h i 2h przed wizyta) i aktywujesz automatyzacje."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy moge personalizowac tresc SMS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak. Dostepne zmienne to m.in. {imie_klienta}, {data_wizyty}, {godzina}, {usluga}, {nazwa_salonu}. Mozesz tworzyc wiele szablonow dla roznych typow uslug."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/integracje">← Wszystkie integracje</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="breadcrumbs">
+    <a href="/">Strona glowna</a> &rsaquo; <a href="/integracje">Integracje</a> &rsaquo; Booksy
+  </div>
+</div>
+
+<div class="container hero">
+  <div class="hero-logos">
+    <div class="hero-logo-box logo-przypominamy">Przypominamy.com</div>
+    <span class="hero-plus">+</span>
+    <div class="hero-logo-box logo-partner">Booksy</div>
+  </div>
+  <h1>Automatyczne <em>przypomnienia SMS</em> o wizytach z Booksy</h1>
+  <p class="subtitle">Zmniejsz no-show o 40%. Klienci potwierdzaja wizyty SMS-em, a Ty oszczedzasz czas na recznym dzwonieniu i wysylaniu wiadomosci.</p>
+  <div class="hero-cta">
+    <a href="https://panel.przypominamy.com/register" class="btn btn-primary">Zaloz konto</a>
+    <a href="#jak-to-dziala" class="btn btn-outline">Dowiedz sie wiecej</a>
+  </div>
+</div>
+
+<div class="container">
+  <section>
+    <h2>Korzysci z integracji <em>Booksy + SMS</em></h2>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="icon">&#128172;</div>
+        <h3>Automatyczne przypomnienia 24h i 2h przed wizyta</h3>
+        <p>System sam wysyla SMS-y w wybranych odstepach czasowych przed wizyta. Klient pamietao terminie, a Ty nie musisz dzwonic recznie.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#9989;</div>
+        <h3>Potwierdzenia rezerwacji SMS zamiast email</h3>
+        <p>SMS ma 98% otwarc w ciagu 3 minut. Email czesto laduje w spamie. Potwierdzaj rezerwacje kanalem, ktory klienci naprawde czytaja.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#128200;</div>
+        <h3>Zmniejszenie no-show o 40%</h3>
+        <p>Salony korzystajace z automatycznych przypomnien SMS notuja sredni spadek nieobecnosci o 40%. To bezposredni wplyw na przychod.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#128260;</div>
+        <h3>Dwukierunkowa komunikacja SMS</h3>
+        <p>Klient odpowiada TAK lub NIE na SMS-a. Potwierdzenie lub odwolanie wizyty wraca automatycznie do systemu Booksy.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#9999;&#65039;</div>
+        <h3>Personalizacja szablonow SMS</h3>
+        <p>Uzywaj zmiennych: {imie_klienta}, {data_wizyty}, {godzina}, {usluga}. Kazdy klient dostaje spersonalizowana wiadomosc.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="icon">&#128202;</div>
+        <h3>Raporty i statystyki</h3>
+        <p>Sprawdzaj ile przypomnien wyslano, ile wizyt potwierdzono, ile klientow odwolalo. Pelna analityka w panelu Przypominamy.com.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="jak-to-dziala">
+    <h2>Jak to <em>dziala</em>?</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Polacz konto Booksy z Przypominamy.com</h3>
+        <p>Wygeneruj token API w panelu Przypominamy.com i podlacz go do konta Booksy. Konfiguracja zajmuje 5 minut.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Ustaw szablon SMS i czas wysylki</h3>
+        <p>Wybierz tresc wiadomosci z polami personalizacji. Ustaw kiedy ma isc przypomnienie: 24h, 2h, 30 min przed wizyta.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>System automatycznie wysyla przypomnienia</h3>
+        <p>Gotowe. Od teraz kazdy klient, ktory zarezerwuje wizyte przez Booksy, dostanie SMS-a z przypomnieniem.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Najczesciej zadawane <em>pytania</em></h2>
+    <div class="faq">
+      <details>
+        <summary>Czym jest integracja Przypominamy.com z Booksy?</summary>
+        <div class="answer">Integracja pozwala automatycznie wysylac przypomnienia SMS do klientow, ktorzy zarezerwowali wizyte przez Booksy. System laczy sie z Twoim kontem Booksy przez API i wysyla wiadomosci o konfigurowalnych porach przed wizyta. Nie musisz recznie wpisywac numerow telefonow ani wysylac SMS-ow -- wszystko dziala w tle.</div>
+      </details>
+      <details>
+        <summary>Ile kosztuje wysylka SMS do klientow z Booksy?</summary>
+        <div class="answer">Koszt jednego SMS-a zaczyna sie od 0,065 zl netto w planie Business. W planie Starter cena wynosi 0,15 zl netto za SMS. Dla salonu z 30 wizytami dziennie to koszt okolo 4,50 zl dziennie -- czyli mniej niz jedna stracona wizyta z powodu no-show. Im wiekszy wolumen, tym nizsza cena jednostkowa.</div>
+      </details>
+      <details>
+        <summary>Czy klienci moga potwierdzac wizyty SMS-em?</summary>
+        <div class="answer">Tak. Mozesz skonfigurowac dwukierunkowa komunikacje -- klient odpowiada TAK lub NIE na SMS-a, a system aktualizuje status rezerwacji. Dzieki temu wiesz z wyprzedzeniem, ktore terminy sie zwolnia i mozesz je wypelnic innymi klientami.</div>
+      </details>
+      <details>
+        <summary>Jak skonfigurowac automatyczne przypomnienia?</summary>
+        <div class="answer">Po polaczeniu kont Booksy i Przypominamy.com, w panelu ustawiasz szablon SMS z polami personalizacji (np. {imie_klienta}, {data_wizyty}, {godzina}), wybierasz czasy wysylki (np. 24h i 2h przed wizyta) i aktywujesz automatyzacje. Caly proces konfiguracji trwa okolo 5-10 minut.</div>
+      </details>
+      <details>
+        <summary>Czy moge personalizowac tresc SMS?</summary>
+        <div class="answer">Tak. Dostepne zmienne to m.in. {imie_klienta}, {data_wizyty}, {godzina}, {usluga}, {nazwa_salonu}. Mozesz tworzyc wiele szablonow dla roznych typow uslug -- inny SMS do klientki na manicure, inny na zabieg kosmetyczny. Kazda wiadomosc moze miec inna tresc.</div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Powiazane <em>integracje</em></h2>
+    <div class="related">
+      <a href="/integracje/woocommerce">WooCommerce</a>
+      <a href="/integracje/zapier">Zapier</a>
+      <a href="/integracje/hubspot">HubSpot CRM</a>
+      <a href="/integracje/google-calendar">Google Calendar</a>
+    </div>
+  </section>
+
+  <div class="cta-section">
+    <h2>Zacznij wysylac przypomnienia SMS z <em>Booksy</em></h2>
+    <p>Dolacz do salonow, ktore zmniejszyly no-show o 40% dzieki automatycznym przypomnieniom SMS.</p>
+    <div class="hero-cta">
+      <a href="https://panel.przypominamy.com/register" class="btn btn-primary">Zaloz konto</a>
+      <a href="mailto:support@przypominamy.com" class="btn btn-outline">Skontaktuj sie</a>
+    </div>
+  </div>
+</div>
+
+<div class="footer-mini">
+  <div class="container">
+    &copy; 2010&ndash;2026 Doradztwo Pawel Mamcarz. Wszelkie prawa zastrzezone. &middot; <a href="/">Strona glowna</a> &middot; <a href="/integracje">Integracje</a> &middot; <a href="/regulamin">Regulamin</a> &middot; <a href="/polityka-prywatnosci">Polityka prywatnosci</a>
+  </div>
+</div>
+
+</body>
+</html>

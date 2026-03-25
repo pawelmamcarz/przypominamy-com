@@ -38,10 +38,13 @@ Właściciel: Doradztwo Paweł Mamcarz, ul. Jesionowa 18, 05-825 Grodzisk Mazowi
 
 ## Integracje
 
-- [Zapier](https://przypominamy.com/integracje): Integracja z 7000+ aplikacji — automatyczne SMS po wydarzeniach w CRM, e-commerce, kalendarzu
+- [Booksy](https://przypominamy.com/integracje/booksy): Automatyczne przypomnienia SMS o wizytach w salonach i klinikach, potwierdzenia rezerwacji, zmniejszenie no-show o 40%
+- [Zapier](https://przypominamy.com/integracje/zapier): Integracja z 7000+ aplikacji — CRM, e-commerce, kalendarze, helpdesk
+- [WooCommerce](https://przypominamy.com/integracje/woocommerce): Potwierdzenia zamówień, statusy dostawy, odzyskiwanie porzuconych koszyków
+- [HubSpot CRM](https://przypominamy.com/integracje/hubspot): SMS z poziomu kontaktu, kampanie w workflow, segmentacja list
+- [Google Calendar](https://przypominamy.com/integracje/google-calendar): SMS przed spotkaniem, potwierdzenie udziału, obsługa wielu kalendarzy
 - [Make (Integromat)](https://przypominamy.com/integracje): Zaawansowane scenariusze automatyzacji z SMS/MMS/IVR
 - [n8n](https://przypominamy.com/integracje): Self-hosted automatyzacja, community node do wysyłki SMS
-- [WooCommerce](https://przypominamy.com/blog/sms-potwierdzenia-zamowien-woocommerce): Automatyczne potwierdzenia zamówień przez SMS z WordPress
 
 ## Blog
 
