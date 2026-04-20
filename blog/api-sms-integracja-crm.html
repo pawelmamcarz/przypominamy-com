@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Integracja API SMS z CRM krok po kroku. Przykłady kodu curl i Python, autoryzacja, webhooks, obsługa błędów. Bramka SMS API — przewodnik dla deweloperów." />
+  <meta name="description" content="Integracja API SMS z CRM krok po kroku. Przykłady kodu curl i Python, autoryzacja, webhooks, obsługa błędów. Bramka SMS API. Przewodnik dla deweloperów." />
   <meta name="keywords" content="API SMS Polska, integracja SMS CRM, bramka SMS API, REST API SMS, wysyłka SMS programowo, webhook SMS" />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Zespół Przypominamy.com" />
   <link rel="canonical" href="https://przypominamy.com/blog/api-sms-integracja-crm" />
 
-  <meta property="og:title" content="Integracja API SMS z CRM — od zera do wysyłki w 30 minut" />
+  <meta property="og:title" content="Integracja API SMS z CRM. Od zera do wysyłki w 30 minut" />
   <meta property="og:description" content="Techniczny przewodnik: autoryzacja, wysyłka SMS, webhooks, obsługa błędów. Przykłady w curl i Python." />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://przypominamy.com/blog/api-sms-integracja-crm" />
@@ -23,7 +23,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@przypominamy" />
 
-  <title>Integracja API SMS z CRM — od zera do wysyłki w 30 min</title>
+  <title>Integracja API SMS z CRM. Od zera do wysyłki w 30 min</title>
 
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
@@ -36,7 +36,7 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Integracja API SMS z CRM — od zera do wysyłki w 30 minut",
+    "headline": "Integracja API SMS z CRM. Od zera do wysyłki w 30 minut",
     "description": "Techniczny przewodnik dla deweloperów: autoryzacja API, wysyłka SMS, webhooks, obsługa błędów. Przykłady kodu w curl i Python.",
     "author": {
       "@type": "Organization",
@@ -116,10 +116,10 @@
   </nav>
 
 <main>
-  <h1>Integracja API SMS z CRM — od zera do wysyłki w 30 minut</h1>
+  <h1>Integracja API SMS z CRM. Od zera do wysyłki w 30 minut</h1>
   <p class="meta">Zespół Przypominamy.com &middot; 5 marca 2026 &middot; 6 min czytania</p>
 
-  <p>Ręczne logowanie do panelu i wysyłanie SMS-ów z poziomu przeglądarki sprawdza się przy małych wolumenach. Ale gdy Twój CRM, system rezerwacji lub platforma e-commerce obsługuje tysiące kontaktów, potrzebujesz <strong>automatyzacji przez API</strong>. W tym artykule przeprowadzimy Cię przez pełną integrację z REST API Przypominamy.com — od uzyskania klucza API, przez wysyłkę pierwszego SMS-a, konfigurację webhooków, aż po obsługę błędów i najlepsze praktyki produkcyjne.</p>
+  <p>Ręczne logowanie do panelu i wysyłanie SMS-ów z poziomu przeglądarki sprawdza się przy małych wolumenach. Ale gdy Twój CRM, system rezerwacji lub platforma e-commerce obsługuje tysiące kontaktów, potrzebujesz <strong>automatyzacji przez API</strong>. W tym artykule przeprowadzimy Cię przez pełną integrację z REST API Przypominamy.com. Od uzyskania klucza API, przez wysyłkę pierwszego SMS-a, konfigurację webhooków, aż po obsługę błędów i najlepsze praktyki produkcyjne.</p>
 
   <h2>Wymagania wstępne</h2>
 
@@ -127,23 +127,23 @@
 
   <ul>
     <li><strong>Konto na Przypominamy.com</strong> z planem Business lub Enterprise (API nie jest dostępne w planie Starter).</li>
-    <li><strong>Klucz API (API Key)</strong> — wygenerujesz go w panelu klienta w sekcji <em>Ustawienia &rarr; API &rarr; Wygeneruj klucz</em>.</li>
-    <li><strong>Środowisko deweloperskie</strong> — dowolny język programowania z obsługą HTTP. W przykładach użyjemy curl (linia poleceń) i Python 3.8+.</li>
-    <li><strong>Doładowane konto</strong> — API działa w modelu prepaid. Upewnij się, że masz wystarczające środki na koncie przed pierwszą wysyłką.</li>
+    <li><strong>Klucz API (API Key)</strong>, wygenerujesz go w panelu klienta w sekcji <em>Ustawienia &rarr; API &rarr; Wygeneruj klucz</em>.</li>
+    <li><strong>Środowisko deweloperskie</strong>, dowolny język programowania z obsługą HTTP. W przykładach użyjemy curl (linia poleceń) i Python 3.8+.</li>
+    <li><strong>Doładowane konto</strong>, API działa w modelu prepaid. Upewnij się, że masz wystarczające środki na koncie przed pierwszą wysyłką.</li>
   </ul>
 
-  <h2>Krok 1: Autoryzacja — nagłówek API Key</h2>
+  <h2>Krok 1: Autoryzacja. Nagłówek API Key</h2>
 
   <p>API Przypominamy.com używa autoryzacji przez nagłówek HTTP. Każde żądanie musi zawierać nagłówek <code class="inline-code">Authorization</code> z tokenem Bearer:</p>
 
 <pre><code>Authorization: Bearer TWOJ_KLUCZ_API</code></pre>
 
-  <p>Klucz API to ciąg 64 znaków alfanumerycznych. Traktuj go jak hasło — nie commituj do repozytorium, nie przesyłaj w URL-ach i nie udostępniaj osobom trzecim. Zalecamy przechowywanie klucza w zmiennych środowiskowych:</p>
+  <p>Klucz API to ciąg 64 znaków alfanumerycznych. Traktuj go jak hasło. Nie commituj do repozytorium, nie przesyłaj w URL-ach i nie udostępniaj osobom trzecim. Zalecamy przechowywanie klucza w zmiennych środowiskowych:</p>
 
-<pre><code># Bash — eksport zmiennej środowiskowej
+<pre><code># Bash. Eksport zmiennej środowiskowej
 export PRZYPOMINAMY_API_KEY="pk_live_abc123def456..."
 
-# Python — odczyt ze zmiennej środowiskowej
+# Python. Odczyt ze zmiennej środowiskowej
 import os
 api_key = os.environ["PRZYPOMINAMY_API_KEY"]</code></pre>
 
@@ -268,9 +268,9 @@ print(f"Credits used: {data.get('credits_used')}")</code></pre>
 
   <p>Endpoint batch przyjmuje do <strong>10 000 wiadomości w jednym żądaniu</strong>. Dla większych wolumenów zalecamy podzielenie wysyłki na partie i wysyłanie ich sekwencyjnie z krótką przerwą (np. 1 sekunda) między żądaniami.</p>
 
-  <h2>Krok 4: Webhooks — odbieranie statusów doręczenia</h2>
+  <h2>Krok 4: Webhooks. Odbieranie statusów doręczenia</h2>
 
-  <p>Webhooks pozwalają Twojemu systemowi CRM otrzymywać powiadomienia o zdarzeniach w czasie rzeczywistym — doręczeniu wiadomości, błędzie dostarczenia, odpowiedzi odbiorcy. Konfiguracja webhooków odbywa się w panelu klienta (<em>Ustawienia &rarr; API &rarr; Webhooks</em>) lub przez API:</p>
+  <p>Webhooks pozwalają Twojemu systemowi CRM otrzymywać powiadomienia o zdarzeniach w czasie rzeczywistym. Doręczeniu wiadomości, błędzie dostarczenia, odpowiedzi odbiorcy. Konfiguracja webhooków odbywa się w panelu klienta (<em>Ustawienia &rarr; API &rarr; Webhooks</em>) lub przez API:</p>
 
 <pre><code>curl -X POST https://api.przypominamy.com/v1/webhooks \
   -H "Authorization: Bearer $PRZYPOMINAMY_API_KEY" \
@@ -375,7 +375,7 @@ def send_sms_with_retry(payload, max_retries=3):
             time.sleep(wait)
             continue
 
-        # Błędy 4xx (oprócz 429) — nie ponawiaj
+        # Błędy 4xx (oprócz 429). Nie ponawiaj
         response.raise_for_status()
 
     raise Exception("Nie udało się wysłać SMS po 3 próbach")</code></pre>
@@ -396,8 +396,8 @@ def send_sms_with_retry(payload, max_retries=3):
     <li><strong>Przechowuj message_id</strong> zwracane przez API. Umożliwia to korelację ze statusami doręczenia otrzymywanymi przez webhooks i ułatwia debugowanie.</li>
     <li><strong>Waliduj numery telefonów</strong> przed wysyłką. Użyj endpointu <code class="inline-code">GET /v1/lookup/{number}</code> do weryfikacji, czy numer jest aktywny (HLR lookup). Kosztuje 0,02 zł za zapytanie, ale oszczędza pieniądze na wiadomościach do nieistniejących numerów.</li>
     <li><strong>Monitoruj saldo</strong> programowo. Endpoint <code class="inline-code">GET /v1/account/balance</code> zwraca aktualny stan konta. Skonfiguruj alert, gdy saldo spadnie poniżej progu (np. 100 zł), aby uniknąć przerwania wysyłek.</li>
-    <li><strong>Loguj wszystkie żądania i odpowiedzi</strong> po stronie swojego systemu. W razie problemów z doręczeniem, logi umożliwią szybką diagnozę — czy problem leży po stronie Twojego kodu, API, czy operatora.</li>
-    <li><strong>Testuj na środowisku sandbox</strong> przed wdrożeniem produkcyjnym. Dodaj nagłówek <code class="inline-code">X-Sandbox: true</code> do żądania — wiadomość zostanie przetworzona, ale nie wysłana i nie obciąży konta.</li>
+    <li><strong>Loguj wszystkie żądania i odpowiedzi</strong> po stronie swojego systemu. W razie problemów z doręczeniem, logi umożliwią szybką diagnozę. Czy problem leży po stronie Twojego kodu, API, czy operatora.</li>
+    <li><strong>Testuj na środowisku sandbox</strong> przed wdrożeniem produkcyjnym. Dodaj nagłówek <code class="inline-code">X-Sandbox: true</code> do żądania. Wiadomość zostanie przetworzona, ale nie wysłana i nie obciąży konta.</li>
   </ul>
 
   <h2>Integracja z popularnymi CRM-ami</h2>
@@ -405,11 +405,11 @@ def send_sms_with_retry(payload, max_retries=3):
   <p>Jeśli korzystasz z gotowego systemu CRM, integracja może być jeszcze prostsza dzięki natywnym wtyczkom i connectorom:</p>
 
   <ul>
-    <li><strong>Salesforce</strong> — pakiet na AppExchange, konfiguracja w 10 minut.</li>
-    <li><strong>HubSpot</strong> — integracja przez Workflows z natywnym action „Wyślij SMS".</li>
-    <li><strong>Pipedrive</strong> — webhook trigger przy zmianie etapu dealu + automatyczna wysyłka SMS.</li>
-    <li><strong>Zapier / Make (Integromat)</strong> — gotowe moduły Przypominamy.com umożliwiające integrację z ponad 5 000 aplikacji bez pisania kodu.</li>
-    <li><strong>WooCommerce / PrestaShop / Magento</strong> — wtyczki do automatycznych powiadomień transakcyjnych i kampanii marketingowych.</li>
+    <li><strong>Salesforce</strong>, pakiet na AppExchange, konfiguracja w 10 minut.</li>
+    <li><strong>HubSpot</strong>, integracja przez Workflows z natywnym action „Wyślij SMS".</li>
+    <li><strong>Pipedrive</strong>, webhook trigger przy zmianie etapu dealu + automatyczna wysyłka SMS.</li>
+    <li><strong>Zapier / Make (Integromat)</strong>, gotowe moduły Przypominamy.com umożliwiające integrację z ponad 5 000 aplikacji bez pisania kodu.</li>
+    <li><strong>WooCommerce / PrestaShop / Magento</strong>, wtyczki do automatycznych powiadomień transakcyjnych i kampanii marketingowych.</li>
   </ul>
 
   <p>Szczegółowe instrukcje instalacji dla każdego CRM znajdziesz w <a href="https://przypominamy.com/api-docs">dokumentacji API</a>.</p>
@@ -419,14 +419,14 @@ def send_sms_with_retry(payload, max_retries=3):
   <p>Integracja API SMS z CRM to inwestycja jednego dnia pracy developera, która automatyzuje komunikację z klientami na lata. Kluczowe wnioski:</p>
 
   <ol>
-    <li>Autoryzacja przez Bearer token — prosty i bezpieczny mechanizm.</li>
+    <li>Autoryzacja przez Bearer token: prosty i bezpieczny mechanizm.</li>
     <li>Endpoint <code class="inline-code">/v1/sms/send</code> do pojedynczych wiadomości, <code class="inline-code">/v1/sms/batch</code> do wysyłek masowych.</li>
     <li>Webhooks dają Ci informacje o doręczeniu i odpowiedziach w czasie rzeczywistym.</li>
     <li>Implementuj retry z exponential backoff dla błędów 429 i 5xx.</li>
     <li>Używaj trybu sandbox do testów, endpoint batch do produkcji, i monitoruj saldo programowo.</li>
   </ol>
 
-  <p>Cała dokumentacja API z interaktywnym exploratorem jest dostępna pod adresem <a href="https://przypominamy.com/api-docs">przypominamy.com/api-docs</a>. Jeśli potrzebujesz wsparcia przy integracji, napisz na <a href="mailto:support@przypominamy.com">support@przypominamy.com</a> — nasz zespół techniczny odpowiada w ciągu 2 godzin w dni robocze.</p>
+  <p>Cała dokumentacja API z interaktywnym exploratorem jest dostępna pod adresem <a href="https://przypominamy.com/api-docs">przypominamy.com/api-docs</a>. Jeśli potrzebujesz wsparcia przy integracji, napisz na <a href="mailto:support@przypominamy.com">support@przypominamy.com</a>, nasz zespół techniczny odpowiada w ciągu 2 godzin w dni robocze.</p>
 
   <div class="cta-box">
     <h3>Zacznij integrację już teraz</h3>
@@ -438,7 +438,7 @@ def send_sms_with_retry(payload, max_retries=3):
     <h3>Przeczytaj również</h3>
     <ul>
       <li><a href="/blog/sms-przypomnienia-wizyty-lekarz">Jak zmniejszyć liczbę nieodwołanych wizyt o 40% dzięki SMS</a></li>
-      <li><a href="/blog/sms-marketing-ecommerce">SMS marketing w e-commerce — kompletny przewodnik 2026</a></li>
+      <li><a href="/blog/sms-marketing-ecommerce">SMS marketing w e-commerce. Kompletny przewodnik 2026</a></li>
     </ul>
   </div>
 </div>
