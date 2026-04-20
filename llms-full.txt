@@ -152,7 +152,7 @@ Informowanie pracowników o zmianach, przypomnienia o spotkaniach, potwierdzenia
 ## Najczęściej zadawane pytania (FAQ)
 
 ### Jak zacząć wysyłać SMS przez Przypominamy.com?
-Załóż konto na panel.przypominamy.com, doładuj konto wybraną kwotą (min. 100 zł), przygotuj szablon wiadomości, zaimportuj listę numerów z pliku CSV i uruchom wysyłkę. Cały proces trwa około 10 minut.
+Zarejestruj się na przypominamy.com/register — każde zgłoszenie weryfikujemy ręcznie w ciągu 24 godzin. Po akceptacji dostajesz dane do panelu klienta, doładowujesz konto (min. 100 zł), przygotowujesz szablon, importujesz listę numerów z CSV i uruchamiasz wysyłkę.
 
 ### Ile kosztuje wysyłka SMS?
 Ceny zaczynają się od 0,10 zł za SMS w planie Business (min. doładowanie 500 zł) i 0,15 zł za SMS w planie Starter (min. doładowanie 100 zł). Brak abonamentu — płacisz tylko za wysłane wiadomości.

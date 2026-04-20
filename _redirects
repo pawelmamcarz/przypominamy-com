@@ -43,6 +43,12 @@ https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
 /polityka-prywatnosci   /polityka-prywatnosci.html   200
 /rodo                   /rodo.html                   200
 
+# Registration
+/register               /register.html               200
+/register/              /register                    301
+/rejestracja            /register                    301
+/rejestracja/           /register                    301
+
 # Integrations
 /integracje             /integracje.html             200
 /integracje/booksy              /integracje/booksy.html              200

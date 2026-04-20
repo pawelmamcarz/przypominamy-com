@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Załóż konto w Przypominamy.com. Każde zgłoszenie weryfikujemy ręcznie w ciągu 24 godzin — to chroni platformę przed spamem i zapewnia dobrą reputację nadawczą." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://przypominamy.com/register" />
+  <meta property="og:title" content="Rejestracja konta — Przypominamy.com" />
+  <meta property="og:description" content="Załóż konto w platformie SMS/MMS/IVR. Weryfikacja ręczna w 24h." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://przypominamy.com/register" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <title>Rejestracja konta — Przypominamy.com</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --yellow-dim:rgba(245,166,35,.15); --white:#fff; --gray:#888; --light:#ccc; --radius:14px; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .container { max-width:1080px; margin:0 auto; padding:0 24px; }
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .breadcrumbs { padding:16px 0 0; font-size:.85rem; color:var(--gray); }
+    .breadcrumbs a { color:var(--gray); }
+    .breadcrumbs a:hover { color:var(--yellow); }
+
+    .page-head { padding:48px 0 24px; text-align:center; }
+    .page-head h1 { font-size:2rem; font-weight:800; margin-bottom:12px; }
+    .page-head h1 em { font-style:normal; color:var(--yellow); }
+    .page-head p { color:var(--gray); max-width:620px; margin:0 auto; font-size:1.02rem; }
+
+    .reg-wrap { display:grid; grid-template-columns: 1fr 1.4fr; gap:48px; padding:32px 0 64px; align-items:start; }
+    @media(max-width:860px) { .reg-wrap { grid-template-columns:1fr; gap:32px; } }
+
+    .reg-info h2 { font-size:1.1rem; font-weight:700; margin-bottom:16px; color:var(--white); }
+    .reg-info .info-list { list-style:none; padding:0; }
+    .reg-info .info-list li { display:flex; gap:12px; padding:14px 0; border-bottom:1px solid var(--border); font-size:.92rem; color:var(--light); }
+    .reg-info .info-list li:last-child { border-bottom:none; }
+    .reg-info .info-list .ico { flex-shrink:0; width:28px; height:28px; border-radius:8px; background:var(--yellow-dim); color:var(--yellow); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.85rem; }
+    .reg-info .info-list strong { display:block; color:var(--white); font-weight:600; font-size:.95rem; margin-bottom:2px; }
+    .reg-info .info-note { margin-top:20px; padding:16px; background:var(--surface); border:1px solid var(--border); border-radius:12px; font-size:.86rem; color:var(--gray); }
+
+    .reg-form-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:32px; }
+
+    .progress { display:flex; gap:8px; margin-bottom:28px; }
+    .progress-dot { flex:1; height:4px; background:var(--border); border-radius:2px; transition:background .2s; }
+    .progress-dot.active { background:var(--yellow); }
+
+    .reg-page { display:none; }
+    .reg-page.active { display:block; }
+    .reg-page h3 { font-size:1.1rem; font-weight:700; margin-bottom:6px; }
+    .reg-page .step-hint { font-size:.85rem; color:var(--gray); margin-bottom:20px; }
+
+    .form-group { margin-bottom:16px; }
+    .form-group label { display:block; font-size:.86rem; font-weight:600; margin-bottom:6px; color:var(--light); }
+    .form-group input,
+    .form-group select,
+    .form-group textarea { width:100%; background:var(--dark); border:1px solid var(--border); border-radius:10px; padding:12px 14px; color:var(--white); font-family:inherit; font-size:.95rem; transition:border-color .2s; }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { outline:none; border-color:var(--yellow); }
+    .form-group textarea { resize:vertical; min-height:80px; }
+
+    .form-error { display:none; background:rgba(229,62,62,.1); border:1px solid rgba(229,62,62,.3); color:#ff8080; padding:10px 14px; border-radius:10px; margin-bottom:14px; font-size:.88rem; }
+    .form-error.visible { display:block; }
+
+    .volume-options { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    @media(max-width:480px) { .volume-options { grid-template-columns:repeat(2,1fr); } }
+    .vol-btn { padding:12px 14px; background:var(--dark); border:1px solid var(--border); border-radius:10px; text-align:center; font-size:.88rem; cursor:pointer; transition:all .15s; color:var(--light); }
+    .vol-btn:hover { border-color:var(--yellow); color:var(--yellow); }
+    .vol-btn.selected { background:var(--yellow-dim); border-color:var(--yellow); color:var(--yellow); font-weight:600; }
+
+    .honeypot { position:absolute; left:-9999px; opacity:0; pointer-events:none; }
+
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border-radius:10px; font-weight:600; font-size:.95rem; border:none; cursor:pointer; transition:all .2s; font-family:inherit; }
+    .btn-primary { background:linear-gradient(135deg, var(--yellow), #FFBE44); color:#000; }
+    .btn-primary:hover { transform:translateY(-1px); text-decoration:none; }
+    .btn-primary:disabled { opacity:.6; cursor:wait; transform:none; }
+    .btn-outline { background:transparent; color:var(--white); border:1.5px solid var(--border); }
+    .btn-outline:hover { border-color:var(--yellow); color:var(--yellow); text-decoration:none; }
+
+    .btn-row { display:flex; gap:12px; margin-top:20px; }
+    .btn-row .btn-primary { flex:1; justify-content:center; }
+
+    .reg-success { display:none; text-align:center; padding:16px 8px; }
+    .reg-success.visible { display:block; }
+    .success-icon { width:64px; height:64px; margin:0 auto 20px; border-radius:50%; background:rgba(75,200,122,.15); color:#4BC87A; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700; }
+    .reg-success h3 { font-size:1.4rem; margin-bottom:12px; }
+    .reg-success p { color:var(--light); font-size:.95rem; max-width:460px; margin:0 auto 20px; }
+
+    .footer-mini { border-top:1px solid var(--border); padding:28px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    .footer-mini a { color:var(--gray); }
+    .footer-mini a:hover { color:var(--yellow); }
+  </style>
+</head>
+<body>
+
+<main>
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/">← Strona główna</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="breadcrumbs">
+    <a href="/">Strona główna</a> &rsaquo; Rejestracja
+  </div>
+</div>
+
+<div class="container">
+  <div class="page-head">
+    <h1>Załóż konto w <em>Przypominamy.com</em></h1>
+    <p>Każde zgłoszenie weryfikujemy ręcznie. Zajmuje nam to do 24 godzin i chroni platformę przed spamem — dzięki temu Twoje SMS-y docierają z dobrą reputacją nadawczą.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="reg-wrap">
+
+    <aside class="reg-info">
+      <h2>Co dzieje się po zgłoszeniu</h2>
+      <ul class="info-list">
+        <li>
+          <div class="ico">1</div>
+          <div>
+            <strong>Wypełniasz formularz (2 minuty)</strong>
+            Email, firma, telefon i krótka informacja o planowanym użyciu.
+          </div>
+        </li>
+        <li>
+          <div class="ico">2</div>
+          <div>
+            <strong>Weryfikujemy Twoje dane (do 24h)</strong>
+            Sprawdzamy firmę i dopasowanie platformy. W razie pytań napiszemy.
+          </div>
+        </li>
+        <li>
+          <div class="ico">3</div>
+          <div>
+            <strong>Dostajesz dostęp do panelu</strong>
+            Wysyłamy dane logowania mailem. Doładowujesz konto i zaczynasz wysyłać.
+          </div>
+        </li>
+      </ul>
+      <div class="info-note">
+        Weryfikujemy ręcznie, bo rynek SMS jest regulowany. Platformy bez weryfikacji szybko tracą renomę, a wiadomości lądują w filtrach operatorów. U nas nie.
+      </div>
+    </aside>
+
+    <div class="reg-form-card">
+
+      <div class="progress" id="progress">
+        <div class="progress-dot active" id="dot1"></div>
+        <div class="progress-dot" id="dot2"></div>
+      </div>
+
+      <form id="registerForm" autocomplete="on" novalidate>
+
+        <!-- Honeypot -->
+        <div class="honeypot" aria-hidden="true">
+          <label for="r_website">Website (leave empty)</label>
+          <input type="text" id="r_website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="reg-page active" id="rp1">
+          <h3>Krok 1 z 2 · Dane firmy</h3>
+          <div class="step-hint">Zaczynamy od minimum. Resztę uzupełnisz za chwilę.</div>
+
+          <div class="form-error" id="err1">Uzupełnij e-mail i nazwę firmy.</div>
+
+          <div class="form-group">
+            <label for="r_email">E-mail *</label>
+            <input type="email" id="r_email" name="email" placeholder="jan@firma.pl" autocomplete="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="r_company">Nazwa firmy *</label>
+            <input type="text" id="r_company" name="company" placeholder="Np. Salon Anna" autocomplete="organization" required />
+          </div>
+
+          <div class="btn-row">
+            <button type="button" class="btn btn-primary" onclick="regNext()">Dalej → Dane kontaktowe</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="reg-page" id="rp2">
+          <h3>Krok 2 z 2 · Kontakt i potrzeby</h3>
+          <div class="step-hint">Im więcej napiszesz, tym szybciej zweryfikujemy zgłoszenie.</div>
+
+          <div class="form-error" id="err2">Uzupełnij imię i telefon kontaktowy.</div>
+
+          <div class="form-group">
+            <label for="r_name">Imię i nazwisko *</label>
+            <input type="text" id="r_name" name="name" placeholder="Jan Kowalski" autocomplete="name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="r_phone">Telefon kontaktowy *</label>
+            <input type="tel" id="r_phone" name="phone" placeholder="+48 600 000 000" autocomplete="tel" required />
+          </div>
+
+          <div class="form-group">
+            <label for="r_nip">NIP (opcjonalnie)</label>
+            <input type="text" id="r_nip" name="nip" placeholder="1234567890" inputmode="numeric" autocomplete="off" />
+          </div>
+
+          <div class="form-group">
+            <label for="r_industry">Branża</label>
+            <select id="r_industry" name="industry">
+              <option value="">Wybierz branżę…</option>
+              <option>Medycyna i kliniki</option>
+              <option>Salony beauty, fryzjerskie, SPA</option>
+              <option>E-commerce i sklepy</option>
+              <option>Finanse i ubezpieczenia</option>
+              <option>Motoryzacja</option>
+              <option>Edukacja i szkolenia</option>
+              <option>Nieruchomości</option>
+              <option>Hotelarstwo i gastronomia</option>
+              <option>HR i agencje pracy</option>
+              <option>Windykacja</option>
+              <option>Administracja i urzędy</option>
+              <option>Inna</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Planowany wolumen miesięczny</label>
+            <div class="volume-options" id="volOptions">
+              <div class="vol-btn" onclick="selectVol(this,'do 1 tys.')">do 1 tys.</div>
+              <div class="vol-btn" onclick="selectVol(this,'1–10 tys.')">1–10 tys.</div>
+              <div class="vol-btn" onclick="selectVol(this,'10–50 tys.')">10–50 tys.</div>
+              <div class="vol-btn" onclick="selectVol(this,'50–200 tys.')">50–200 tys.</div>
+              <div class="vol-btn" onclick="selectVol(this,'200 tys.+')">200 tys.+</div>
+              <div class="vol-btn" onclick="selectVol(this,'nie wiem')">Nie wiem</div>
+            </div>
+            <input type="hidden" id="r_volume" name="volume" />
+          </div>
+
+          <div class="form-group">
+            <label for="r_usecase">Krótko o zastosowaniu (opcjonalnie)</label>
+            <textarea id="r_usecase" name="usecase" rows="3" placeholder="Np. potwierdzenia wizyt dla gabinetu dentystycznego, powiadomienia o statusie zamówień w sklepie, windykacja miękka."></textarea>
+          </div>
+
+          <div class="btn-row">
+            <button type="button" class="btn btn-outline" onclick="regBack()">← Wróć</button>
+            <button type="submit" class="btn btn-primary" id="regSubmitBtn">Wyślij zgłoszenie</button>
+          </div>
+        </div>
+
+      </form>
+
+      <!-- Success -->
+      <div class="reg-success" id="regSuccess">
+        <div class="success-icon">✓</div>
+        <h3>Zgłoszenie przyjęte</h3>
+        <p>Wysłaliśmy potwierdzenie na adres <strong id="successEmail"></strong>. W ciągu 24 godzin otrzymasz tam dane dostępu do panelu albo pytanie od nas, jeśli potrzebujemy doprecyzowania.</p>
+        <p style="color:var(--gray);font-size:.88rem">Sprawdź też folder SPAM — czasem pierwsza wiadomość tam trafia.</p>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-mini">
+  <div class="container">
+    &copy; 2010–2026 Doradztwo Paweł Mamcarz ·
+    <a href="/regulamin">Regulamin</a> ·
+    <a href="/polityka-prywatnosci">Polityka prywatności</a> ·
+    <a href="/rodo">RODO</a>
+  </div>
+</div>
+</main>
+
+<script>
+  let regStep = 1;
+
+  function setStep(n) {
+    regStep = n;
+    document.getElementById('rp1').classList.toggle('active', n === 1);
+    document.getElementById('rp2').classList.toggle('active', n === 2);
+    document.getElementById('dot1').classList.toggle('active', n >= 1);
+    document.getElementById('dot2').classList.toggle('active', n >= 2);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showError(id, msg) {
+    const el = document.getElementById(id);
+    if (msg) el.textContent = msg;
+    el.classList.add('visible');
+    setTimeout(() => el.classList.remove('visible'), 6000);
+  }
+
+  function regNext() {
+    const email = document.getElementById('r_email').value.trim();
+    const company = document.getElementById('r_company').value.trim();
+    if (!email || !company) {
+      showError('err1', 'Uzupełnij e-mail i nazwę firmy.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('err1', 'Podaj prawidłowy adres e-mail.');
+      return;
+    }
+    setStep(2);
+  }
+
+  function regBack() {
+    setStep(1);
+  }
+
+  function selectVol(el, val) {
+    document.querySelectorAll('#volOptions .vol-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('r_volume').value = val;
+  }
+
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('r_name').value.trim();
+    const phone = document.getElementById('r_phone').value.trim();
+    if (!name || !phone) {
+      showError('err2', 'Uzupełnij imię i telefon kontaktowy.');
+      return;
+    }
+
+    const payload = {
+      email:    document.getElementById('r_email').value.trim(),
+      company:  document.getElementById('r_company').value.trim(),
+      name,
+      phone,
+      nip:      document.getElementById('r_nip').value.trim(),
+      industry: document.getElementById('r_industry').value,
+      volume:   document.getElementById('r_volume').value,
+      usecase:  document.getElementById('r_usecase').value.trim(),
+      website:  document.getElementById('r_website').value,
+    };
+
+    const btn = document.getElementById('regSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Wysyłam…';
+
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Coś poszło nie tak.');
+
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('progress').style.display = 'none';
+      document.getElementById('successEmail').textContent = payload.email;
+      document.getElementById('regSuccess').classList.add('visible');
+    } catch (err) {
+      showError('err2', err.message || 'Nie udało się wysłać zgłoszenia. Spróbuj jeszcze raz.');
+      btn.disabled = false;
+      btn.textContent = 'Wyślij zgłoszenie';
+    }
+  });
+</script>
+
+</body>
+</html>
