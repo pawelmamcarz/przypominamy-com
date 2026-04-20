@@ -19,3 +19,6 @@ preview*.png
 # OS
 .DS_Store
 Thumbs.db
+
+# Local notes / session logs
+notes/
