@@ -4,6 +4,10 @@
  *
  * Receives JSON from the contact form and forwards
  * to support@przypominamy.com via MailChannels (free on Cloudflare Workers).
+ *
+ * STATUS: UNUSED — kept for future contact form page.
+ * Current order flow goes through order-worker.js (/api/order).
+ * No route is configured in any .toml and no frontend form POSTs here.
  */
 
 export default {
