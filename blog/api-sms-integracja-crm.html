@@ -151,16 +151,16 @@ api_key = os.environ["PRZYPOMINAMY_API_KEY"]</code></pre>
 
   <h2>Krok 2: Wysyłka pojedynczego SMS-a</h2>
 
-  <p>Podstawowy endpoint do wysyłki SMS-a to <code class="inline-code">POST /v1/sms/send</code>. Oto przykład wywołania w curl:</p>
+  <p>Podstawowy endpoint do wysyłki SMS-a to <code class="inline-code">POST /v1/sms</code>. Oto przykład wywołania w curl:</p>
 
-<pre><code>curl -X POST https://api.przypominamy.com/v1/sms/send \
+<pre><code>curl -X POST https://api.przypominamy.com/v1/sms \
   -H "Authorization: Bearer $PRZYPOMINAMY_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "to": "+48600123456",
     "from": "MojaFirma",
     "message": "Przypominamy o wizycie jutro o 10:00. Pozdrawiamy!",
-    "reference": "wizyta-4521"
+    "idx": "wizyta-4521"
   }'</code></pre>
 
   <p>Ten sam request w Pythonie z biblioteką <code class="inline-code">requests</code>:</p>
@@ -168,7 +168,7 @@ api_key = os.environ["PRZYPOMINAMY_API_KEY"]</code></pre>
 <pre><code>import os
 import requests
 
-API_URL = "https://api.przypominamy.com/v1/sms/send"
+API_URL = "https://api.przypominamy.com/v1/sms"
 API_KEY = os.environ["PRZYPOMINAMY_API_KEY"]
 
 response = requests.post(
@@ -181,14 +181,15 @@ response = requests.post(
         "to": "+48600123456",
         "from": "MojaFirma",
         "message": "Przypominamy o wizycie jutro o 10:00. Pozdrawiamy!",
-        "reference": "wizyta-4521",
+        "idx": "wizyta-4521",
     },
 )
 
 data = response.json()
-print(f"Status: {response.status_code}")
-print(f"Message ID: {data.get('message_id')}")
-print(f"Credits used: {data.get('credits_used')}")</code></pre>
+message = data["data"]["messages"][0]
+print(f"Status HTTP: {response.status_code}")
+print(f"Message ID: {message['id']}")
+print(f"Cost: {message['cost']} PLN")</code></pre>
 
   <p>Parametry żądania:</p>
 
@@ -218,94 +219,84 @@ print(f"Credits used: {data.get('credits_used')}")</code></pre>
       <td>Treść wiadomości, max 612 znaków (4 segmenty SMS)</td>
     </tr>
     <tr>
-      <td><code>reference</code></td>
+      <td><code>idx</code></td>
       <td>string</td>
       <td>Nie</td>
-      <td>Twój wewnętrzny identyfikator, zwracany w webhookach</td>
+      <td>Twój wewnętrzny identyfikator, używany do deduplikacji i zwracany w webhookach</td>
     </tr>
     <tr>
-      <td><code>send_at</code></td>
+      <td><code>date</code></td>
       <td>ISO 8601</td>
       <td>Nie</td>
-      <td>Zaplanuj wysyłkę na przyszłość (np. 2026-03-20T10:00:00+01:00)</td>
+      <td>Zaplanuj wysyłkę na przyszłość (np. 2026-03-20T10:00:00Z)</td>
     </tr>
   </table>
 
-  <p>Odpowiedź (HTTP 201):</p>
+  <p>Odpowiedź (HTTP 200):</p>
 
 <pre><code>{
-  "status": "queued",
-  "message_id": "msg_7f3a2b1c9d4e",
-  "to": "+48600123456",
-  "credits_used": 1,
-  "segments": 1
+  "success": true,
+  "data": {
+    "count": 1,
+    "messages": [
+      {
+        "id": "msg_7f3a2b1c9d4e",
+        "to": "+48600123456",
+        "status": "queued",
+        "parts": 1,
+        "cost": 0.15,
+        "sent_at": "2026-03-20T10:00:00.000Z"
+      }
+    ]
+  }
 }</code></pre>
 
   <h2>Krok 3: Wysyłka masowa (batch)</h2>
 
-  <p>Aby wysłać tę samą wiadomość do wielu odbiorców lub spersonalizowane wiadomości w jednym żądaniu, użyj endpointu <code class="inline-code">POST /v1/sms/batch</code>:</p>
+  <p>Aby wysłać tę samą wiadomość do wielu odbiorców lub spersonalizowane wiadomości w jednym żądaniu, użyj endpointu <code class="inline-code">POST /v1/sms/bulk</code>. Pierwszy wariant &mdash; ten sam tekst do wielu numerów:</p>
 
-<pre><code>curl -X POST https://api.przypominamy.com/v1/sms/batch \
+<pre><code>curl -X POST https://api.przypominamy.com/v1/sms/bulk \
+  -H "Authorization: Bearer $PRZYPOMINAMY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "from": "MojaKlinika",
+    "recipients": ["+48600111222", "+48600333444", "+48600555666"],
+    "message": "Przypominamy o wizycie 20.03"
+  }'</code></pre>
+
+  <p>Drugi wariant &mdash; indywidualna treść per odbiorca (tablica <code class="inline-code">messages</code>):</p>
+
+<pre><code>curl -X POST https://api.przypominamy.com/v1/sms/bulk \
   -H "Authorization: Bearer $PRZYPOMINAMY_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "from": "MojaKlinika",
     "messages": [
-      {
-        "to": "+48600111222",
-        "message": "Jan, przypominamy o wizycie 20.03 o 10:00."
-      },
-      {
-        "to": "+48600333444",
-        "message": "Anna, przypominamy o wizycie 20.03 o 11:30."
-      },
-      {
-        "to": "+48600555666",
-        "message": "Piotr, przypominamy o wizycie 20.03 o 14:00."
-      }
+      { "to": "+48600111222", "message": "Jan, wizyta 20.03 o 10:00." },
+      { "to": "+48600333444", "message": "Anna, wizyta 20.03 o 11:30." },
+      { "to": "+48600555666", "message": "Piotr, wizyta 20.03 o 14:00." }
     ]
   }'</code></pre>
 
-  <p>Endpoint batch przyjmuje do <strong>10 000 wiadomości w jednym żądaniu</strong>. Dla większych wolumenów zalecamy podzielenie wysyłki na partie i wysyłanie ich sekwencyjnie z krótką przerwą (np. 1 sekunda) między żądaniami.</p>
+  <p>Limity: do <strong>10 000 odbiorców</strong> w wariancie z polem <code class="inline-code">recipients</code> i do <strong>100 wiadomości</strong> w wariancie z tablicą <code class="inline-code">messages</code>. Dla większych wolumenów dziel wysyłkę na partie i wysyłaj sekwencyjnie z krótką przerwą między żądaniami.</p>
 
   <h2>Krok 4: Webhooks. Odbieranie statusów doręczenia</h2>
 
-  <p>Webhooks pozwalają Twojemu systemowi CRM otrzymywać powiadomienia o zdarzeniach w czasie rzeczywistym. Doręczeniu wiadomości, błędzie dostarczenia, odpowiedzi odbiorcy. Konfiguracja webhooków odbywa się w panelu klienta (<em>Ustawienia &rarr; API &rarr; Webhooks</em>) lub przez API:</p>
+  <p>Webhooks pozwalają Twojemu systemowi CRM otrzymywać powiadomienia o zdarzeniach w czasie rzeczywistym &mdash; doręczeniu wiadomości, błędzie dostarczenia, odpowiedzi odbiorcy. Konfigurację wykonujesz raz w panelu klienta (<em>Ustawienia &rarr; API &rarr; Callback URL</em>). Po zapisaniu adresu wszystkie zdarzenia są kierowane na Twój endpoint bez żadnych dodatkowych wywołań API.</p>
 
-<pre><code>curl -X POST https://api.przypominamy.com/v1/webhooks \
-  -H "Authorization: Bearer $PRZYPOMINAMY_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "url": "https://twojafirma.pl/api/sms-webhook",
-    "events": ["delivered", "failed", "reply"],
-    "secret": "twoj_tajny_klucz_webhook"
-  }'</code></pre>
-
-  <p>Każde powiadomienie webhook zawiera nagłówek <code class="inline-code">X-Webhook-Signature</code> z podpisem HMAC-SHA256 obliczonym z ciała żądania i Twojego sekretu. Zawsze weryfikuj podpis, aby upewnić się, że żądanie pochodzi z naszego serwera:</p>
-
-<pre><code>import hmac
-import hashlib
-
-def verify_webhook(body: bytes, signature: str, secret: str) -&gt; bool:
-    expected = hmac.new(
-        secret.encode(),
-        body,
-        hashlib.sha256
-    ).hexdigest()
-    return hmac.compare_digest(expected, signature)</code></pre>
-
-  <p>Przykładowy payload webhooka typu <code class="inline-code">delivered</code>:</p>
+  <p>Przykładowy payload zdarzenia <code class="inline-code">delivery_report</code> wysyłany na skonfigurowany webhook:</p>
 
 <pre><code>{
-  "event": "delivered",
+  "event": "delivery_report",
   "message_id": "msg_7f3a2b1c9d4e",
-  "reference": "wizyta-4521",
   "to": "+48600123456",
-  "delivered_at": "2026-03-18T09:01:23+01:00",
-  "status_code": 0
+  "status": "delivered",
+  "sent_at": "2026-03-18T09:00:58.000Z",
+  "done_at": "2026-03-18T09:01:23.000Z",
+  "idx": "wizyta-4521"
 }</code></pre>
 
-  <p>Webhook typu <code class="inline-code">reply</code> (odpowiedź od odbiorcy) zawiera dodatkowo pole <code class="inline-code">reply_text</code> z treścią wiadomości zwrotnej. Dzięki temu możesz automatycznie przetwarzać odpowiedzi TAK/NIE i aktualizować status wizyty w CRM.</p>
+  <p>Dla wiadomości przychodzących (odpowiedzi od odbiorców) wysyłany jest event <code class="inline-code">incoming_sms</code> z polami <code class="inline-code">from</code>, <code class="inline-code">to</code> i <code class="inline-code">message</code>. Dzięki temu możesz automatycznie przetwarzać odpowiedzi TAK/NIE i aktualizować status wizyty w CRM. Zalecamy, aby Twój endpoint odpowiadał kodem HTTP 200 w ciągu kilku sekund &mdash; dłuższe przetwarzanie wykonuj asynchronicznie.</p>
 
   <h2>Krok 5: Obsługa błędów i retry</h2>
 
@@ -353,7 +344,7 @@ def send_sms_with_retry(payload, max_retries=3):
     """Wysyła SMS z automatycznym ponowieniem przy błędach serwera."""
     for attempt in range(max_retries):
         response = requests.post(
-            "https://api.przypominamy.com/v1/sms/send",
+            "https://api.przypominamy.com/v1/sms",
             headers={
                 "Authorization": f"Bearer {API_KEY}",
                 "Content-Type": "application/json",
@@ -362,7 +353,7 @@ def send_sms_with_retry(payload, max_retries=3):
             timeout=10,
         )
 
-        if response.status_code == 201:
+        if response.status_code == 200:
             return response.json()
 
         if response.status_code == 429:
@@ -392,12 +383,12 @@ def send_sms_with_retry(payload, max_retries=3):
   <p>Oto praktyczne wskazówki dla stabilnej integracji produkcyjnej:</p>
 
   <ul>
-    <li><strong>Używaj endpointu batch</strong> zamiast wysyłać wiadomości pojedynczo. Jedno żądanie batch z 1 000 wiadomości zużywa 1 request z limitu zamiast 1 000.</li>
-    <li><strong>Przechowuj message_id</strong> zwracane przez API. Umożliwia to korelację ze statusami doręczenia otrzymywanymi przez webhooks i ułatwia debugowanie.</li>
-    <li><strong>Waliduj numery telefonów</strong> przed wysyłką. Użyj endpointu <code class="inline-code">GET /v1/lookup/{number}</code> do weryfikacji, czy numer jest aktywny (HLR lookup). Kosztuje 0,02 zł za zapytanie, ale oszczędza pieniądze na wiadomościach do nieistniejących numerów.</li>
-    <li><strong>Monitoruj saldo</strong> programowo. Endpoint <code class="inline-code">GET /v1/account/balance</code> zwraca aktualny stan konta. Skonfiguruj alert, gdy saldo spadnie poniżej progu (np. 100 zł), aby uniknąć przerwania wysyłek.</li>
-    <li><strong>Loguj wszystkie żądania i odpowiedzi</strong> po stronie swojego systemu. W razie problemów z doręczeniem, logi umożliwią szybką diagnozę. Czy problem leży po stronie Twojego kodu, API, czy operatora.</li>
-    <li><strong>Testuj na środowisku sandbox</strong> przed wdrożeniem produkcyjnym. Dodaj nagłówek <code class="inline-code">X-Sandbox: true</code> do żądania. Wiadomość zostanie przetworzona, ale nie wysłana i nie obciąży konta.</li>
+    <li><strong>Używaj endpointu bulk</strong> zamiast wysyłać wiadomości pojedynczo. Jedno żądanie <code class="inline-code">/v1/sms/bulk</code> z tysiącem odbiorców zużywa 1 request z limitu zamiast tysiąca.</li>
+    <li><strong>Przechowuj id wiadomości</strong> zwracane w <code class="inline-code">data.messages[].id</code>. Umożliwia to korelację ze statusami doręczenia otrzymywanymi przez webhooks i ułatwia debugowanie.</li>
+    <li><strong>Waliduj numery telefonów</strong> przed wysyłką. Użyj endpointu <code class="inline-code">GET /v1/hlr?number=+48...</code> do weryfikacji, czy numer jest aktywny (HLR lookup). Oszczędza to koszty wiadomości do nieistniejących numerów.</li>
+    <li><strong>Monitoruj saldo</strong> programowo. Endpoint <code class="inline-code">GET /v1/balance</code> zwraca aktualny stan konta. Skonfiguruj alert, gdy saldo spadnie poniżej progu (np. 100 zł), aby uniknąć przerwania wysyłek.</li>
+    <li><strong>Loguj wszystkie żądania i odpowiedzi</strong> po stronie swojego systemu. W razie problemów z doręczeniem logi umożliwią szybką diagnozę &mdash; czy problem leży po stronie Twojego kodu, API, czy operatora.</li>
+    <li><strong>Testuj z osobnym kontem roboczym</strong> przed wdrożeniem produkcyjnym. Utwórz konto testowe z własnym kluczem API i wysyłaj na własny numer, zanim podłączysz produkcję.</li>
   </ul>
 
   <h2>Integracja z popularnymi CRM-ami</h2>
@@ -420,10 +411,10 @@ def send_sms_with_retry(payload, max_retries=3):
 
   <ol>
     <li>Autoryzacja przez Bearer token: prosty i bezpieczny mechanizm.</li>
-    <li>Endpoint <code class="inline-code">/v1/sms/send</code> do pojedynczych wiadomości, <code class="inline-code">/v1/sms/batch</code> do wysyłek masowych.</li>
+    <li>Endpoint <code class="inline-code">/v1/sms</code> do pojedynczych wiadomości, <code class="inline-code">/v1/sms/bulk</code> do wysyłek masowych.</li>
     <li>Webhooks dają Ci informacje o doręczeniu i odpowiedziach w czasie rzeczywistym.</li>
     <li>Implementuj retry z exponential backoff dla błędów 429 i 5xx.</li>
-    <li>Używaj trybu sandbox do testów, endpoint batch do produkcji, i monitoruj saldo programowo.</li>
+    <li>Używaj konta testowego do walidacji integracji, endpointu bulk do produkcji, i monitoruj saldo programowo.</li>
   </ol>
 
   <p>Cała dokumentacja API z interaktywnym exploratorem jest dostępna pod adresem <a href="https://przypominamy.com/api-docs">przypominamy.com/api-docs</a>. Jeśli potrzebujesz wsparcia przy integracji, napisz na <a href="mailto:support@przypominamy.com">support@przypominamy.com</a>, nasz zespół techniczny odpowiada w ciągu 2 godzin w dni robocze.</p>

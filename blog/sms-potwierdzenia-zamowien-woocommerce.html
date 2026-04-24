@@ -167,7 +167,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 // define( 'PRZYPOMINAMY_API_KEY', 'pk_live_xxxxxxxxxxxx' );
 
 define( 'PRZYPOMINAMY_API_URL',
-        'https://api.przypominamy.com/v1/sms/send' );</code></pre>
+        'https://api.przypominamy.com/v1/sms' );</code></pre>
 
   <h3>Krok 3: Podepnij hook do zmiany statusu zamówienia</h3>
   <p>WooCommerce udostępnia hook <code>woocommerce_order_status_changed</code>, który jest wywoływany przy każdej zmianie statusu zamówienia. Oto kompletny kod obsługujący wysyłkę SMS:</p>
@@ -200,7 +200,7 @@ function przypominamy_send_order_sms(
         'body' =&gt; json_encode( [
             'to'      =&gt; $phone,
             'message' =&gt; $message,
-            'sender'  =&gt; 'MojSklep',
+            'from'    =&gt; 'MojSklep',
         ] ),
         'timeout' =&gt; 15,
     ] );

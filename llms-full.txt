@@ -100,13 +100,13 @@ REST API v1.7 z autoryzacją Bearer token. Pełna dokumentacja dostępna jako PD
 - Webhooks i callbacki — powiadomienia o statusie dostarczenia w czasie rzeczywistym
 - Import CSV i bulk API — wysyłka tysięcy wiadomości jednocześnie
 - Szablony z parametrami — personalizacja każdej wiadomości dynamicznie
-- Planowanie wysyłek — schedule z datą w formacie ISO 8601
+- Planowanie wysyłek — pole date z datą w formacie ISO 8601
 - Deduplikacja — parametr idx z 24h oknem
-- Tryb testowy — parametr test=1 (bez kosztów)
+- Callbacki DLR — konfigurowany webhook_url w ustawieniach klienta
 
 ### Przykład wywołania
 ```
-POST https://panel.przypominamy.com/api/sms
+POST https://api.przypominamy.com/v1/sms
 Authorization: Bearer {token}
 Content-Type: application/json
 
@@ -114,14 +114,22 @@ Content-Type: application/json
   "to": "+48512345678",
   "from": "KLINIKA",
   "message": "Wizyta jutro o 10:00",
-  "schedule": "2026-03-21T08:00:00"
+  "date": "2026-03-21T08:00:00Z"
 }
 
 Odpowiedź:
 {
-  "id": "msg_abc123",
-  "status": "queued",
-  "parts": 1
+  "success": true,
+  "data": {
+    "count": 1,
+    "messages": [{
+      "id": "msg_abc123",
+      "to": "+48512345678",
+      "status": "queued",
+      "parts": 1,
+      "cost": 0.15
+    }]
+  }
 }
 ```
 

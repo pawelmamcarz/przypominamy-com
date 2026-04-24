@@ -1430,21 +1430,29 @@
           <span style="color:var(--gray);font-size:.8rem;margin-left:8px">Wyślij SMS. Przykład API</span>
         </div>
         <div>
-          <span class="code-comment">// POST https://panel.przypominamy.com/api/sms</span><br/>
-          <span class="code-op">curl</span> <span class="code-str">-X POST</span> \<br/>
+          <span class="code-comment">// POST https://api.przypominamy.com/v1/sms</span><br/>
+          <span class="code-op">curl</span> <span class="code-str">-X POST</span> <span class="code-val">https://api.przypominamy.com/v1/sms</span> \<br/>
           &nbsp;&nbsp;<span class="code-str">-H</span> <span class="code-val">"Authorization: Bearer {token}"</span> \<br/>
           &nbsp;&nbsp;<span class="code-str">-H</span> <span class="code-val">"Content-Type: application/json"</span> \<br/>
           &nbsp;&nbsp;<span class="code-str">-d</span> <span class="code-val">'{'</span><br/>
           &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"to"</span>: <span class="code-val">"+48512345678"</span>,<br/>
           &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"from"</span>: <span class="code-val">"KLINIKA"</span>,<br/>
           &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"message"</span>: <span class="code-val">"Wizyta jutro o 10:00"</span>,<br/>
-          &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"schedule"</span>: <span class="code-val">"2026-03-11T08:00:00"</span><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"date"</span>: <span class="code-val">"2026-03-11T08:00:00Z"</span><br/>
           &nbsp;&nbsp;<span class="code-val">'}'</span><br/><br/>
           <span class="code-comment">// Odpowiedź:</span><br/>
           <span class="code-val">{</span><br/>
-          &nbsp;&nbsp;<span class="code-key">"id"</span>: <span class="code-str">"msg_abc123"</span>,<br/>
-          &nbsp;&nbsp;<span class="code-key">"status"</span>: <span class="code-str">"queued"</span>,<br/>
-          &nbsp;&nbsp;<span class="code-key">"parts"</span>: <span class="code-op">1</span><br/>
+          &nbsp;&nbsp;<span class="code-key">"success"</span>: <span class="code-op">true</span>,<br/>
+          &nbsp;&nbsp;<span class="code-key">"data"</span>: <span class="code-val">{</span><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"count"</span>: <span class="code-op">1</span>,<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"messages"</span>: [<span class="code-val">{</span><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"id"</span>: <span class="code-str">"msg_abc123"</span>,<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"to"</span>: <span class="code-str">"+48512345678"</span>,<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"status"</span>: <span class="code-str">"queued"</span>,<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"parts"</span>: <span class="code-op">1</span>,<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"cost"</span>: <span class="code-op">0.15</span><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-val">}</span>]<br/>
+          &nbsp;&nbsp;<span class="code-val">}</span><br/>
           <span class="code-val">}</span>
         </div>
       </div>

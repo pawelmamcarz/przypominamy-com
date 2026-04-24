@@ -6,9 +6,6 @@ const {
   handleErrors,
 } = require('./authentication');
 
-const incomingSms = require('./triggers/incomingSms');
-const deliveryReport = require('./triggers/deliveryReport');
-
 const sendSms = require('./creates/sendSms');
 const sendSmsBulk = require('./creates/sendSmsBulk');
 const sendMms = require('./creates/sendMms');
@@ -26,10 +23,7 @@ module.exports = {
   beforeRequest: [addApiKeyToHeader],
   afterResponse: [handleErrors],
 
-  triggers: {
-    [incomingSms.key]: incomingSms,
-    [deliveryReport.key]: deliveryReport,
-  },
+  triggers: {},
 
   creates: {
     [sendSms.key]: sendSms,

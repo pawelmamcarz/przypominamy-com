@@ -14,7 +14,6 @@ describe('Authentication', () => {
       },
     };
 
-    // This will fail without a real API key, but tests the wiring
     try {
       const response = await appTester(
         App.authentication.test,
@@ -23,7 +22,6 @@ describe('Authentication', () => {
       expect(response).toBeDefined();
       expect(response.data).toBeDefined();
     } catch (error) {
-      // Expected to fail without real credentials
       expect(error).toBeDefined();
     }
   });
@@ -63,7 +61,7 @@ describe('Send SMS', () => {
 
     const messageField = fields.find((f) => f.key === 'message');
     expect(messageField.required).toBe(true);
-    expect(messageField.type).toBe('text');
+    expect(messageField.type).toBe('string');
   });
 
   it('should build correct request', async () => {
@@ -79,7 +77,6 @@ describe('Send SMS', () => {
     try {
       await appTester(App.creates.sendSms.operation.perform, bundle);
     } catch (error) {
-      // Expected - no real API
       expect(error).toBeDefined();
     }
   });
@@ -103,7 +100,7 @@ describe('Send MMS', () => {
     const fields = mms.operation.inputFields;
     const smilField = fields.find((f) => f.key === 'smil');
     expect(smilField.required).toBe(true);
-    expect(smilField.type).toBe('text');
+    expect(smilField.type).toBe('string');
   });
 });
 
@@ -129,9 +126,11 @@ describe('Send VMS', () => {
 });
 
 describe('Check Balance', () => {
-  it('should have no input fields', () => {
+  it('should have one optional input field', () => {
     const balance = App.searches.checkBalance;
-    expect(balance.operation.inputFields).toHaveLength(0);
+    const fields = balance.operation.inputFields;
+    expect(fields).toHaveLength(1);
+    expect(fields[0].required).toBe(false);
   });
 
   it('should have correct output fields', () => {
@@ -163,59 +162,6 @@ describe('Verify Number (HLR)', () => {
   });
 });
 
-describe('Triggers', () => {
-  it('should register incoming SMS trigger', () => {
-    const trigger = App.triggers.incomingSms;
-    expect(trigger.key).toBe('incomingSms');
-    expect(trigger.operation.type).toBe('hook');
-  });
-
-  it('should register delivery report trigger', () => {
-    const trigger = App.triggers.deliveryReport;
-    expect(trigger.key).toBe('deliveryReport');
-    expect(trigger.operation.type).toBe('hook');
-  });
-
-  it('should parse incoming SMS payload', () => {
-    const trigger = App.triggers.incomingSms;
-    const bundle = {
-      cleanedRequest: {
-        event: 'incoming_sms',
-        from: '+48123456789',
-        to: '+48987654321',
-        message: 'Hello',
-        message_id: 'msg_123',
-        received_at: '2025-01-15T12:00:00.000Z',
-      },
-    };
-
-    const result = trigger.operation.perform(null, bundle);
-    expect(result).toHaveLength(1);
-    expect(result[0].from).toBe('+48123456789');
-    expect(result[0].message).toBe('Hello');
-    expect(result[0].id).toBe('msg_123');
-  });
-
-  it('should parse delivery report payload', () => {
-    const trigger = App.triggers.deliveryReport;
-    const bundle = {
-      cleanedRequest: {
-        event: 'delivery_report',
-        message_id: 'msg_456',
-        to: '+48123456789',
-        status: 'delivered',
-        sent_at: '2025-01-15T12:00:00.000Z',
-        done_at: '2025-01-15T12:00:05.000Z',
-      },
-    };
-
-    const result = trigger.operation.perform(null, bundle);
-    expect(result).toHaveLength(1);
-    expect(result[0].status).toBe('delivered');
-    expect(result[0].message_id).toBe('msg_456');
-  });
-});
-
 describe('App Structure', () => {
   it('should have correct version', () => {
     expect(App.version).toBe('1.0.0');
@@ -236,8 +182,8 @@ describe('App Structure', () => {
     expect(App.afterResponse).toHaveLength(1);
   });
 
-  it('should register all triggers', () => {
-    expect(Object.keys(App.triggers)).toHaveLength(2);
+  it('should register no webhook triggers', () => {
+    expect(Object.keys(App.triggers)).toHaveLength(0);
   });
 
   it('should register all creates', () => {
