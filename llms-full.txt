@@ -90,11 +90,12 @@ Brak abonamentu — płacisz tylko za wysłane wiadomości. Model prepaid: doła
 REST API v1.7 z autoryzacją Bearer token. Pełna dokumentacja dostępna jako PDF.
 
 ### Endpointy
-- `POST /sms.do` — wysyłka SMS (do 10 000 odbiorców na żądanie)
-- `POST /mms.do` — wysyłka MMS (format SMIL)
-- `POST /vms.do` — wiadomość głosowa TTS
-- `GET /hlr.do` — weryfikacja numeru telefonu
-- `GET /profile` — saldo konta
+- `POST /v1/sms` — pojedynczy SMS
+- `POST /v1/sms/bulk` — wysyłka masowa (do 10 000 odbiorców na żądanie)
+- `POST /v1/mms` — wysyłka MMS (format SMIL)
+- `POST /v1/vms` — wiadomość głosowa TTS
+- `GET /v1/hlr` — weryfikacja numeru telefonu (HLR lookup)
+- `GET /v1/balance` — saldo konta
 
 ### Funkcje API
 - Webhooks i callbacki — powiadomienia o statusie dostarczenia w czasie rzeczywistym
