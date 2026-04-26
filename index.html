@@ -2020,28 +2020,33 @@
       const contentType = res.headers.get('Content-Type') || '';
 
       if (contentType.includes('text/event-stream')) {
-        // Streaming SSE response
+        // Streaming SSE response — must buffer across chunks because a single
+        // SSE event ("data: {...}\n\n") can span multiple reader reads.
         const msgDiv = appendMsg('bot', '');
         const bubble = msgDiv.querySelector('.msg-bubble');
         let fullText = '';
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
-        while (true) {
+        let buffer = '';
+        let streamDone = false;
+        while (!streamDone) {
           const { value, done } = await reader.read();
           if (done) break;
-          const chunk = decoder.decode(value);
-          for (const line of chunk.split('\n')) {
-            if (line.startsWith('data: ')) {
-              const data = line.slice(6).trim();
-              if (data === '[DONE]') break;
-              try {
-                const parsed = JSON.parse(data);
-                const delta = parsed.delta?.text || parsed.choices?.[0]?.delta?.content || '';
-                fullText += delta;
-                bubble.innerHTML = escapeHtml(fullText).replace(/\n/g, '<br>');
-                document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
-              } catch {}
-            }
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop();  // last line may be incomplete — keep for next chunk
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const data = line.slice(6).trim();
+            if (!data) continue;
+            if (data === '[DONE]') { streamDone = true; break; }
+            try {
+              const parsed = JSON.parse(data);
+              const delta = parsed.delta?.text || parsed.choices?.[0]?.delta?.content || '';
+              fullText += delta;
+              bubble.innerHTML = escapeHtml(fullText).replace(/\n/g, '<br>');
+              document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+            } catch {}
           }
         }
         chatHistory.push({ role: 'assistant', content: fullText });
