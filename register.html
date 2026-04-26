@@ -358,15 +358,16 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Coś poszło nie tak.');
+      let data = {};
+      try { data = await res.json(); } catch (_) {}
+      if (!res.ok) throw new Error(data.error || 'Nie udało się wysłać zgłoszenia. Spróbuj ponownie za chwilę.');
 
       document.getElementById('registerForm').style.display = 'none';
       document.getElementById('progress').style.display = 'none';
       document.getElementById('successEmail').textContent = payload.email;
       document.getElementById('regSuccess').classList.add('visible');
     } catch (err) {
-      showError('err2', err.message || 'Nie udało się wysłać zgłoszenia. Spróbuj jeszcze raz.');
+      showError('err2', 'Nie udało się wysłać zgłoszenia. Spróbuj ponownie za chwilę lub napisz na support@przypominamy.com.');
       btn.disabled = false;
       btn.textContent = 'Wyślij zgłoszenie';
     }

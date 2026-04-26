@@ -1,5 +1,10 @@
 # Cloudflare Pages – Redirects
 # Format: source  destination  status_code
+#
+# Note on pretty URLs: Cloudflare Pages serves `register.html` at `/register`
+# automatically and 301s `/register.html` → `/register`. We do NOT add explicit
+# `/register → /register.html (200)` rewrites here because they create infinite
+# 308 loops with the auto .html-stripping behavior.
 
 # pages.dev → canonical domain
 https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
@@ -31,49 +36,10 @@ https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
 # API docs (old path → new)
 /api-docs         /xmlapi_en_przypominamy2020v17.pdf  301
 
-# Trailing slash normalization for legal pages
-/regulamin/             /regulamin       301
-/polityka-prywatnosci/  /polityka-prywatnosci  301
-/rodo/                  /rodo            301
-/integracje/            /integracje      301
-/en/                    /en              301
+# Polish-language alias for /register
+/rejestracja      /register        301
+/rejestracja/     /register        301
 
-# Legal pages (pretty URLs → HTML files)
-/regulamin              /regulamin.html              200
-/polityka-prywatnosci   /polityka-prywatnosci.html   200
-/rodo                   /rodo.html                   200
-
-# Registration
-/register               /register.html               200
-/register/              /register                    301
-/rejestracja            /register                    301
-/rejestracja/           /register                    301
-
-# Integrations
-/integracje             /integracje.html             200
-/integracje/booksy              /integracje/booksy.html              200
-/integracje/woocommerce         /integracje/woocommerce.html         200
-/integracje/zapier              /integracje/zapier.html              200
-/integracje/hubspot             /integracje/hubspot.html             200
-/integracje/google-calendar     /integracje/google-calendar.html     200
-
-# English version
-/en                     /en.html                     200
-
-# Blog (index lives outside /blog/ dir to avoid Cloudflare trailing-slash redirect loop)
-/blog                   /blog-index.html             200
-/blog/                  /blog-index.html             200
-/blog/windykacja-sms                          /blog/windykacja-sms.html                         200
-/blog/sms-vs-email-open-rate                  /blog/sms-vs-email-open-rate.html                 200
-/blog/konfiguracja-ivr-tts                    /blog/konfiguracja-ivr-tts.html                   200
-/blog/rodo-wysylka-sms                        /blog/rodo-wysylka-sms.html                       200
-/blog/personalizacja-sms-szablony             /blog/personalizacja-sms-szablony.html            200
-/blog/sms-potwierdzenia-zamowien-woocommerce  /blog/sms-potwierdzenia-zamowien-woocommerce.html 200
-/blog/sms-przypomnienia-wizyty-lekarz         /blog/sms-przypomnienia-wizyty-lekarz.html        200
-/blog/sms-marketing-ecommerce                 /blog/sms-marketing-ecommerce.html                200
-/blog/api-sms-integracja-crm                  /blog/api-sms-integracja-crm.html                 200
-
-# Static files — Cloudflare Pages serves these automatically before SPA fallback
-
-# SPA fallback
-/*                /index.html      200
+# Old blog-index.html alias (legacy, before blog/index.html was added)
+/blog-index       /blog            301
+/blog-index.html  /blog            301
