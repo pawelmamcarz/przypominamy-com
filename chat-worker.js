@@ -95,51 +95,49 @@ export default {
       return jsonError('AI service error', 502);
     }
 
-    // Stream the SSE response back to the client
-    const { readable, writable } = new TransformStream();
-    const writer = writable.getWriter();
+    // Stream the SSE response back to the client using ReadableStream + controller.
+    // The previous TransformStream + detached IIFE pattern caused Anthropic events to
+    // be silently dropped after the first chunk in Cloudflare Workers (the writer was
+    // not held by the response, so writes after the first one were lost).
     const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+    const upstream = anthropicRes.body;
 
-    // Process the Anthropic SSE stream
-    (async () => {
-      const reader = anthropicRes.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-
-      try {
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-
-          // Buffer chunks — JSON may span multiple network reads
-          buffer += decoder.decode(value, { stream: true });
-
-          const lines = buffer.split('\n');
-          // Keep the last (potentially incomplete) line in the buffer
-          buffer = lines.pop();
-
-          for (const line of lines) {
-            if (!line.startsWith('data: ')) continue;
-            const data = line.slice(6).trim();
-            if (!data) continue;
-            try {
-              const parsed = JSON.parse(data);
-              if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
-                const token = parsed.delta.text;
-                await writer.write(encoder.encode(
-                  `data: ${JSON.stringify({ delta: { text: token } })}\n\n`
-                ));
-              }
-            } catch {}
+    const stream = new ReadableStream({
+      async start(controller) {
+        const reader = upstream.getReader();
+        let buffer = '';
+        try {
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop();  // last segment may be incomplete
+            for (const line of lines) {
+              if (!line.startsWith('data: ')) continue;
+              const data = line.slice(6).trim();
+              if (!data) continue;
+              try {
+                const parsed = JSON.parse(data);
+                if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
+                  controller.enqueue(encoder.encode(
+                    `data: ${JSON.stringify({ delta: { text: parsed.delta.text } })}\n\n`
+                  ));
+                }
+              } catch {}
+            }
           }
+        } catch (err) {
+          console.error('Chat stream error:', err && err.message);
+        } finally {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+          controller.close();
         }
-        await writer.write(encoder.encode('data: [DONE]\n\n'));
-      } finally {
-        await writer.close();
-      }
-    })();
+      },
+    });
 
-    return new Response(readable, {
+    return new Response(stream, {
       headers: {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
