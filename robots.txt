@@ -1,15 +1,13 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /v1/
-Disallow: /wp-content/
-Disallow: /wp-admin/
-Disallow: /wp-login.php
-Disallow: /feed/
-Disallow: /casestudy/
-Disallow: /case-study/
 
 Sitemap: https://przypominamy.com/sitemap.xml
 
 # Canonical: https://przypominamy.com (non-www, HTTPS)
 # Panel (panel.przypominamy.com) should have its own robots.txt with Disallow: /
+#
+# Note: legacy WordPress paths (/wp-content, /wp-admin, /wp-login.php, /feed,
+# /casestudy, /case-study, /portfolio) are intentionally NOT disallowed here —
+# they 301 to / via _redirects, and disallowing them would prevent Google from
+# following the redirect and dropping the stale URLs from its index.

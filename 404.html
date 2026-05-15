@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Strona nie została znaleziona. Wróć na stronę główną Przypominamy.com lub przejdź do bloga." />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="author" content="Doradztwo Paweł Mamcarz" />
+
+  <title>404 — strona nie znaleziona · Przypominamy.com</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --white:#fff; --gray:#888; --light:#ccc; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; min-height:100vh; display:flex; flex-direction:column; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+
+    .container { max-width:780px; margin:0 auto; padding:0 24px; width:100%; }
+    main { flex:1; display:flex; align-items:center; padding:64px 0; }
+    .err-code { font-size:6rem; font-weight:800; letter-spacing:-.03em; color:var(--yellow); line-height:1; margin-bottom:16px; }
+    h1 { font-size:2rem; font-weight:800; margin-bottom:14px; }
+    .lead { color:var(--light); font-size:1.05rem; margin-bottom:36px; max-width:560px; }
+    .actions { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:48px; }
+    .btn { display:inline-block; padding:12px 22px; border-radius:8px; font-weight:600; font-size:.95rem; transition:transform .15s, background .15s; }
+    .btn-primary { background:var(--yellow); color:var(--black); }
+    .btn-primary:hover { transform:translateY(-2px); text-decoration:none; }
+    .btn-ghost { background:transparent; color:var(--white); border:1px solid var(--border); }
+    .btn-ghost:hover { border-color:var(--yellow); text-decoration:none; }
+
+    .links-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:14px; }
+    .link-card { display:block; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px 20px; transition:border-color .2s, transform .2s; }
+    .link-card:hover { border-color:var(--yellow); transform:translateY(-2px); text-decoration:none; }
+    .link-card-title { color:var(--white); font-weight:600; font-size:.95rem; margin-bottom:4px; }
+    .link-card-desc { color:var(--gray); font-size:.83rem; line-height:1.4; }
+
+    .footer-mini { border-top:1px solid var(--border); padding:24px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    @media(max-width:600px){
+      .err-code { font-size:4.5rem; }
+      h1 { font-size:1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/">&larr; Strona główna</a>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+    <p class="err-code">404</p>
+    <h1>Tej strony nie ma — albo zmieniła adres</h1>
+    <p class="lead">Sprawdziliśmy i pod tym adresem nic nie znajdujemy. Mogła zostać przeniesiona lub link zawiera literówkę. Poniżej kilka miejsc, do których warto zajrzeć.</p>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="/">Wróć na stronę główną</a>
+      <a class="btn btn-ghost" href="/blog/">Przejdź do bloga</a>
+    </div>
+
+    <div class="links-grid">
+      <a class="link-card" href="/#uslugi">
+        <div class="link-card-title">Usługi SMS, MMS, IVR</div>
+        <div class="link-card-desc">Wysyłka masowa, dwukierunkowa komunikacja, wiadomości głosowe TTS.</div>
+      </a>
+      <a class="link-card" href="/integracje">
+        <div class="link-card-title">Integracje</div>
+        <div class="link-card-desc">WooCommerce, Booksy, Zapier, HubSpot, Google Calendar.</div>
+      </a>
+      <a class="link-card" href="/register">
+        <div class="link-card-title">Załóż konto</div>
+        <div class="link-card-desc">Rejestracja firmy — weryfikujemy w 24 godziny.</div>
+      </a>
+      <a class="link-card" href="/xmlapi_en_przypominamy2020v17.pdf">
+        <div class="link-card-title">Dokumentacja API</div>
+        <div class="link-card-desc">REST API v1.7 — SMS, MMS, IVR, HLR, raporty.</div>
+      </a>
+    </div>
+  </div>
+</main>
+
+<div class="footer-mini">
+  <div class="container">
+    &copy; 2010–2026 Doradztwo Paweł Mamcarz &middot; <a href="/">Strona główna</a> &middot; <a href="/regulamin">Regulamin</a> &middot; <a href="/polityka-prywatnosci">Polityka prywatności</a> &middot; <a href="/rodo">RODO</a>
+  </div>
+</div>
+
+</body>
+</html>
