@@ -21,7 +21,7 @@ Three logical layers live in one repo:
 | Worker file | Config | Deployed name | Route | Secrets |
 |---|---|---|---|---|
 | `chat-worker.js` | `chat.toml` | `przypominamy-chat` | `przypominamy.com/api/chat` | `ANTHROPIC_API_KEY` |
-| `order-worker.js` | (no toml — uses CLI flags, see DEPLOY.md) | `przypominamy-order` | `przypominamy.com/api/order` | `ANTHROPIC_API_KEY`, `NOTIFY_EMAIL`, `FROM_EMAIL` |
+| `order-worker.js` | `order.toml` | `przypominamy-order` | `przypominamy.com/api/order` | `ANTHROPIC_API_KEY`, `NOTIFY_EMAIL`, `FROM_EMAIL` |
 | `register-worker.js` | `register.toml` | `przypominamy-register` | `przypominamy.com/api/register` | `NOTIFY_EMAIL`, optionally `FROM_EMAIL` |
 | `email-worker.js` | `workers.toml` | `przypominamy-email` | (no HTTP route — Email Routing trigger) | `ANTHROPIC_API_KEY`, `FORWARD_TO` |
 | `api-worker.js` | `api.toml` | `przypominamy-api` | `api.przypominamy.com/*` (KV-backed) | `SMSAPI_TOKEN` |
@@ -49,9 +49,10 @@ git push origin main
 wrangler deploy -c chat.toml
 wrangler deploy -c api.toml
 wrangler deploy -c register.toml
+wrangler deploy -c order.toml
 wrangler deploy -c workers.toml          # email-worker
-# order-worker has no .toml — deploy by filename + name (see DEPLOY.md §3):
-wrangler deploy order-worker.js --name przypominamy-order
+# Note: DEPLOY.md §3 still shows the legacy `wrangler deploy order-worker.js --name ...`
+# form for order-worker — order.toml supersedes it.
 
 # Secrets
 wrangler secret put ANTHROPIC_API_KEY --name przypominamy-chat
