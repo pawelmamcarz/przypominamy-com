@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Przypominamy.com – platforma masowej wysyłki SMS, MMS i wiadomości głosowych IVR/TTS. Dwukierunkowa komunikacja, API, 30+ krajów. Od 0,10 zł/SMS." />
-  <meta name="keywords" content="SMS, masowa wysyłka SMS, bramka SMS, API SMS, MMS, IVR, TTS, komunikacja mobilna, przypomnienia SMS, platforma SMS Polska" />
+  <meta name="description" content="Polskie API SMS dla firm. REST, JSON, Bearer token, 6 endpointów, webhooki DLR. Masowa wysyłka SMS, MMS i IVR/TTS bez abonamentu od 0,10 zł/SMS. Weryfikacja 24h." />
+  <meta name="keywords" content="API SMS, API SMS Polska, REST API SMS, bramka SMS API, masowa wysyłka SMS, MMS API, IVR API, TTS, OpenAPI SMS, webhook DLR, platforma SMS Polska, SMS dla firm" />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Doradztwo Paweł Mamcarz" />
   <link rel="canonical" href="https://przypominamy.com/" />
@@ -13,8 +13,8 @@
   <link rel="alternate" hreflang="x-default" href="https://przypominamy.com/" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Przypominamy.com – Masowa wysyłka SMS, MMS i IVR" />
-  <meta property="og:description" content="Platforma do masowej komunikacji mobilnej. Wysyłaj SMS, MMS i wiadomości głosowe do 30+ krajów. API, dwukierunkowa komunikacja, raporty w czasie rzeczywistym." />
+  <meta property="og:title" content="API SMS Polska — Przypominamy.com" />
+  <meta property="og:description" content="REST API SMS, MMS i IVR dla polskich firm. 6 endpointów, JSON, Bearer token, webhooki. Od 0,10 zł/SMS bez abonamentu." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://przypominamy.com/" />
   <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
@@ -25,8 +25,8 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Przypominamy.com – Masowa wysyłka SMS, MMS i IVR" />
-  <meta name="twitter:description" content="Platforma do masowej komunikacji mobilnej. Od 0,10 zł/SMS. API, dwukierunkowa komunikacja, 30+ krajów." />
+  <meta name="twitter:title" content="API SMS Polska — Przypominamy.com" />
+  <meta name="twitter:description" content="REST API SMS, MMS i IVR. Bearer token, webhooki DLR, od 0,10 zł/SMS bez abonamentu." />
   <meta name="twitter:image" content="https://przypominamy.com/preview-og.png" />
   <meta name="twitter:site" content="@przypominamy" />
   <meta name="twitter:creator" content="@przypominamy" />
@@ -35,7 +35,7 @@
   <!-- <meta name="google-site-verification" content="REPLACE_ME" /> -->
   <!-- <meta name="msvalidate.01" content="REPLACE_ME" /> -->
 
-  <title>Przypominamy.com – Masowa wysyłka SMS, MMS i IVR</title>
+  <title>Przypominamy.com — API SMS Polska, masowa wysyłka SMS/MMS/IVR</title>
 
   <!-- Favicons -->
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
@@ -113,6 +113,47 @@
         "description": "SMS + MMS + IVR/TTS, własny nadpis, API, raporty zaawansowane"
       }
     ]
+  }
+  </script>
+
+  <!-- JSON-LD: WebAPI (krytyczne dla pozycjonowania "API SMS") -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebAPI",
+    "name": "Przypominamy.com SMS API",
+    "description": "Polskie REST API do wysyłki SMS, MMS i wiadomości głosowych IVR/TTS dla małych i średnich firm. Bearer token, JSON, webhooki DLR.",
+    "documentation": "https://przypominamy.com/api/docs",
+    "termsOfService": "https://przypominamy.com/regulamin",
+    "url": "https://przypominamy.com/api",
+    "provider": {
+      "@type": "Organization",
+      "name": "Doradztwo Paweł Mamcarz",
+      "url": "https://przypominamy.com"
+    },
+    "areaServed": [
+      {"@type": "Country", "name": "Poland"},
+      {"@type": "Place", "name": "European Union"}
+    ],
+    "audience": {
+      "@type": "BusinessAudience",
+      "audienceType": "Małe i średnie firmy w Polsce"
+    },
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "PLN",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "0.10",
+        "priceCurrency": "PLN",
+        "unitText": "SMS"
+      }
+    },
+    "potentialAction": {
+      "@type": "ConsumeAction",
+      "target": "https://api.przypominamy.com/v1/sms"
+    },
+    "isAccessibleForFree": false
   }
   </script>
 
@@ -985,20 +1026,20 @@
   <div class="container">
     <div class="hero-inner">
       <div class="hero-content">
-        <div class="hero-kicker"><span class="tag">Platforma SMS / MMS / IVR</span></div>
+        <div class="hero-kicker"><span class="tag">REST API · SMS / MMS / IVR · Polskie wsparcie</span></div>
         <h1 class="hero-title">
-          Twoi klienci <em>nie&nbsp;zapominają.</em><br/>Nigdy.
+          <em>API SMS</em>, MMS i głos<br/>dla polskich firm.
         </h1>
         <p class="hero-desc">
-          Automatyczne przypomnienia SMS, kampanie MMS i powiadomienia głosowe IVR. W jednej platformie. Wysyłaj tysiące wiadomości w minuty, nie godziny.
+          REST API z 6 endpointami, autoryzacją Bearer i webhookami DLR — plus pełna platforma do masowej wysyłki SMS, MMS i wiadomości głosowych IVR/TTS. <em style="color:var(--light);font-style:normal">Twoi klienci nie zapominają. Nigdy.</em>
         </p>
         <div class="hero-actions">
           <a href="/register" class="btn btn-primary">
             Rozpocznij za darmo →
           </a>
-          <a href="#cennik" class="btn btn-outline">Zobacz ceny</a>
+          <a href="/api/docs" class="btn btn-outline">Dokumentacja API →</a>
         </div>
-        <div class="hero-microcopy">Bez karty kredytowej · Weryfikacja w 24h · Prepaid, bez abonamentu</div>
+        <div class="hero-microcopy">Bez karty kredytowej · Weryfikacja w 24h · REST API · Prepaid bez abonamentu</div>
         <div class="hero-trust">
           <div class="hero-trust-avatars">
             <span style="background:linear-gradient(135deg,#F5A623,#ff8c00);color:#000">BPH</span>
@@ -1419,8 +1460,8 @@
 <section id="api">
   <div class="container">
     <div class="section-label"><span class="tag">Dla deweloperów</span></div>
-    <h2 class="section-title">Proste i potężne API</h2>
-    <p class="section-sub">Integruj wysyłkę SMS/MMS bezpośrednio ze swoim systemem w kilka minut. Pełna dokumentacja w języku polskim i angielskim.</p>
+    <h2 class="section-title">API SMS: 6 endpointów, JSON, Bearer token</h2>
+    <p class="section-sub">REST API do programowej wysyłki SMS, MMS i wiadomości głosowych. Sześć stabilnych endpointów, autoryzacja Bearer, webhooki DLR. Pełna dokumentacja: <a href="/api" style="color:var(--yellow)">/api</a> i <a href="/api/docs" style="color:var(--yellow)">/api/docs</a> (Redoc / OpenAPI 3.1).</p>
     <div class="api-grid">
       <div class="code-block">
         <div class="code-header">
@@ -1460,36 +1501,109 @@
         <div class="api-feat">
           <div class="num">1</div>
           <div>
-            <h4>REST API v1.7</h4>
-            <p>Pełna specyfikacja API dostępna jako PDF. Obsługa wysyłek SMS, MMS i IVR przez jeden endpoint z tokenem Bearer.</p>
+            <h4>6 endpointów REST</h4>
+            <p>SMS, bulk SMS, MMS, VMS, HLR, balance. Autoryzacja Bearer token. Specyfikacja OpenAPI 3.1 do pobrania jako <a href="/openapi.json">openapi.json</a>.</p>
           </div>
         </div>
         <div class="api-feat">
           <div class="num">2</div>
           <div>
-            <h4>Webhooks i callbacki</h4>
-            <p>Otrzymuj powiadomienia w czasie rzeczywistym o statusie dostarczenia, odpowiedziach od odbiorców i błędach.</p>
+            <h4>Webhooki DLR i incoming SMS</h4>
+            <p>Raporty doręczenia (delivered/failed/expired) i SMS-y przychodzące — POST JSON na Twój endpoint, fire-and-forget.</p>
           </div>
         </div>
         <div class="api-feat">
           <div class="num">3</div>
           <div>
-            <h4>Import CSV i bulk API</h4>
-            <p>Wysyłaj tysiące wiadomości jednocześnie. Uploaduj plik CSV lub korzystaj z endpoint masowych wysyłek.</p>
+            <h4>Bulk do 10 000 numerów</h4>
+            <p>Jeden POST na <code style="color:var(--yellow)">/v1/sms/bulk</code> — ta sama treść do 10k odbiorców lub 100 z indywidualnymi treściami.</p>
           </div>
         </div>
         <div class="api-feat">
           <div class="num">4</div>
           <div>
-            <h4>Szablony z parametrami</h4>
-            <p>Definiuj szablony z polami do podstawienia i przekazuj wartości przez API. Personalizuj każdą wiadomość dynamicznie.</p>
+            <h4>Rate limit 100/min, idempotency</h4>
+            <p>Domyślnie 100 żądań na minutę. Pole <code style="color:var(--yellow)">idx</code> w żądaniu wraca w webhookach — łatwo skojarzysz raport z encją.</p>
           </div>
         </div>
-        <a href="/xmlapi_en_przypominamy2020v17.pdf" target="_blank" class="btn btn-outline" style="margin-top:8px">
-          Pobierz dokumentację API (PDF) →
-        </a>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+          <a href="/api" class="btn btn-primary">Pełna strona API →</a>
+          <a href="/api/docs" class="btn btn-outline">Dokumentacja Redoc</a>
+        </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ API W TRZECH JĘZYKACH ═══════════════════════════ -->
+<section id="api-languages">
+  <div class="container">
+    <div class="section-label"><span class="tag">Code samples</span></div>
+    <h2 class="section-title">Integracja API w trzech językach</h2>
+    <p class="section-sub">Ten sam endpoint <code style="color:var(--yellow);font-family:ui-monospace,Menlo,monospace">POST /v1/sms</code>, trzy popularne klienty HTTP. Wszystkie przykłady oraz pełna dokumentacja w <a href="/api/docs" style="color:var(--yellow)">Redoc</a>.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px" id="api-langs-grid">
+      <div class="code-block" style="margin:0">
+        <div class="code-header">
+          <div class="code-dot cd-red"></div>
+          <div class="code-dot cd-yellow"></div>
+          <div class="code-dot cd-green"></div>
+          <span style="color:var(--gray);font-size:.8rem;margin-left:8px">curl</span>
+        </div>
+        <div style="font-family:ui-monospace,Menlo,monospace;font-size:.82rem;line-height:1.65;padding:14px 16px;color:var(--light)">
+          <span class="code-op">curl</span> <span class="code-str">-X POST</span> <span class="code-val">https://api.przypominamy.com/v1/sms</span> \<br/>
+          &nbsp;&nbsp;<span class="code-str">-H</span> <span class="code-val">"Authorization: Bearer $TOKEN"</span> \<br/>
+          &nbsp;&nbsp;<span class="code-str">-H</span> <span class="code-val">"Content-Type: application/json"</span> \<br/>
+          &nbsp;&nbsp;<span class="code-str">-d</span> <span class="code-val">'{</span><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"to"</span>: <span class="code-val">"+48600123456"</span>,<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">"message"</span>: <span class="code-val">"Hello"</span><br/>
+          &nbsp;&nbsp;<span class="code-val">}'</span>
+        </div>
+      </div>
+
+      <div class="code-block" style="margin:0">
+        <div class="code-header">
+          <div class="code-dot cd-red"></div>
+          <div class="code-dot cd-yellow"></div>
+          <div class="code-dot cd-green"></div>
+          <span style="color:var(--gray);font-size:.8rem;margin-left:8px">Python (requests)</span>
+        </div>
+        <div style="font-family:ui-monospace,Menlo,monospace;font-size:.82rem;line-height:1.65;padding:14px 16px;color:var(--light)">
+          <span class="code-op">import</span> requests<br/><br/>
+          resp = requests.<span class="code-op">post</span>(<br/>
+          &nbsp;&nbsp;<span class="code-val">"https://api.przypominamy.com/v1/sms"</span>,<br/>
+          &nbsp;&nbsp;<span class="code-key">headers</span>={<span class="code-val">"Authorization"</span>: <span class="code-str">f"Bearer {TOKEN}"</span>},<br/>
+          &nbsp;&nbsp;<span class="code-key">json</span>={<span class="code-val">"to"</span>: <span class="code-val">"+48600123456"</span>,<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-val">"message"</span>: <span class="code-val">"Hello"</span>},<br/>
+          )<br/>
+          <span class="code-op">print</span>(resp.json())
+        </div>
+      </div>
+
+      <div class="code-block" style="margin:0">
+        <div class="code-header">
+          <div class="code-dot cd-red"></div>
+          <div class="code-dot cd-yellow"></div>
+          <div class="code-dot cd-green"></div>
+          <span style="color:var(--gray);font-size:.8rem;margin-left:8px">Node.js (fetch)</span>
+        </div>
+        <div style="font-family:ui-monospace,Menlo,monospace;font-size:.82rem;line-height:1.65;padding:14px 16px;color:var(--light)">
+          <span class="code-op">const</span> res = <span class="code-op">await</span> <span class="code-op">fetch</span>(<br/>
+          &nbsp;&nbsp;<span class="code-val">'https://api.przypominamy.com/v1/sms'</span>, {<br/>
+          &nbsp;&nbsp;<span class="code-key">method</span>: <span class="code-val">'POST'</span>,<br/>
+          &nbsp;&nbsp;<span class="code-key">headers</span>: {<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-val">'Authorization'</span>: <span class="code-str">`Bearer ${TOKEN}`</span>,<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-val">'Content-Type'</span>: <span class="code-val">'application/json'</span>,<br/>
+          &nbsp;&nbsp;},<br/>
+          &nbsp;&nbsp;<span class="code-key">body</span>: <span class="code-op">JSON</span>.stringify({<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">to</span>: <span class="code-val">'+48600123456'</span>,<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-key">message</span>: <span class="code-val">'Hello'</span>}),<br/>
+          });
+        </div>
+      </div>
+    </div>
+    <style>
+      @media(max-width:860px) { #api-langs-grid { grid-template-columns:1fr !important; } }
+    </style>
   </div>
 </section>
 

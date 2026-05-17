@@ -1,10 +1,23 @@
 # Przypominamy.com
 
-> Przypominamy.com to polska platforma do masowej wysyłki SMS, MMS i wiadomości głosowych IVR/TTS. Działamy od 2010 roku, obsługujemy ponad 30 krajów (UE, Australia, UK). Oferujemy dwukierunkową komunikację, REST API v1.7, raporty w czasie rzeczywistym i integracje z CRM/ERP. Ceny od 0,10 zł/SMS bez abonamentu.
+> Przypominamy.com to polskie REST API SMS oraz platforma do masowej wysyłki SMS, MMS i wiadomości głosowych IVR/TTS. Działamy od 2010 roku, obsługujemy ponad 30 krajów. API z 6 endpointami, autoryzacja Bearer token, webhooki DLR i SMS przychodzące, specyfikacja OpenAPI 3.1. Pay-as-you-go od 0,10 zł/SMS bez abonamentu. Manualna weryfikacja konta w 24h zamiast anonimowego sandboxa — chroni reputację nadawców i jakość ruchu.
 
 Platforma jest skierowana do firm — od małych (plan Starter od 0,15 zł/SMS) po korporacje (Enterprise z indywidualną wyceną). Kluczowe branże: medycyna (przypomnienia o wizytach), e-commerce (statusy zamówień), finanse (przypomnienia o ratach), windykacja, HR i media.
 
 Właściciel: Doradztwo Paweł Mamcarz, ul. Jesionowa 18, 05-825 Grodzisk Mazowiecki, NIP: 7122188089.
+
+## API
+
+- [Strona API](https://przypominamy.com/api): Pełna strona dla deweloperów — endpointy, autoryzacja, webhooki, cennik, FAQ, code samples
+- [Dokumentacja Redoc](https://przypominamy.com/api/docs): Interaktywna dokumentacja renderowana z OpenAPI 3.1 — wszystkie endpointy z przykładami curl/Python/Node.js
+- [OpenAPI 3.1 spec](https://przypominamy.com/openapi.json): Maszynowy opis API (JSON) — do importu w Postman, Insomnia, Swagger UI, ChatGPT GPT Actions
+- [Integracja API z CRM](https://przypominamy.com/blog/api-sms-integracja-crm): Praktyczny przewodnik krok po kroku — curl, Python, webhooks DLR, obsługa błędów
+- Endpointy: `POST /v1/sms`, `POST /v1/sms/bulk` (do 10 000 odbiorców), `POST /v1/mms`, `POST /v1/vms` (TTS), `GET /v1/hlr`, `GET /v1/balance`
+- Autoryzacja: `Authorization: Bearer <token>` — token z panelu po manualnej weryfikacji konta (24h)
+- Webhooki: `delivery_report` (DLR) i `incoming_sms` (two-way) — POST application/json na Twój URL
+- Rate limit: 100 żądań/min domyślnie (wyższe na życzenie)
+- Baza URL: `https://api.przypominamy.com`
+- Specyfikacja legacy XML (PDF, 2020): [xmlapi_en_przypominamy2020v17.pdf](https://przypominamy.com/xmlapi_en_przypominamy2020v17.pdf)
 
 ## Usługi
 
@@ -17,11 +30,7 @@ Właściciel: Doradztwo Paweł Mamcarz, ul. Jesionowa 18, 05-825 Grodzisk Mazowi
 - [Starter](https://przypominamy.com/#cennik): 0,15 zł/SMS, min. doładowanie 100 zł, do 10 000 SMS/miesiąc, szablony, import CSV, raportowanie podstawowe
 - [Business](https://przypominamy.com/#cennik): 0,10 zł/SMS, min. doładowanie 500 zł, SMS+MMS+IVR, własny shortcode, dwukierunkowa komunikacja, API, raporty zaawansowane
 - [Enterprise](https://przypominamy.com/#cennik): Cena negocjowana od wolumenu, dedykowany opiekun, SLA, multi-konto, obsługa rynków zagranicznych
-
-## API
-
-- [Dokumentacja API](https://przypominamy.com/xmlapi_en_przypominamy2020v17.pdf): REST API v1.7, tokeny Bearer, wysyłka SMS/MMS/IVR, webhooks/callbacki, bulk import, format JSON
-- [Jak działa](https://przypominamy.com/#jak-to-dziala): Utwórz szablon → Wybierz odbiorców (CSV) → Wyślij i monitoruj w czasie rzeczywistym
+- API dostępne we wszystkich planach. Pay-as-you-go, bez abonamentu, bez minimum miesięcznego.
 
 ## Zastosowania
 

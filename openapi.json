@@ -1,0 +1,704 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Przypominamy.com SMS API",
+    "version": "1.0.0",
+    "summary": "Polskie REST API do wysyłki SMS, MMS i wiadomości głosowych IVR/TTS",
+    "description": "REST API do programowej wysyłki SMS, MMS i głosowych wiadomości IVR/TTS w Polsce i na świecie.\n\n**Dla kogo**: małe i średnie firmy potrzebujące prostego, polskiego API do komunikacji z klientami — przypomnienia o wizytach, potwierdzenia zamówień, 2FA/OTP, powiadomienia transakcyjne, kampanie marketingowe.\n\n**Auth**: Bearer token wydawany po manualnej weryfikacji konta (24h). Token uzyskasz w panelu klienta po założeniu konta na https://przypominamy.com/register.\n\n**Rate limit**: domyślnie 100 żądań na minutę. W przypadku przekroczenia API zwraca HTTP 429 z nagłówkiem `Retry-After`.\n\n**Cennik**: pay-as-you-go od 0,10 zł/SMS, bez abonamentu. Pełny cennik: https://przypominamy.com/#cennik\n\n**Dokumentacja czytelna**: https://przypominamy.com/api/docs\n**Strona API**: https://przypominamy.com/api",
+    "termsOfService": "https://przypominamy.com/regulamin",
+    "contact": {
+      "name": "Wsparcie Przypominamy.com",
+      "email": "support@przypominamy.com",
+      "url": "https://przypominamy.com/api"
+    },
+    "license": {
+      "name": "Proprietary",
+      "url": "https://przypominamy.com/regulamin"
+    },
+    "x-logo": {
+      "url": "https://przypominamy.com/przypominamy-logo.png",
+      "altText": "Przypominamy.com"
+    },
+    "x-audience": "Polskie małe i średnie firmy integrujące SMS w CRM, e-commerce, aplikacjach 2FA, systemach umawiania wizyt i windykacji.",
+    "x-llm-summary": "Przypominamy.com to polskie REST API do wysyłki SMS, MMS i wiadomości głosowych IVR/TTS dla małych i średnich firm. Sześć endpointów (SMS, bulk SMS, MMS, VMS, HLR, balance), autoryzacja Bearer token, webhooki dla raportów doręczenia (DLR) i SMS-ów przychodzących. Pay-as-you-go od 0,10 zł/SMS bez abonamentu. Manualna weryfikacja konta w 24h chroni reputację nadawców. Polskie wsparcie."
+  },
+  "servers": [
+    {
+      "url": "https://api.przypominamy.com",
+      "description": "Production"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Messaging",
+      "description": "Wysyłka SMS, MMS i wiadomości głosowych (VMS)"
+    },
+    {
+      "name": "Lookup",
+      "description": "Weryfikacja numeru (HLR) i saldo konta"
+    },
+    {
+      "name": "Webhooks",
+      "description": "Raporty doręczenia (DLR) i SMS-y przychodzące — wysyłane z platformy do Twojego URL"
+    }
+  ],
+  "paths": {
+    "/v1/sms": {
+      "post": {
+        "operationId": "sendSms",
+        "summary": "Wyślij pojedynczy SMS",
+        "description": "Wysyła jeden SMS do jednego odbiorcy. Obsługuje personalizację nadawcy, planowanie wysyłki, flash SMS, normalizację znaków (usuwanie polskich znaków diakrytycznych) oraz idempotency przez pole `idx`.",
+        "tags": ["Messaging"],
+        "x-tags": ["bramka SMS API", "REST SMS", "wysyłka SMS programowo", "API SMS Polska"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SmsRequest" },
+              "example": {
+                "to": "+48600123456",
+                "message": "Cześć Anna, przypominamy o wizycie jutro o 14:00. Pozdrawiamy!",
+                "from": "FIRMA",
+                "idx": "appointment-12345"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SMS przyjęty do wysyłki",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageListResponse" },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "count": 1,
+                    "messages": [
+                      { "id": "msg_abc123", "to": "+48600123456", "status": "queued", "parts": 1, "cost": 0.10, "sent_at": "2026-05-17T10:30:00.000Z" }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "402": { "$ref": "#/components/responses/InsufficientFunds" },
+          "422": { "$ref": "#/components/responses/ValidationError" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "502": { "$ref": "#/components/responses/UpstreamError" }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "curl",
+            "source": "curl -X POST https://api.przypominamy.com/v1/sms \\\n  -H \"Authorization: Bearer $PRZYPOMINAMY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"to\": \"+48600123456\",\n    \"message\": \"Cześć! Przypominamy o wizycie jutro o 14:00.\",\n    \"from\": \"FIRMA\"\n  }'"
+          },
+          {
+            "lang": "Python",
+            "source": "import os, requests\n\nresp = requests.post(\n    \"https://api.przypominamy.com/v1/sms\",\n    headers={\"Authorization\": f\"Bearer {os.environ['PRZYPOMINAMY_API_KEY']}\"},\n    json={\n        \"to\": \"+48600123456\",\n        \"message\": \"Cześć! Przypominamy o wizycie jutro o 14:00.\",\n        \"from\": \"FIRMA\",\n        \"idx\": \"appointment-12345\",\n    },\n    timeout=10,\n)\nresp.raise_for_status()\nprint(resp.json())"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const res = await fetch('https://api.przypominamy.com/v1/sms', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${process.env.PRZYPOMINAMY_API_KEY}`,\n    'Content-Type': 'application/json',\n  },\n  body: JSON.stringify({\n    to: '+48600123456',\n    message: 'Cześć! Przypominamy o wizycie jutro o 14:00.',\n    from: 'FIRMA',\n  }),\n});\nconst data = await res.json();\nconsole.log(data);"
+          }
+        ]
+      }
+    },
+    "/v1/sms/bulk": {
+      "post": {
+        "operationId": "sendSmsBulk",
+        "summary": "Wyślij SMS-y do wielu odbiorców",
+        "description": "Dwa tryby:\n\n1. **Ta sama treść do wielu odbiorców** — przekaż `recipients: [...]` (max 10 000) i `message`. Najwydajniejszy tryb dla kampanii.\n2. **Indywidualne treści** — przekaż `messages: [{to, message}, ...]` (max 100). Idealny dla spersonalizowanych przypomnień.\n\nObsługa nadawcy, planowania i webhooków DLR identyczna jak w `/v1/sms`.",
+        "tags": ["Messaging"],
+        "x-tags": ["bulk SMS API", "masowa wysyłka SMS", "kampania SMS API"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  { "$ref": "#/components/schemas/BulkSameMessageRequest" },
+                  { "$ref": "#/components/schemas/BulkIndividualRequest" }
+                ]
+              },
+              "examples": {
+                "sameMessage": {
+                  "summary": "Ta sama treść do wielu odbiorców",
+                  "value": {
+                    "recipients": ["+48600123456", "+48600234567", "+48600345678"],
+                    "message": "Promocja -20% tylko do niedzieli! Kod: SMS20",
+                    "from": "FIRMA"
+                  }
+                },
+                "individual": {
+                  "summary": "Indywidualne treści per odbiorca",
+                  "value": {
+                    "messages": [
+                      { "to": "+48600123456", "message": "Cześć Anna, wizyta 17.05 o 14:00" },
+                      { "to": "+48600234567", "message": "Cześć Piotr, wizyta 17.05 o 15:30" }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Lista wysłanych SMS-ów",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageListResponse" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "402": { "$ref": "#/components/responses/InsufficientFunds" },
+          "422": { "$ref": "#/components/responses/ValidationError" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "502": { "$ref": "#/components/responses/UpstreamError" }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "curl",
+            "source": "curl -X POST https://api.przypominamy.com/v1/sms/bulk \\\n  -H \"Authorization: Bearer $PRZYPOMINAMY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"recipients\": [\"+48600123456\", \"+48600234567\"],\n    \"message\": \"Promocja -20% do niedzieli!\"\n  }'"
+          },
+          {
+            "lang": "Python",
+            "source": "import os, requests\n\nresp = requests.post(\n    \"https://api.przypominamy.com/v1/sms/bulk\",\n    headers={\"Authorization\": f\"Bearer {os.environ['PRZYPOMINAMY_API_KEY']}\"},\n    json={\n        \"recipients\": [\"+48600123456\", \"+48600234567\"],\n        \"message\": \"Promocja -20% do niedzieli!\",\n    },\n)\nprint(resp.json())"
+          },
+          {
+            "lang": "Node.js",
+            "source": "const res = await fetch('https://api.przypominamy.com/v1/sms/bulk', {\n  method: 'POST',\n  headers: {\n    'Authorization': `Bearer ${process.env.PRZYPOMINAMY_API_KEY}`,\n    'Content-Type': 'application/json',\n  },\n  body: JSON.stringify({\n    recipients: ['+48600123456', '+48600234567'],\n    message: 'Promocja -20% do niedzieli!',\n  }),\n});\nconsole.log(await res.json());"
+          }
+        ]
+      }
+    },
+    "/v1/mms": {
+      "post": {
+        "operationId": "sendMms",
+        "summary": "Wyślij MMS (wiadomość multimedialną)",
+        "description": "Wysyła MMS z markupem SMIL. SMIL pozwala załączyć obraz, audio lub video z timing'iem. Wymagane: `to`, `subject`, `smil`.",
+        "tags": ["Messaging"],
+        "x-tags": ["MMS API", "wysyłka MMS programowo"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MmsRequest" },
+              "example": {
+                "to": "+48600123456",
+                "subject": "Nowa kolekcja wiosna 2026",
+                "smil": "<smil><body><par><img src=\"https://example.com/promo.jpg\"/><text>Sprawdź nową kolekcję!</text></par></body></smil>",
+                "from": "FIRMA"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "MMS przyjęty do wysyłki",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageListResponse" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "402": { "$ref": "#/components/responses/InsufficientFunds" },
+          "422": { "$ref": "#/components/responses/ValidationError" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "502": { "$ref": "#/components/responses/UpstreamError" }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "curl",
+            "source": "curl -X POST https://api.przypominamy.com/v1/mms \\\n  -H \"Authorization: Bearer $PRZYPOMINAMY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"to\": \"+48600123456\",\n    \"subject\": \"Nowa kolekcja\",\n    \"smil\": \"<smil>...</smil>\"\n  }'"
+          }
+        ]
+      }
+    },
+    "/v1/vms": {
+      "post": {
+        "operationId": "sendVms",
+        "summary": "Wyślij wiadomość głosową (VMS / IVR / TTS)",
+        "description": "Wykonuje połączenie głosowe i odczytuje syntetyzowany głosem (TTS) tekst. Cztery polskojęzyczne lektorzy: `ewa`, `jacek`, `jan`, `maja`. Domyślnie `ewa`. Liczba prób połączenia 1–6 (parametr `tries`).",
+        "tags": ["Messaging"],
+        "x-tags": ["VMS API", "TTS API", "IVR Polska", "wiadomość głosowa programowo"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/VmsRequest" },
+              "example": {
+                "to": "+48600123456",
+                "tts": "Dzień dobry, przypominamy o wizycie jutro o czternastej. Pozdrawiamy.",
+                "tts_lector": "ewa",
+                "tries": 3
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Połączenie zaplanowane",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MessageListResponse" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "402": { "$ref": "#/components/responses/InsufficientFunds" },
+          "422": { "$ref": "#/components/responses/ValidationError" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "502": { "$ref": "#/components/responses/UpstreamError" }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "curl",
+            "source": "curl -X POST https://api.przypominamy.com/v1/vms \\\n  -H \"Authorization: Bearer $PRZYPOMINAMY_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"to\": \"+48600123456\",\n    \"tts\": \"Dzień dobry, przypominamy o wizycie jutro o czternastej.\",\n    \"tts_lector\": \"ewa\",\n    \"tries\": 3\n  }'"
+          }
+        ]
+      }
+    },
+    "/v1/hlr": {
+      "get": {
+        "operationId": "lookupHlr",
+        "summary": "Weryfikacja numeru (HLR lookup)",
+        "description": "Sprawdza status, sieć i kraj numeru telefonu w bazie HLR (Home Location Register). Przydatne do walidacji baz numerów przed kampanią — eliminuje nieaktywne numery i obniża koszty.",
+        "tags": ["Lookup"],
+        "x-tags": ["HLR lookup", "weryfikacja numeru API"],
+        "parameters": [
+          {
+            "name": "number",
+            "in": "query",
+            "required": true,
+            "description": "Numer telefonu w formacie międzynarodowym (z prefiksem kraju, np. `+48600123456`).",
+            "schema": { "type": "string", "example": "+48600123456" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Wynik HLR",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HlrResponse" },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "number": "+48600123456",
+                    "status": "ok",
+                    "ported": false,
+                    "network": "Orange",
+                    "country": "PL",
+                    "cost": 0.05
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "422": { "$ref": "#/components/responses/ValidationError" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "502": { "$ref": "#/components/responses/UpstreamError" }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "curl",
+            "source": "curl \"https://api.przypominamy.com/v1/hlr?number=%2B48600123456\" \\\n  -H \"Authorization: Bearer $PRZYPOMINAMY_API_KEY\""
+          }
+        ]
+      }
+    },
+    "/v1/balance": {
+      "get": {
+        "operationId": "getBalance",
+        "summary": "Sprawdź saldo konta",
+        "description": "Zwraca aktualne saldo konta w PLN i nazwę użytkownika.",
+        "tags": ["Lookup"],
+        "x-tags": ["saldo API", "balance check"],
+        "responses": {
+          "200": {
+            "description": "Saldo konta",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/BalanceResponse" },
+                "example": {
+                  "success": true,
+                  "data": {
+                    "balance": 450.75,
+                    "currency": "PLN",
+                    "username": "twojafirma"
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/RateLimited" },
+          "502": { "$ref": "#/components/responses/UpstreamError" }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "curl",
+            "source": "curl https://api.przypominamy.com/v1/balance \\\n  -H \"Authorization: Bearer $PRZYPOMINAMY_API_KEY\""
+          }
+        ]
+      }
+    }
+  },
+  "webhooks": {
+    "deliveryReport": {
+      "post": {
+        "operationId": "deliveryReport",
+        "summary": "Raport doręczenia (DLR)",
+        "description": "Platforma wysyła POST do skonfigurowanego `webhook_url` za każdym razem, gdy status SMS-a się zmienia (doręczony, niedoręczony, błąd). Konfiguracja `webhook_url` odbywa się przez panel klienta. Webhook jest fire-and-forget — odpowiedz HTTP 2xx jak najszybciej.",
+        "tags": ["Webhooks"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DeliveryReportPayload" },
+              "example": {
+                "event": "delivery_report",
+                "message_id": "msg_abc123",
+                "to": "+48600123456",
+                "status": "delivered",
+                "sent_at": "2026-05-17T10:30:00.000Z",
+                "done_at": "2026-05-17T10:30:04.000Z",
+                "idx": "appointment-12345"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Przyjęto raport. Platforma nie ponawia w razie błędu." }
+        }
+      }
+    },
+    "incomingSms": {
+      "post": {
+        "operationId": "incomingSms",
+        "summary": "SMS przychodzący (two-way SMS)",
+        "description": "Platforma wysyła POST do skonfigurowanego `webhook_url`, gdy odbiorca odpowie na Twojego SMS-a (lub wyśle SMS na Twój numer). Wymaga numeru dwukierunkowego — kontakt z supportem.",
+        "tags": ["Webhooks"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/IncomingSmsPayload" },
+              "example": {
+                "event": "incoming_sms",
+                "message_id": "in_xyz789",
+                "from": "+48600123456",
+                "to": "+48732555000",
+                "message": "TAK",
+                "received_at": "2026-05-17T10:32:15.000Z"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Przyjęto wiadomość. Platforma nie ponawia w razie błędu." }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "opaque",
+        "description": "Token z panelu klienta po manualnej weryfikacji konta (24h). Przekaż w nagłówku `Authorization: Bearer <token>`."
+      }
+    },
+    "schemas": {
+      "SmsRequest": {
+        "type": "object",
+        "required": ["to", "message"],
+        "properties": {
+          "to": {
+            "type": "string",
+            "description": "Numer odbiorcy w formacie międzynarodowym (z prefiksem +48 dla Polski).",
+            "example": "+48600123456"
+          },
+          "message": {
+            "type": "string",
+            "description": "Treść SMS-a. Dla `encoding=utf-8` jedna część = 70 znaków, kolejne łączone w concatenated SMS. Dla `gsm` jedna część = 160 znaków.",
+            "example": "Cześć! Przypominamy o wizycie jutro o 14:00."
+          },
+          "from": {
+            "type": "string",
+            "description": "Nazwa nadawcy (sender ID), max 11 znaków. Wymaga pre-rejestracji w panelu. Jeśli pominiete, używamy domyślnego nadawcy klienta.",
+            "example": "FIRMA"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Data zaplanowanej wysyłki (ISO 8601). Jeśli pominięta — wysłany natychmiast. Maksymalnie 60 dni w przyszłość.",
+            "example": "2026-05-18T14:00:00Z"
+          },
+          "encoding": {
+            "type": "string",
+            "enum": ["utf-8", "gsm"],
+            "default": "utf-8",
+            "description": "`utf-8` zachowuje polskie znaki diakrytyczne (70 znaków/część). `gsm` używa tablicy GSM-7 bez polskich znaków (160 znaków/część)."
+          },
+          "flash": {
+            "type": "boolean",
+            "description": "Flash SMS — wyświetlany na ekranie odbiorcy bez konieczności otwierania."
+          },
+          "normalize": {
+            "type": "boolean",
+            "description": "Usuń polskie znaki diakrytyczne (ą→a, ż→z, itd.) przed wysyłką."
+          },
+          "idx": {
+            "type": "string",
+            "description": "Twój identyfikator wiadomości (idempotency key). Zwracany w DLR webhookach — pozwala skojarzyć raport z Twoją encją.",
+            "example": "appointment-12345"
+          }
+        }
+      },
+      "BulkSameMessageRequest": {
+        "type": "object",
+        "required": ["recipients", "message"],
+        "properties": {
+          "recipients": {
+            "type": "array",
+            "items": { "type": "string" },
+            "maxItems": 10000,
+            "description": "Lista numerów odbiorców (max 10 000).",
+            "example": ["+48600123456", "+48600234567"]
+          },
+          "message": { "type": "string", "description": "Treść identyczna dla wszystkich odbiorców." },
+          "from": { "type": "string", "description": "Nadawca (jak w `/v1/sms`)." },
+          "date": { "type": "string", "format": "date-time" },
+          "encoding": { "type": "string", "enum": ["utf-8", "gsm"], "default": "utf-8" }
+        }
+      },
+      "BulkIndividualRequest": {
+        "type": "object",
+        "required": ["messages"],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "required": ["to", "message"],
+              "properties": {
+                "to": { "type": "string" },
+                "message": { "type": "string" },
+                "from": { "type": "string" },
+                "date": { "type": "string", "format": "date-time" },
+                "idx": { "type": "string" }
+              }
+            },
+            "description": "Lista wiadomości z indywidualnymi treściami (max 100). Idealne dla spersonalizowanych przypomnień."
+          }
+        }
+      },
+      "MmsRequest": {
+        "type": "object",
+        "required": ["to", "subject", "smil"],
+        "properties": {
+          "to": { "type": "string", "example": "+48600123456" },
+          "subject": { "type": "string", "description": "Temat MMS-a." },
+          "smil": { "type": "string", "description": "Markup SMIL z multimediami. Obsługuje `<img>`, `<audio>`, `<video>`, `<text>` z timingiem `<par>` i `<seq>`." },
+          "from": { "type": "string" },
+          "date": { "type": "string", "format": "date-time" }
+        }
+      },
+      "VmsRequest": {
+        "type": "object",
+        "required": ["to", "tts"],
+        "properties": {
+          "to": { "type": "string", "example": "+48600123456" },
+          "tts": { "type": "string", "description": "Tekst do odczytania przez syntezator mowy." },
+          "tts_lector": {
+            "type": "string",
+            "enum": ["ewa", "jacek", "jan", "maja"],
+            "default": "ewa",
+            "description": "Polski lektor TTS."
+          },
+          "tries": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "default": 1,
+            "description": "Liczba prób połączenia, jeśli abonent nie odbiera."
+          },
+          "from": { "type": "string", "description": "Numer prezentowany dzwoniącemu." },
+          "date": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "Identyfikator wiadomości w platformie.", "example": "msg_abc123" },
+          "to": { "type": "string", "example": "+48600123456" },
+          "status": {
+            "type": "string",
+            "enum": ["queued", "sent", "delivered", "not_found", "expired", "failed", "accepted", "unknown", "rejected", "undelivered"],
+            "description": "Status doręczenia. `queued` → `sent` → `delivered` (lub status terminalny: `failed`, `expired`, itd.)."
+          },
+          "parts": { "type": "integer", "description": "Liczba części concatenated SMS (1 dla krótkich, 2+ dla długich).", "example": 1 },
+          "cost": { "type": "number", "description": "Koszt wysyłki w punktach (1 punkt = 1 grosz).", "example": 0.10 },
+          "sent_at": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "MessageListResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": {
+            "type": "object",
+            "properties": {
+              "count": { "type": "integer", "example": 1 },
+              "messages": { "type": "array", "items": { "$ref": "#/components/schemas/Message" } }
+            }
+          }
+        }
+      },
+      "HlrResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "number": { "type": "string" },
+              "status": { "type": "string", "description": "Status HLR (np. `ok`, `not_active`, `incorrect`)." },
+              "ported": { "type": "boolean", "description": "Czy numer był przenoszony między sieciami." },
+              "network": { "type": "string", "nullable": true },
+              "country": { "type": "string", "nullable": true, "description": "Kod kraju ISO-3166 alfa-2." },
+              "cost": { "type": "number" }
+            }
+          }
+        }
+      },
+      "BalanceResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "balance": { "type": "number", "description": "Saldo w PLN." },
+              "currency": { "type": "string", "example": "PLN" },
+              "username": { "type": "string", "nullable": true }
+            }
+          }
+        }
+      },
+      "DeliveryReportPayload": {
+        "type": "object",
+        "required": ["event", "message_id", "to", "status"],
+        "properties": {
+          "event": { "type": "string", "enum": ["delivery_report"] },
+          "message_id": { "type": "string", "description": "ID wiadomości z odpowiedzi `/v1/sms`." },
+          "to": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["queued", "sent", "delivered", "not_found", "expired", "failed", "accepted", "unknown", "rejected", "undelivered"]
+          },
+          "sent_at": { "type": "string", "format": "date-time", "nullable": true },
+          "done_at": { "type": "string", "format": "date-time", "nullable": true },
+          "idx": { "type": "string", "nullable": true, "description": "Twój identyfikator z `/v1/sms` request." }
+        }
+      },
+      "IncomingSmsPayload": {
+        "type": "object",
+        "required": ["event", "from", "to", "message"],
+        "properties": {
+          "event": { "type": "string", "enum": ["incoming_sms"] },
+          "message_id": { "type": "string" },
+          "from": { "type": "string", "description": "Numer nadawcy." },
+          "to": { "type": "string", "description": "Twój numer dwukierunkowy." },
+          "message": { "type": "string", "description": "Treść SMS-a od odbiorcy." },
+          "received_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["code", "message"],
+            "properties": {
+              "code": { "type": "integer", "description": "HTTP status code." },
+              "message": { "type": "string", "description": "Czytelny komunikat błędu po polsku." },
+              "details": { "description": "Opcjonalne dodatkowe informacje.", "nullable": true }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Brak lub nieprawidłowy token autoryzacji",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": { "code": 401, "message": "Nieprawidłowy token autoryzacji" } }
+          }
+        }
+      },
+      "InsufficientFunds": {
+        "description": "Niewystarczające środki na koncie",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": { "code": 402, "message": "Niewystarczające środki na koncie" } }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Błąd walidacji danych wejściowych",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": { "code": 422, "message": "Pole \"to\" jest wymagane" } }
+          }
+        }
+      },
+      "RateLimited": {
+        "description": "Przekroczono limit żądań (domyślnie 100/min). Sprawdź nagłówek `Retry-After`.",
+        "headers": {
+          "Retry-After": {
+            "schema": { "type": "integer" },
+            "description": "Sekundy do następnej dozwolonej próby."
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": { "code": 429, "message": "Przekroczono limit żądań. Spróbuj ponownie za chwilę." } }
+          }
+        }
+      },
+      "UpstreamError": {
+        "description": "Błąd po stronie dostawcy SMS lub timeout (10s).",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" },
+            "example": { "error": { "code": 502, "message": "Dostawca SMS nie odpowiada" } }
+          }
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Strona główna API + dokumentacja czytelna",
+    "url": "https://przypominamy.com/api"
+  }
+}

@@ -33,8 +33,9 @@ https://przypominamy-com.pages.dev/*  https://przypominamy.com/:splat  301
 /panel            https://panel.przypominamy.com    302
 /login            https://panel.przypominamy.com    302
 
-# API docs (old path → new)
-/api-docs         /xmlapi_en_przypominamy2020v17.pdf  301
+# API docs — Redoc renderowane z openapi.json
+/api-docs         /api/docs                            301
+/api-docs.pdf     /xmlapi_en_przypominamy2020v17.pdf   301
 
 # Polish-language alias for /register
 /rejestracja      /register        301

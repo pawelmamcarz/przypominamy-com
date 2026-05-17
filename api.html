@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API SMS Polska — REST, JSON, Bearer token | Przypominamy.com</title>
+  <meta name="description" content="Polskie REST API do wysyłki SMS, MMS i wiadomości głosowych dla małych i średnich firm. 6 endpointów, Bearer token, webhooki DLR. Bez abonamentu od 0,10 zł/SMS. Weryfikacja konta w 24h." />
+  <meta name="keywords" content="API SMS, API SMS Polska, REST API SMS, bramka SMS API, wysyłka SMS API, API MMS, API IVR, API TTS, webhook DLR, OpenAPI SMS" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://przypominamy.com/api" />
+  <link rel="alternate" hreflang="pl" href="https://przypominamy.com/api" />
+  <link rel="alternate" hreflang="en" href="https://przypominamy.com/en" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="API SMS Polska — Przypominamy.com" />
+  <meta property="og:description" content="REST API SMS, MMS i IVR dla polskich firm. 6 endpointów, JSON, Bearer token, webhooki DLR. Od 0,10 zł/SMS bez abonamentu." />
+  <meta property="og:url" content="https://przypominamy.com/api" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="API SMS Polska — Przypominamy.com" />
+  <meta name="twitter:description" content="REST API SMS, MMS i IVR. Bearer token, webhooki, od 0,10 zł/SMS." />
+  <meta name="twitter:image" content="https://przypominamy.com/preview-og.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebAPI",
+    "name": "Przypominamy.com SMS API",
+    "description": "Polskie REST API do wysyłki SMS, MMS i wiadomości głosowych IVR/TTS dla małych i średnich firm. Bearer token, JSON, webhooki DLR.",
+    "documentation": "https://przypominamy.com/api/docs",
+    "termsOfService": "https://przypominamy.com/regulamin",
+    "url": "https://przypominamy.com/api",
+    "provider": {
+      "@type": "Organization",
+      "name": "Doradztwo Paweł Mamcarz",
+      "url": "https://przypominamy.com"
+    },
+    "areaServed": [
+      {"@type": "Country", "name": "Poland"},
+      {"@type": "Place", "name": "European Union"}
+    ],
+    "audience": {
+      "@type": "BusinessAudience",
+      "audienceType": "Małe i średnie firmy w Polsce"
+    },
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "PLN",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "0.10",
+        "priceCurrency": "PLN",
+        "unitText": "SMS"
+      }
+    },
+    "potentialAction": {
+      "@type": "ConsumeAction",
+      "target": "https://api.przypominamy.com/v1/sms"
+    },
+    "isAccessibleForFree": false
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Jak zdobyć token API?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Załóż konto na https://przypominamy.com/register. Każde zgłoszenie weryfikujemy ręcznie w ciągu 24 godzin. Po weryfikacji w panelu klienta wygenerujesz Bearer token i ustawisz webhook URL."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy macie sandbox lub środowisko testowe?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nie. Każde konto przechodzi manualną weryfikację (24h) zamiast anonimowego sandboxa. Chroni to reputację numerów nadawczych i jakość ruchu. Po weryfikacji możesz wysyłać prawdziwe SMS-y od pierwszego doładowania."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Jaki jest limit zapytań?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Domyślnie 100 żądań na minutę. Limit można podnieść po kontakcie z supportem. Po przekroczeniu API zwraca HTTP 429 z nagłówkiem Retry-After."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czym różnicicie się od innych dostawców API SMS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Jesteśmy nastawieni na małe i średnie firmy. Pay-as-you-go od 100 zł, bez abonamentu i minimalnych zobowiązań. Manualna weryfikacja konta w 24h. Polskie wsparcie. Dokumentacja po polsku. Proste 6 endpointów REST zamiast skomplikowanego SOAP."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy API obsługuje MMS i wiadomości głosowe?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak. Endpoint /v1/mms wysyła MMS z markupem SMIL (obraz, video, audio). Endpoint /v1/vms wykonuje połączenie głosowe z syntezatorem mowy TTS — cztery polskie głosy lektorów (ewa, jacek, jan, maja), 1-6 prób połączenia."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Jak skonfigurować webhook URL dla raportów doręczenia (DLR)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Webhook URL ustawiasz w panelu klienta. Platforma wysyła POST application/json na Twój endpoint z payloadem zawierającym event, message_id, to, status, sent_at, done_at i Twój idx. Możesz też odbierać SMS-y przychodzące jeśli masz numer dwukierunkowy."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy mogę używać własnej nazwy nadawcy (sender ID)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak. Nazwę nadawcy (do 11 znaków) zgłaszasz w panelu i po weryfikacji możesz jej używać w parametrze 'from'. Bez własnego sender ID SMS-y wychodzą z domyślnego nadawcy klienta."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy są SDK dla Pythona, Node.js lub innych języków?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nie oferujemy własnych SDK — API jest na tyle proste, że standardowy klient HTTP (requests w Pythonie, fetch w Node) wystarczy. W dokumentacji znajdziesz gotowe przykłady curl, Python i Node.js. Dostępne są też integracje no-code: Zapier, Make, n8n."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --surface-2:#202020;
+      --border:#2c2c2c; --border-strong:#3c3c3c;
+      --yellow:#F5A623; --yellow-dim:rgba(245,166,35,.15);
+      --green:#4BC87A; --green-dim:rgba(75,200,122,.15);
+      --blue:#5BA4E8; --blue-dim:rgba(91,164,232,.15);
+      --red:#E53E3E;
+      --white:#fff; --gray:#888; --light:#ccc;
+      --radius:14px; --radius-sm:10px;
+      --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .container { max-width:1080px; margin:0 auto; padding:0 24px; }
+
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; position:sticky; top:0; z-index:10; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .top-bar nav { display:flex; gap:18px; align-items:center; font-size:.92rem; }
+    .top-bar nav a { color:var(--light); }
+    .top-bar nav a:hover { color:var(--yellow); text-decoration:none; }
+
+    .breadcrumbs { padding:16px 0 0; font-size:.85rem; color:var(--gray); }
+    .breadcrumbs a { color:var(--gray); }
+    .breadcrumbs a:hover { color:var(--yellow); }
+
+    /* ── Hero ── */
+    .hero { padding:56px 0 32px; }
+    .hero .kicker { display:inline-block; padding:6px 12px; background:var(--yellow-dim); color:var(--yellow); border-radius:999px; font-size:.78rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase; margin-bottom:20px; }
+    .hero h1 { font-size:2.6rem; font-weight:800; line-height:1.15; margin-bottom:20px; letter-spacing:-.02em; }
+    .hero h1 em { font-style:normal; color:var(--yellow); }
+    @media(max-width:680px) { .hero h1 { font-size:1.9rem; } }
+    .hero .lead { font-size:1.15rem; color:var(--light); max-width:740px; margin-bottom:28px; }
+    .hero .cta-row { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px; }
+    .hero .micro { display:flex; gap:18px; flex-wrap:wrap; font-size:.85rem; color:var(--gray); }
+    .hero .micro span::before { content:"·"; margin-right:18px; color:var(--border-strong); }
+    .hero .micro span:first-child::before { content:""; margin-right:0; }
+
+    /* ── Buttons ── */
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:13px 22px; border-radius:10px; font-weight:600; font-size:.95rem; border:none; cursor:pointer; transition:all .2s; font-family:inherit; }
+    .btn-primary { background:linear-gradient(135deg, var(--yellow), #FFBE44); color:#000; }
+    .btn-primary:hover { transform:translateY(-1px); text-decoration:none; }
+    .btn-outline { background:transparent; color:var(--white); border:1.5px solid var(--border-strong); }
+    .btn-outline:hover { border-color:var(--yellow); color:var(--yellow); text-decoration:none; }
+
+    /* ── Sections ── */
+    section { padding:48px 0; border-top:1px solid var(--border); }
+    section h2 { font-size:1.65rem; font-weight:800; margin-bottom:10px; letter-spacing:-.01em; }
+    section h2 em { font-style:normal; color:var(--yellow); }
+    section .section-lead { color:var(--light); max-width:720px; margin-bottom:28px; font-size:1.02rem; }
+
+    /* ── Code blocks ── */
+    .code-block { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+    .code-header { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:var(--dark); border-bottom:1px solid var(--border); font-size:.8rem; color:var(--gray); }
+    .code-header .method { display:inline-flex; align-items:center; gap:8px; }
+    .code-header .verb { font-family:var(--mono); font-weight:700; padding:2px 7px; border-radius:4px; font-size:.75rem; }
+    .code-header .verb.post { background:var(--green-dim); color:var(--green); }
+    .code-header .verb.get { background:var(--blue-dim); color:var(--blue); }
+    .code-block pre { padding:18px 20px; overflow-x:auto; font-family:var(--mono); font-size:.85rem; line-height:1.65; color:var(--light); }
+    .code-block code .k { color:#FFBE44; } /* keys */
+    .code-block code .s { color:#A6E3A1; } /* strings */
+    .code-block code .c { color:var(--gray); } /* comments */
+
+    /* ── Quickstart ── */
+    .quickstart-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+    @media(max-width:720px) { .quickstart-steps { grid-template-columns:1fr; } }
+    .qs-step { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; }
+    .qs-step .num { display:inline-flex; width:28px; height:28px; border-radius:50%; background:var(--yellow-dim); color:var(--yellow); align-items:center; justify-content:center; font-weight:700; font-size:.9rem; margin-bottom:10px; }
+    .qs-step h3 { font-size:1rem; font-weight:700; margin-bottom:6px; }
+    .qs-step p { font-size:.9rem; color:var(--light); }
+
+    /* ── Endpoint cards ── */
+    .endpoint-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    @media(max-width:860px) { .endpoint-grid { grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:520px) { .endpoint-grid { grid-template-columns:1fr; } }
+    .ep-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; transition:border-color .2s, transform .2s; display:block; color:inherit; }
+    .ep-card:hover { border-color:var(--yellow); text-decoration:none; transform:translateY(-2px); }
+    .ep-card .ep-method { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .ep-card .verb { font-family:var(--mono); font-weight:700; padding:3px 8px; border-radius:5px; font-size:.72rem; letter-spacing:.04em; }
+    .ep-card .verb.post { background:var(--green-dim); color:var(--green); }
+    .ep-card .verb.get { background:var(--blue-dim); color:var(--blue); }
+    .ep-card .path { font-family:var(--mono); font-size:.88rem; color:var(--white); font-weight:500; }
+    .ep-card h3 { font-size:.98rem; font-weight:700; margin:6px 0 6px; }
+    .ep-card p { font-size:.88rem; color:var(--light); line-height:1.55; }
+
+    /* ── Webhook grid ── */
+    .webhook-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    @media(max-width:860px) { .webhook-grid { grid-template-columns:1fr; } }
+    .webhook-card h3 { font-size:1.02rem; font-weight:700; margin-bottom:6px; }
+    .webhook-card .wh-desc { font-size:.9rem; color:var(--light); margin-bottom:12px; }
+
+    /* ── Auth ── */
+    .auth-grid { display:grid; grid-template-columns:1.2fr 1fr; gap:24px; align-items:start; }
+    @media(max-width:860px) { .auth-grid { grid-template-columns:1fr; } }
+    .auth-list { list-style:none; padding:0; }
+    .auth-list li { padding:12px 0; border-bottom:1px solid var(--border); font-size:.94rem; color:var(--light); display:flex; gap:12px; }
+    .auth-list li:last-child { border-bottom:none; }
+    .auth-list li::before { content:"→"; color:var(--yellow); font-weight:700; flex-shrink:0; }
+
+    /* ── Errors table ── */
+    .err-table { width:100%; border-collapse:collapse; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+    .err-table th, .err-table td { padding:12px 16px; text-align:left; border-bottom:1px solid var(--border); font-size:.9rem; }
+    .err-table th { background:var(--dark); font-weight:600; color:var(--white); font-size:.82rem; text-transform:uppercase; letter-spacing:.04em; }
+    .err-table td:first-child { font-family:var(--mono); font-weight:700; color:var(--yellow); width:90px; }
+    .err-table tbody tr:last-child td { border-bottom:none; }
+    .limits-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:24px; align-items:start; }
+    @media(max-width:860px) { .limits-grid { grid-template-columns:1fr; } }
+    .limits-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px 22px; }
+    .limits-card h3 { font-size:1rem; font-weight:700; margin-bottom:10px; }
+    .limits-card p { font-size:.92rem; color:var(--light); margin-bottom:8px; }
+    .limits-card .big { font-size:2.2rem; font-weight:800; color:var(--yellow); line-height:1; margin:6px 0 4px; }
+
+    /* ── Pricing ── */
+    .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    @media(max-width:860px) { .pricing-grid { grid-template-columns:1fr; } }
+    .price-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:24px; position:relative; }
+    .price-card.featured { border-color:var(--yellow); }
+    .price-card .name { font-size:.85rem; font-weight:700; color:var(--yellow); text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; }
+    .price-card .price { font-size:2.4rem; font-weight:800; line-height:1; margin-bottom:4px; }
+    .price-card .price small { font-size:.95rem; font-weight:500; color:var(--gray); }
+    .price-card .min { font-size:.86rem; color:var(--light); margin-bottom:14px; }
+    .price-card ul { list-style:none; padding:0; font-size:.9rem; color:var(--light); }
+    .price-card ul li { padding:6px 0; }
+    .price-card ul li::before { content:"✓"; color:var(--green); margin-right:8px; }
+
+    /* ── Onboarding differentiator ── */
+    .onboard-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    @media(max-width:860px) { .onboard-grid { grid-template-columns:1fr; } }
+    .onboard-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px; }
+    .onboard-card .ico { display:inline-flex; width:38px; height:38px; border-radius:10px; background:var(--yellow-dim); color:var(--yellow); align-items:center; justify-content:center; font-weight:700; margin-bottom:12px; font-size:1.1rem; }
+    .onboard-card h3 { font-size:1.02rem; font-weight:700; margin-bottom:8px; }
+    .onboard-card p { font-size:.92rem; color:var(--light); }
+
+    /* ── SDK cards ── */
+    .sdk-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+    @media(max-width:860px) { .sdk-grid { grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:480px) { .sdk-grid { grid-template-columns:1fr; } }
+    .sdk-card { display:block; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; color:inherit; transition:border-color .2s, transform .2s; }
+    .sdk-card:hover { border-color:var(--yellow); text-decoration:none; transform:translateY(-2px); }
+    .sdk-card .sdk-name { font-size:1rem; font-weight:700; margin-bottom:4px; color:var(--white); }
+    .sdk-card .sdk-desc { font-size:.86rem; color:var(--light); }
+
+    /* ── FAQ accordions ── */
+    .faq-list { display:flex; flex-direction:column; gap:8px; }
+    .faq-list details { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+    .faq-list details[open] { border-color:var(--yellow-dim); }
+    .faq-list summary { padding:16px 20px; cursor:pointer; font-weight:600; font-size:.98rem; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .faq-list summary::-webkit-details-marker { display:none; }
+    .faq-list summary::after { content:"+"; color:var(--yellow); font-size:1.4rem; font-weight:300; transition:transform .2s; line-height:1; }
+    .faq-list details[open] summary::after { transform:rotate(45deg); }
+    .faq-list summary:hover { color:var(--yellow); }
+    .faq-list details p { padding:0 20px 18px; color:var(--light); font-size:.93rem; line-height:1.65; }
+
+    /* ── Final CTA ── */
+    .final-cta { text-align:center; padding:56px 24px; background:var(--surface); border-radius:var(--radius); margin:24px 0; border:1px solid var(--border); }
+    .final-cta h2 { border:none; padding:0; margin-bottom:12px; }
+    .final-cta p { color:var(--light); margin-bottom:24px; max-width:560px; margin-left:auto; margin-right:auto; }
+
+    /* ── Footer ── */
+    footer { border-top:1px solid var(--border); padding:32px 0; text-align:center; color:var(--gray); font-size:.88rem; margin-top:24px; }
+    footer a { color:var(--gray); }
+    footer a:hover { color:var(--yellow); }
+    footer .links { display:flex; gap:18px; justify-content:center; flex-wrap:wrap; margin-bottom:12px; }
+  </style>
+</head>
+<body>
+
+<main>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <nav>
+      <a href="/api/docs">Dokumentacja Redoc</a>
+      <a href="/#cennik">Cennik</a>
+      <a href="/integracje">Integracje</a>
+      <a href="/register">Zarejestruj się →</a>
+    </nav>
+  </div>
+</div>
+
+<div class="container">
+  <div class="breadcrumbs">
+    <a href="/">Strona główna</a> &rsaquo; API SMS
+  </div>
+</div>
+
+<!-- ─────────────────────────── 1. HERO ─────────────────────────── -->
+<section class="hero" style="border-top:none">
+  <div class="container">
+    <div class="kicker">REST API · SMS / MMS / IVR</div>
+    <h1>API SMS dla polskich firm — <em>REST, JSON, Bearer token</em></h1>
+    <p class="lead">Wysyłaj SMS-y, MMS-y i wiadomości głosowe programowo. Sześć endpointów, autoryzacja Bearer, webhooki DLR. Pay-as-you-go od 0,10 zł/SMS — bez abonamentu, bez minimum miesięcznego.</p>
+    <div class="cta-row">
+      <a href="/register" class="btn btn-primary">Załóż konto →</a>
+      <a href="/api/docs" class="btn btn-outline">Dokumentacja Redoc</a>
+    </div>
+    <div class="micro">
+      <span>Weryfikacja konta w 24h</span>
+      <span>Polskie wsparcie</span>
+      <span>OpenAPI 3.1</span>
+      <span>30+ krajów</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── 2. QUICKSTART ─────────────────────────── -->
+<section id="quickstart">
+  <div class="container">
+    <h2>Pierwszy SMS w <em>30 sekund</em></h2>
+    <p class="section-lead">Załóż konto, odbierz token z panelu po weryfikacji, wyślij curl. Tyle.</p>
+    <div class="quickstart-steps">
+      <div class="qs-step">
+        <div class="num">1</div>
+        <h3>Załóż konto</h3>
+        <p>Wypełnij formularz na <a href="/register">/register</a>. Weryfikujemy ręcznie w 24h.</p>
+      </div>
+      <div class="qs-step">
+        <div class="num">2</div>
+        <h3>Wygeneruj token</h3>
+        <p>Po weryfikacji w panelu klienta klikasz „Wygeneruj token" i kopiujesz Bearer.</p>
+      </div>
+      <div class="qs-step">
+        <div class="num">3</div>
+        <h3>Wyślij SMS</h3>
+        <p>Wykonaj jeden POST na <code style="font-family:var(--mono);color:var(--yellow)">/v1/sms</code> z numerem i treścią.</p>
+      </div>
+    </div>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="method"><span class="verb post">POST</span><span>https://api.przypominamy.com/v1/sms</span></div>
+        <span>curl</span>
+      </div>
+<pre><code>curl -X POST https://api.przypominamy.com/v1/sms \
+  -H "Authorization: Bearer $PRZYPOMINAMY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "to": "+48600123456",
+    "message": "Cześć! Przypominamy o wizycie jutro o 14:00.",
+    "from": "FIRMA"
+  }'</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── 3. ENDPOINT CARDS ─────────────────────────── -->
+<section id="endpointy">
+  <div class="container">
+    <h2>Sześć endpointów. <em>To wszystko, czego potrzebujesz.</em></h2>
+    <p class="section-lead">Bez SOAP-u, bez tysiąca opcji konfiguracyjnych. Pełna specyfikacja w <a href="/api/docs">Redoc</a> i <a href="/openapi.json">openapi.json</a>.</p>
+    <div class="endpoint-grid">
+
+      <a href="/api/docs#operation/sendSms" class="ep-card">
+        <div class="ep-method"><span class="verb post">POST</span><span class="path">/v1/sms</span></div>
+        <h3>Wyślij SMS</h3>
+        <p>Pojedynczy SMS — nazwa nadawcy, planowanie, flash, idempotency przez <code style="color:var(--yellow)">idx</code>.</p>
+      </a>
+
+      <a href="/api/docs#operation/sendSmsBulk" class="ep-card">
+        <div class="ep-method"><span class="verb post">POST</span><span class="path">/v1/sms/bulk</span></div>
+        <h3>Bulk SMS</h3>
+        <p>Do 10 000 odbiorców z tą samą treścią lub do 100 z indywidualnymi treściami.</p>
+      </a>
+
+      <a href="/api/docs#operation/sendMms" class="ep-card">
+        <div class="ep-method"><span class="verb post">POST</span><span class="path">/v1/mms</span></div>
+        <h3>Wyślij MMS</h3>
+        <p>Multimedia w SMIL — obraz, audio, video z timingiem. Temat + treść.</p>
+      </a>
+
+      <a href="/api/docs#operation/sendVms" class="ep-card">
+        <div class="ep-method"><span class="verb post">POST</span><span class="path">/v1/vms</span></div>
+        <h3>Wiadomość głosowa (TTS)</h3>
+        <p>Połączenie z syntezatorem mowy. 4 polscy lektorzy. 1–6 prób.</p>
+      </a>
+
+      <a href="/api/docs#operation/lookupHlr" class="ep-card">
+        <div class="ep-method"><span class="verb get">GET</span><span class="path">/v1/hlr</span></div>
+        <h3>Weryfikacja numeru (HLR)</h3>
+        <p>Sprawdź status, sieć i kraj numeru przed wysyłką. Tańsze kampanie.</p>
+      </a>
+
+      <a href="/api/docs#operation/getBalance" class="ep-card">
+        <div class="ep-method"><span class="verb get">GET</span><span class="path">/v1/balance</span></div>
+        <h3>Saldo konta</h3>
+        <p>Aktualny stan portfela w PLN. Monitoruj przed dużymi kampaniami.</p>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── 4. AUTH ─────────────────────────── -->
+<section id="autoryzacja">
+  <div class="container">
+    <h2>Autoryzacja: <em>Bearer token</em></h2>
+    <p class="section-lead">Każde żądanie wymaga nagłówka <code style="font-family:var(--mono);color:var(--yellow)">Authorization: Bearer &lt;token&gt;</code>. Token uzyskasz w panelu klienta po weryfikacji konta.</p>
+    <div class="auth-grid">
+      <div class="code-block">
+        <div class="code-header">
+          <span>Nagłówek HTTP</span>
+          <span>curl</span>
+        </div>
+<pre><code>curl https://api.przypominamy.com/v1/balance \
+  -H "Authorization: Bearer pk_live_a1b2c3d4..."</code></pre>
+      </div>
+      <ul class="auth-list">
+        <li>Token wygenerujesz w panelu po manualnej weryfikacji konta (24h).</li>
+        <li>Rotuj token, jeśli wycieknie — stary unieważnij w panelu.</li>
+        <li>Nie wspieramy Basic Auth ani API key w query string. Tylko Bearer.</li>
+        <li>Tokenów nie ograniczamy per-IP — używaj tej samej wartości z dowolnego środowiska.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── 5. WEBHOOKS ─────────────────────────── -->
+<section id="webhooki">
+  <div class="container">
+    <h2>Webhooki: <em>DLR i SMS przychodzące</em></h2>
+    <p class="section-lead">Platforma wysyła POST <code style="font-family:var(--mono);color:var(--yellow)">application/json</code> na Twój skonfigurowany URL. Fire-and-forget — odpowiedz HTTP 2xx tak szybko, jak się da.</p>
+    <div class="webhook-grid">
+
+      <div>
+        <div class="webhook-card">
+          <h3>📥 Raport doręczenia (DLR)</h3>
+          <p class="wh-desc">Wysyłany przy każdej zmianie statusu SMS-a. Pole <code style="font-family:var(--mono);color:var(--yellow)">idx</code> pochodzi z Twojego żądania — pozwala skojarzyć raport z encją w Twoim systemie.</p>
+        </div>
+        <div class="code-block">
+          <div class="code-header">
+            <span>POST → Twój webhook URL</span>
+            <span>application/json</span>
+          </div>
+<pre><code>{
+  "event": "delivery_report",
+  "message_id": "msg_abc123",
+  "to": "+48600123456",
+  "status": "delivered",
+  "sent_at": "2026-05-17T10:30:00.000Z",
+  "done_at": "2026-05-17T10:30:04.000Z",
+  "idx": "appointment-12345"
+}</code></pre>
+        </div>
+      </div>
+
+      <div>
+        <div class="webhook-card">
+          <h3>📨 SMS przychodzący</h3>
+          <p class="wh-desc">Dwukierunkowa komunikacja — klient może odpowiedzieć na Twojego SMS-a. Wymaga numeru dwukierunkowego (kontakt z supportem przy rejestracji).</p>
+        </div>
+        <div class="code-block">
+          <div class="code-header">
+            <span>POST → Twój webhook URL</span>
+            <span>application/json</span>
+          </div>
+<pre><code>{
+  "event": "incoming_sms",
+  "message_id": "in_xyz789",
+  "from": "+48600123456",
+  "to": "+48732555000",
+  "message": "TAK",
+  "received_at": "2026-05-17T10:32:15.000Z"
+}</code></pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── 6. RATE LIMITS & ERRORS ─────────────────────────── -->
+<section id="limity">
+  <div class="container">
+    <h2>Limity i <em>kody błędów</em></h2>
+    <p class="section-lead">API używa standardowych kodów HTTP. Wszystkie błędy zwracają JSON: <code style="font-family:var(--mono);color:var(--yellow)">{"error":{"code":XXX,"message":"..."}}</code>.</p>
+    <div class="limits-grid">
+
+      <div class="limits-card">
+        <h3>Rate limit</h3>
+        <div class="big">100<small style="font-size:.95rem;font-weight:500;color:var(--gray)">/min</small></div>
+        <p>Domyślny limit per token. Po przekroczeniu HTTP 429 z nagłówkiem <code style="font-family:var(--mono)">Retry-After</code>.</p>
+        <p style="font-size:.85rem;color:var(--gray);margin-top:8px">Wyższe limity dostępne — napisz na <a href="mailto:support@przypominamy.com">support@przypominamy.com</a>.</p>
+      </div>
+
+      <table class="err-table">
+        <thead>
+          <tr><th>Kod</th><th>Znaczenie</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>400</td><td>Nieprawidłowy JSON w żądaniu</td></tr>
+          <tr><td>401</td><td>Brak lub nieprawidłowy token Bearer</td></tr>
+          <tr><td>402</td><td>Niewystarczające środki na koncie</td></tr>
+          <tr><td>403</td><td>Brak dostępu do tego endpointu</td></tr>
+          <tr><td>422</td><td>Błąd walidacji — np. nieprawidłowy numer, pusta treść</td></tr>
+          <tr><td>429</td><td>Przekroczono rate limit</td></tr>
+          <tr><td>502</td><td>Błąd dostawcy SMS (upstream)</td></tr>
+          <tr><td>504</td><td>Timeout dostawcy SMS (10s)</td></tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── 7. PRICING ─────────────────────────── -->
+<section id="cennik">
+  <div class="container">
+    <h2>Cennik API: <em>pay-as-you-go</em></h2>
+    <p class="section-lead">API dostępne we wszystkich planach. Płacisz tylko za wysłane wiadomości — bez abonamentu i bez minimum miesięcznego.</p>
+    <div class="pricing-grid">
+
+      <div class="price-card">
+        <div class="name">Starter</div>
+        <div class="price">0,15 zł<small>/SMS</small></div>
+        <div class="min">Minimalne doładowanie: <strong style="color:var(--white)">100 zł</strong></div>
+        <ul>
+          <li>Wszystkie endpointy API</li>
+          <li>Webhooki DLR + incoming</li>
+          <li>Rate limit 100 req/min</li>
+          <li>Wsparcie email</li>
+        </ul>
+      </div>
+
+      <div class="price-card featured">
+        <div class="name">Business</div>
+        <div class="price">0,10 zł<small>/SMS</small></div>
+        <div class="min">Minimalne doładowanie: <strong style="color:var(--white)">500 zł</strong></div>
+        <ul>
+          <li>Wszystko ze Startera</li>
+          <li>Niższa cena za SMS</li>
+          <li>Priorytetowe wsparcie</li>
+          <li>Wyższe limity na życzenie</li>
+        </ul>
+      </div>
+
+      <div class="price-card">
+        <div class="name">Enterprise</div>
+        <div class="price" style="font-size:1.6rem">Indywidualnie</div>
+        <div class="min">Wolumen <strong style="color:var(--white)">100k+ SMS/mies.</strong></div>
+        <ul>
+          <li>Dedykowane numery</li>
+          <li>SLA i custom rate limits</li>
+          <li>Faktura zbiorcza</li>
+          <li>Dedykowany opiekun</li>
+        </ul>
+      </div>
+
+    </div>
+    <p style="margin-top:20px;font-size:.9rem;color:var(--gray)">Ceny dotyczą SMS-ów wysyłanych do Polski. MMS i wiadomości głosowe wycenione osobno — pełen cennik dostępny po zalogowaniu do panelu. Wysyłka zagraniczna w 30+ krajach po stawkach indywidualnych.</p>
+  </div>
+</section>
+
+<!-- ─────────────────────────── 8. ONBOARDING DIFFERENTIATOR ─────────────────────────── -->
+<section id="onboarding">
+  <div class="container">
+    <h2>Dlaczego <em>weryfikacja 24h?</em></h2>
+    <p class="section-lead">Nie mamy sandboxa ani instant tokena. Każde konto przechodzi przez ręczną weryfikację. To celowy wybór, nie ograniczenie techniczne.</p>
+    <div class="onboard-grid">
+
+      <div class="onboard-card">
+        <div class="ico">🛡️</div>
+        <h3>Antyfraud</h3>
+        <p>Anonimowy sandbox = łatwe nadużycia — phishing, spam, oszustwa SMS-em. Manualna weryfikacja eliminuje ten ruch zanim trafi do sieci operatorów.</p>
+      </div>
+
+      <div class="onboard-card">
+        <div class="ico">📡</div>
+        <h3>Reputacja nadawcy</h3>
+        <p>Operatorzy filtrują numery, z których wychodzi spam. Weryfikujemy zgłoszenia, więc Twoje SMS-y dostarczają się z dobrą reputacją — wyższy delivery rate niż na anonimowych bramkach.</p>
+      </div>
+
+      <div class="onboard-card">
+        <div class="ico">👤</div>
+        <h3>Ludzkie wsparcie</h3>
+        <p>Przy weryfikacji rozmawiamy z Tobą o use case'ie i pomagamy dobrać sender ID, encoding, częstotliwość wysyłek. Nie tylko aktywujemy konto — pomagamy uruchomić wysyłkę.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── 9. SDK & NO-CODE ─────────────────────────── -->
+<section id="sdk">
+  <div class="container">
+    <h2>SDK i <em>integracje no-code</em></h2>
+    <p class="section-lead">API jest na tyle proste, że standardowy klient HTTP wystarczy. Dla integratorów no-code mamy gotowe nody do najpopularniejszych platform.</p>
+    <div class="sdk-grid">
+
+      <a href="/integracje/zapier" class="sdk-card">
+        <div class="sdk-name">⚡ Zapier</div>
+        <div class="sdk-desc">6 operacji: send SMS, bulk, MMS, VMS, balance, HLR. Triggery webhook DLR.</div>
+      </a>
+
+      <a href="mailto:support@przypominamy.com?subject=n8n SMS" class="sdk-card">
+        <div class="sdk-name">🔄 n8n</div>
+        <div class="sdk-desc">Custom node TypeScript. SMS, bulk, MMS, VMS, balance, HLR.</div>
+      </a>
+
+      <a href="mailto:support@przypominamy.com?subject=Make SMS" class="sdk-card">
+        <div class="sdk-name">🔗 Make (Integromat)</div>
+        <div class="sdk-desc">Moduły wysyłki + triggery webhook DLR i incoming SMS.</div>
+      </a>
+
+      <a href="/blog/api-sms-integracja-crm" class="sdk-card">
+        <div class="sdk-name">📘 Własna integracja</div>
+        <div class="sdk-desc">Przewodnik z przykładami curl, Python i Node.js + obsługa błędów.</div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── 10. FAQ ─────────────────────────── -->
+<section id="faq">
+  <div class="container">
+    <h2>Najczęstsze pytania <em>o API</em></h2>
+    <div class="faq-list">
+
+      <details>
+        <summary>Jak zdobyć token API?</summary>
+        <p>Załóż konto na <a href="/register">/register</a>. Każde zgłoszenie weryfikujemy ręcznie w ciągu 24 godzin. Po weryfikacji w panelu klienta wygenerujesz Bearer token i ustawisz webhook URL.</p>
+      </details>
+
+      <details>
+        <summary>Czy macie sandbox lub środowisko testowe?</summary>
+        <p>Nie. Każde konto przechodzi manualną weryfikację (24h) zamiast anonimowego sandboxa. Chroni to reputację numerów nadawczych i jakość ruchu w sieci. Po weryfikacji możesz wysyłać prawdziwe SMS-y od pierwszego doładowania.</p>
+      </details>
+
+      <details>
+        <summary>Jaki jest limit zapytań?</summary>
+        <p>Domyślnie <strong>100 żądań na minutę</strong> per token. Limit można podnieść po kontakcie z supportem. Po przekroczeniu API zwraca HTTP 429 z nagłówkiem <code style="font-family:var(--mono);color:var(--yellow)">Retry-After</code> wskazującym sekundy do następnej próby.</p>
+      </details>
+
+      <details>
+        <summary>Czym różnicicie się od innych dostawców API SMS?</summary>
+        <p>Jesteśmy nastawieni na małe i średnie firmy: <strong>pay-as-you-go od 100 zł</strong>, bez abonamentu i minimalnych zobowiązań. Manualna weryfikacja konta w 24h zamiast samodzielnego sandboxa. Polskie wsparcie. Dokumentacja po polsku. Proste 6 endpointów REST zamiast skomplikowanego SOAP czy 30 metodami SDK.</p>
+      </details>
+
+      <details>
+        <summary>Czy API obsługuje MMS i wiadomości głosowe?</summary>
+        <p>Tak. Endpoint <code style="font-family:var(--mono);color:var(--yellow)">/v1/mms</code> wysyła MMS z markupem SMIL (obraz, video, audio). Endpoint <code style="font-family:var(--mono);color:var(--yellow)">/v1/vms</code> wykonuje połączenie głosowe z syntezatorem mowy TTS — cztery polskie głosy lektorów (ewa, jacek, jan, maja), 1–6 prób połączenia.</p>
+      </details>
+
+      <details>
+        <summary>Jak skonfigurować webhook URL dla raportów doręczenia (DLR)?</summary>
+        <p>Webhook URL ustawiasz w panelu klienta. Platforma wysyła POST <code style="font-family:var(--mono);color:var(--yellow)">application/json</code> na Twój endpoint z payloadem zawierającym <code>event</code>, <code>message_id</code>, <code>to</code>, <code>status</code>, <code>sent_at</code>, <code>done_at</code> i Twój <code>idx</code>. Możesz też odbierać SMS-y przychodzące, jeśli masz numer dwukierunkowy.</p>
+      </details>
+
+      <details>
+        <summary>Czy mogę używać własnej nazwy nadawcy (sender ID)?</summary>
+        <p>Tak. Nazwę nadawcy (do 11 znaków) zgłaszasz w panelu i po weryfikacji możesz jej używać w parametrze <code style="font-family:var(--mono);color:var(--yellow)">from</code>. Bez własnego sender ID SMS-y wychodzą z domyślnego nadawcy klienta.</p>
+      </details>
+
+      <details>
+        <summary>Czy są SDK dla Pythona, Node.js lub innych języków?</summary>
+        <p>Nie oferujemy własnych SDK — API jest na tyle proste, że standardowy klient HTTP (<code>requests</code> w Pythonie, <code>fetch</code> w Node) wystarczy. W <a href="/api/docs">dokumentacji Redoc</a> znajdziesz gotowe przykłady <strong>curl, Python i Node.js</strong> dla każdego endpointu. Dostępne są też integracje no-code: <a href="/integracje/zapier">Zapier</a>, Make, n8n.</p>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── 11. FINAL CTA ─────────────────────────── -->
+<section style="border-top:none">
+  <div class="container">
+    <div class="final-cta">
+      <h2>Zacznij wysyłać przez API <em>jeszcze dziś</em></h2>
+      <p>Zgłoszenie weryfikujemy w 24h. Po weryfikacji generujesz token w panelu i wysyłasz pierwszego SMS-a w 30 sekund.</p>
+      <a href="/register" class="btn btn-primary" style="padding:16px 32px;font-size:1rem">Zarejestruj się →</a>
+      <p style="margin-top:24px;font-size:.86rem">Masz pytania? Napisz na <a href="mailto:support@przypominamy.com">support@przypominamy.com</a>.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="links">
+      <a href="/">Strona główna</a>
+      <a href="/api/docs">Dokumentacja API</a>
+      <a href="/openapi.json">openapi.json</a>
+      <a href="/integracje">Integracje</a>
+      <a href="/blog">Blog</a>
+      <a href="/regulamin">Regulamin</a>
+      <a href="/polityka-prywatnosci">Polityka prywatności</a>
+    </div>
+    <div>© Przypominamy.com — Doradztwo Paweł Mamcarz</div>
+  </div>
+</footer>
+
+</body>
+</html>
