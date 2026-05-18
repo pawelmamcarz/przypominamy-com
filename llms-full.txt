@@ -1,16 +1,178 @@
-# Przypominamy.com — Platforma masowej komunikacji SMS, MMS i IVR
+# Przypominamy.com — Polskie REST API SMS i platforma masowej komunikacji SMS, MMS, IVR
 
-> Przypominamy.com to polska platforma do masowej wysyłki SMS, MMS i wiadomości głosowych IVR/TTS. Działamy od 2010 roku, wysłaliśmy ponad 100 milionów wiadomości, obsługujemy ponad 30 krajów. Oferujemy dwukierunkową komunikację, REST API, raporty w czasie rzeczywistym. Ceny od 0,10 zł/SMS bez abonamentu. Właściciel: Doradztwo Paweł Mamcarz, NIP: 7122188089, Grodzisk Mazowiecki.
+> Przypominamy.com to polskie REST API SMS oraz platforma do masowej wysyłki SMS, MMS i wiadomości głosowych IVR/TTS. Działamy od 2010 roku, wysłaliśmy ponad 100 milionów wiadomości, obsługujemy ponad 30 krajów. API z 6 endpointami, autoryzacja Bearer token, webhooki DLR i SMS przychodzące, specyfikacja OpenAPI 3.1. Pay-as-you-go od 0,10 zł/SMS bez abonamentu. Manualna weryfikacja konta w 24h zamiast anonimowego sandboxa — chroni reputację nadawców i jakość ruchu. Właściciel: Doradztwo Paweł Mamcarz, NIP: 7122188089, Grodzisk Mazowiecki.
 
 ---
 
 ## Jak działa platforma?
 
-Trzy kroki do wysyłki:
+Dwie drogi do wysyłki: programowo przez REST API albo przez panel klienta z importem CSV.
+
+**Przez API (rekomendowane dla deweloperów):**
+
+1. **Zarejestruj się** na przypominamy.com/register — weryfikujemy zgłoszenie w 24h.
+2. **Wygeneruj token** w panelu klienta po weryfikacji.
+3. **Wykonaj POST** na `https://api.przypominamy.com/v1/sms` z numerem i treścią — pierwszy SMS leci w 30 sekund.
+
+**Przez panel klienta (dla nie-programistów):**
 
 1. **Utwórz szablon** — przygotuj treść SMS, MMS lub scenariusz głosowy IVR. Użyj zmiennych {Imię}, {Kwota}, {Termin} do personalizacji.
-2. **Wybierz odbiorców** — zaimportuj listę numerów z pliku CSV lub użyj istniejącej bazy. Obsługujemy wszystkie polskie sieci: Plus, Orange, T-Mobile, Play.
-3. **Wyślij i monitoruj** — zaplanuj wysyłkę lub uruchom natychmiast. Śledź statusy dostarczenia i odpowiedzi klientów w czasie rzeczywistym.
+2. **Wybierz odbiorców** — zaimportuj listę numerów z pliku CSV. Obsługujemy wszystkie polskie sieci: Plus, Orange, T-Mobile, Play.
+3. **Wyślij i monitoruj** — zaplanuj wysyłkę lub uruchom natychmiast. Śledź statusy dostarczenia w czasie rzeczywistym.
+
+---
+
+## REST API
+
+REST API z 6 stabilnymi endpointami, autoryzacją Bearer token, webhookami DLR i specyfikacją OpenAPI 3.1.
+
+**Linki:**
+- Strona API: https://przypominamy.com/api
+- Dokumentacja Redoc: https://przypominamy.com/api/docs
+- OpenAPI 3.1 spec (JSON): https://przypominamy.com/openapi.json
+- Specyfikacja legacy XML (PDF, 2020): https://przypominamy.com/xmlapi_en_przypominamy2020v17.pdf
+
+**Baza URL**: `https://api.przypominamy.com`
+
+**Autoryzacja**: `Authorization: Bearer <token>` — token wydawany w panelu klienta po manualnej weryfikacji konta (24h). Brak self-serve tokenu, brak sandboxa — to świadomy wybór dla jakości ruchu i reputacji nadawców.
+
+**Rate limit**: 100 żądań na minutę per token (domyślnie). Po przekroczeniu HTTP 429 z nagłówkiem `Retry-After`. Wyższe limity dostępne — kontakt z supportem.
+
+### Endpointy
+
+- `POST /v1/sms` — pojedynczy SMS (parametry: to, message, from?, date?, encoding?, flash?, normalize?, idx?)
+- `POST /v1/sms/bulk` — bulk wysyłka (do 10 000 odbiorców z tą samą treścią lub do 100 z indywidualnymi treściami)
+- `POST /v1/mms` — MMS z markupem SMIL (parametry: to, subject, smil, from?, date?)
+- `POST /v1/vms` — wiadomość głosowa TTS (parametry: to, tts, tts_lector?, tries?, from?, date?; lektorzy: ewa, jacek, jan, maja; 1-6 prób)
+- `GET /v1/hlr` — weryfikacja numeru (HLR lookup): status, sieć, kraj, ported
+- `GET /v1/balance` — saldo konta w PLN i nazwa użytkownika
+
+### Webhooki
+
+Platforma wysyła POST `application/json` na skonfigurowany `webhook_url` (panel klienta). Fire-and-forget — odpowiedz HTTP 2xx jak najszybciej (< 2 sekundy).
+
+**delivery_report** — raport doręczenia SMS-a:
+
+```json
+{
+  "event": "delivery_report",
+  "message_id": "msg_abc123",
+  "to": "+48600123456",
+  "status": "delivered",
+  "sent_at": "2026-05-18T10:30:00.000Z",
+  "done_at": "2026-05-18T10:30:04.000Z",
+  "idx": "appointment-12345"
+}
+```
+
+Status enum: `queued`, `sent`, `delivered`, `not_found`, `expired`, `failed`, `accepted`, `unknown`, `rejected`, `undelivered`.
+
+**incoming_sms** — SMS przychodzący (two-way):
+
+```json
+{
+  "event": "incoming_sms",
+  "message_id": "in_xyz789",
+  "from": "+48600123456",
+  "to": "+48732555000",
+  "message": "TAK",
+  "received_at": "2026-05-18T10:32:15.000Z"
+}
+```
+
+### Przykład wywołania (curl)
+
+```
+curl -X POST https://api.przypominamy.com/v1/sms \
+  -H "Authorization: Bearer $PRZYPOMINAMY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "to": "+48600123456",
+    "message": "Cześć! Przypominamy o wizycie jutro o 14:00.",
+    "from": "FIRMA",
+    "idx": "appointment-12345"
+  }'
+
+Odpowiedź:
+{
+  "success": true,
+  "data": {
+    "count": 1,
+    "messages": [{
+      "id": "msg_abc123",
+      "to": "+48600123456",
+      "status": "queued",
+      "parts": 1,
+      "cost": 0.10,
+      "sent_at": "2026-05-18T10:30:00.000Z"
+    }]
+  }
+}
+```
+
+### Przykład wywołania (Python)
+
+```python
+import os, requests
+
+resp = requests.post(
+    "https://api.przypominamy.com/v1/sms",
+    headers={"Authorization": f"Bearer {os.environ['PRZYPOMINAMY_API_KEY']}"},
+    json={
+        "to": "+48600123456",
+        "message": "Cześć! Przypominamy o wizycie jutro o 14:00.",
+        "from": "FIRMA",
+        "idx": "appointment-12345",
+    },
+    timeout=10,
+)
+resp.raise_for_status()
+print(resp.json())
+```
+
+### Kody błędów
+
+- 400 — Nieprawidłowy JSON w żądaniu
+- 401 — Brak lub nieprawidłowy token Bearer
+- 402 — Niewystarczające środki na koncie
+- 403 — Brak dostępu do endpointu
+- 422 — Błąd walidacji (numer, treść, encoding)
+- 429 — Przekroczono rate limit (sprawdź nagłówek Retry-After)
+- 502 — Błąd dostawcy SMS (upstream)
+- 504 — Timeout dostawcy SMS (10s)
+
+Wszystkie błędy zwracają JSON: `{"error":{"code":XXX,"message":"..."}}`.
+
+---
+
+## Dla deweloperów
+
+**Idempotency**: każde żądanie może zawierać własny `idx` — Twój identyfikator wiadomości. Wartość wraca w webhookach DLR, pozwala skojarzyć raport z encją w Twojej bazie (np. wizytą, zamówieniem).
+
+**SDK i no-code:**
+
+- Zapier — 6 operacji: send SMS, bulk, MMS, VMS, balance, HLR. Triggery webhook DLR.
+- Make.com (Integromat) — moduły wysyłki + triggery webhook DLR i incoming SMS.
+- n8n — community node TypeScript + standardowy HTTP Request node.
+- Własna integracja — code samples w curl, Python, Node.js dostępne w Redoc i blog poście.
+
+**Encoding SMS:**
+
+- `utf-8` (domyślnie) — zachowuje polskie znaki diakrytyczne, 70 znaków/część SMS-a.
+- `gsm` — tablica GSM-7 bez polskich znaków, 160 znaków/część.
+- Parametr `normalize: true` — automatycznie usuwa polskie znaki (ą→a, ż→z) przed wysyłką.
+
+**Planowanie wysyłek**: pole `date` (ISO 8601), max 60 dni w przyszłość.
+
+**Sender ID (nazwa nadawcy)**: max 11 znaków alfanumerycznych. Rejestracja w panelu klienta — wymaga weryfikacji własności marki. Bez własnego sender ID SMS-y wychodzą z domyślnego nadawcy klienta.
+
+**Best practices:**
+
+- Timeout klienta HTTP ustaw na 10 sekund (API ma fetch timeout 10s).
+- Retry z exponential backoff dla 502/504 (max 3 próby).
+- Dla 429 respektuj `Retry-After` zamiast retry z backoff.
+- Nie loguj treści SMS-a ani numerów w plain text (RODO).
+- Walidacja numerów przez HLR przed dużą kampanią eliminuje koszt wysyłki na martwe numery.
 
 ---
 
@@ -21,118 +183,61 @@ Masowa wysyłka SMS z personalizacją i dwukierunkową komunikacją. Wiadomości
 
 Funkcje:
 - Personalizacja: zmienne {Imię}, {Kwota}, {Termin} podstawiane automatycznie
-- Dwukierunkowa komunikacja — odbiorcy mogą odpisywać
+- Dwukierunkowa komunikacja — odbiorcy mogą odpisywać (webhook `incoming_sms`)
 - Import listy numerów z pliku CSV
-- Własny nadpis nadawcy (Shortcode lub nazwa alfanumeryczna, np. "KLINIKA")
+- Własny nadpis nadawcy (Shortcode lub nazwa alfanumeryczna, max 11 znaków)
 - Godziny nieaktywne — automatyczna kontrola czasu wysyłki (np. 22:00–06:00)
-- SMS wieloczęściowe dla dłuższych wiadomości (powyżej 160 znaków)
+- SMS wieloczęściowe dla dłuższych wiadomości
 
 ### MMS
 Wiadomości multimedialne z grafiką, wideo i tekstem.
 
 Funkcje:
-- Szablony SMIL — dowolna kombinacja obrazów, wideo i tekstu
+- Szablony SMIL — kombinacja obrazów, wideo i tekstu z timingiem
 - Wysyłka do wszystkich polskich sieci
 - Kody rabatowe i bilety elektroniczne w formie grafiki
 - Pliki do 300 KB na MMS
 - Podgląd przed wysyłką
-- Wysyłki masowe lub indywidualne
 
 ### IVR / TTS (wiadomości głosowe)
 Automatyczne połączenia głosowe z syntezatorem mowy.
 
 Funkcje:
 - Syntezator mowy TTS w języku polskim (4 głosy: Ewa, Jacek, Jan, Maja)
-- Scenariusze IVR — reakcja na naciśnięcie klawiszy telefonu
 - Obsługa telefonów stacjonarnych i komórkowych
 - Automatyczne ponawianie przy braku odpowiedzi (1-6 prób)
-- Raport przekierowań IVR
-- Nagrywanie sesji (opcjonalne)
+- Raport połączeń
 
 ---
 
 ## Cennik
 
-Brak abonamentu — płacisz tylko za wysłane wiadomości. Model prepaid: doładowujesz konto wybraną kwotą.
+Brak abonamentu — płacisz tylko za wysłane wiadomości. Model prepaid: doładowujesz konto wybraną kwotą. **API dostępne we wszystkich planach.**
 
 ### Plan Starter
 - **Cena: 0,15 zł za SMS**
 - Minimalne doładowanie: 100 zł
-- Do 10 000 SMS miesięcznie
-- Szablony SMS
-- Raportowanie podstawowe
-- Import kontaktów z CSV
+- Pełen dostęp do API i wszystkich 6 endpointów
+- Webhooki DLR + incoming SMS
+- Rate limit 100 req/min
 - Wsparcie e-mail
 
 ### Plan Business
 - **Cena: 0,10 zł za SMS**
 - Minimalne doładowanie: 500 zł
-- Nieograniczone wysyłki SMS
-- SMS + MMS + IVR/TTS
+- Wszystko ze Startera
+- Niższa cena za SMS
 - Własny Shortcode / nadpis nadawcy
-- Dwukierunkowa komunikacja
-- Pełny dostęp do API
-- Raporty zaawansowane
 - Wsparcie priorytetowe
+- Wyższe limity na życzenie
 
 ### Plan Enterprise
-- **Cena: negocjowana od wolumenu**
+- **Cena: negocjowana od wolumenu** (od 100k+ SMS/mies.)
 - Dedykowany opiekun klienta
-- SLA i gwarancja dostarczalności
+- SLA 99.9% i gwarancja dostarczalności
 - Multi-konto i sub-konta
 - Integracja z systemami klienta (CRM, ERP)
 - Obsługa rynków zagranicznych (30+ krajów UE, Australia, UK)
-
----
-
-## API
-
-REST API v1.7 z autoryzacją Bearer token. Pełna dokumentacja dostępna jako PDF.
-
-### Endpointy
-- `POST /v1/sms` — pojedynczy SMS
-- `POST /v1/sms/bulk` — wysyłka masowa (do 10 000 odbiorców na żądanie)
-- `POST /v1/mms` — wysyłka MMS (format SMIL)
-- `POST /v1/vms` — wiadomość głosowa TTS
-- `GET /v1/hlr` — weryfikacja numeru telefonu (HLR lookup)
-- `GET /v1/balance` — saldo konta
-
-### Funkcje API
-- Webhooks i callbacki — powiadomienia o statusie dostarczenia w czasie rzeczywistym
-- Import CSV i bulk API — wysyłka tysięcy wiadomości jednocześnie
-- Szablony z parametrami — personalizacja każdej wiadomości dynamicznie
-- Planowanie wysyłek — pole date z datą w formacie ISO 8601
-- Deduplikacja — parametr idx z 24h oknem
-- Callbacki DLR — konfigurowany webhook_url w ustawieniach klienta
-
-### Przykład wywołania
-```
-POST https://api.przypominamy.com/v1/sms
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-  "to": "+48512345678",
-  "from": "KLINIKA",
-  "message": "Wizyta jutro o 10:00",
-  "date": "2026-03-21T08:00:00Z"
-}
-
-Odpowiedź:
-{
-  "success": true,
-  "data": {
-    "count": 1,
-    "messages": [{
-      "id": "msg_abc123",
-      "to": "+48512345678",
-      "status": "queued",
-      "parts": 1,
-      "cost": 0.15
-    }]
-  }
-}
-```
 
 ---
 
@@ -142,10 +247,13 @@ Odpowiedź:
 Automatyczne przypomnienia o wizytach u lekarza, badaniach kontrolnych i szczepieniach. Zmniejszenie liczby nieodwołanych wizyt nawet o 40%.
 
 ### Banki i finanse
-Przypomnienia o spłacie rat, powiadomienia o saldzie konta, komunikaty windykacyjne, informacje o promocjach kredytowych.
+Przypomnienia o spłacie rat, powiadomienia o saldzie konta, komunikaty windykacyjne, kody 2FA/OTP dla logowania i transakcji.
 
 ### E-commerce i handel
-Potwierdzenia zamówień, powiadomienia o statusie dostawy, kody rabatowe w formie MMS, programy lojalnościowe i kampanie promocyjne.
+Potwierdzenia zamówień (np. integracja z Stripe webhook), powiadomienia o statusie dostawy, kody rabatowe w formie MMS, programy lojalnościowe.
+
+### Aplikacje SaaS i 2FA
+Jednorazowe kody OTP dla dwuskładnikowego uwierzytelniania, weryfikacja numeru przy rejestracji, alerty bezpieczeństwa.
 
 ### Windykacja
 Skuteczne przypomnienia o zaległych płatnościach z dwukierunkową komunikacją. Klient może od razu dopytać o szczegóły faktury.
@@ -161,28 +269,47 @@ Informowanie pracowników o zmianach, przypomnienia o spotkaniach, potwierdzenia
 ## Najczęściej zadawane pytania (FAQ)
 
 ### Jak zacząć wysyłać SMS przez Przypominamy.com?
-Zarejestruj się na przypominamy.com/register — każde zgłoszenie weryfikujemy ręcznie w ciągu 24 godzin. Po akceptacji dostajesz dane do panelu klienta, doładowujesz konto (min. 100 zł), przygotowujesz szablon, importujesz listę numerów z CSV i uruchamiasz wysyłkę.
+Zarejestruj się na przypominamy.com/register — każde zgłoszenie weryfikujemy ręcznie w ciągu 24 godzin. Po akceptacji dostajesz dane do panelu klienta, generujesz Bearer token (do API) lub doładowujesz konto i wysyłasz przez panel.
 
 ### Ile kosztuje wysyłka SMS?
-Ceny zaczynają się od 0,10 zł za SMS w planie Business (min. doładowanie 500 zł) i 0,15 zł za SMS w planie Starter (min. doładowanie 100 zł). Brak abonamentu — płacisz tylko za wysłane wiadomości.
+Ceny zaczynają się od 0,10 zł za SMS w planie Business (min. doładowanie 500 zł) i 0,15 zł za SMS w planie Starter (min. doładowanie 100 zł). Brak abonamentu — płacisz tylko za wysłane wiadomości. API dostępne we wszystkich planach.
+
+### Czy macie sandbox lub środowisko testowe?
+Nie. Każde konto przechodzi manualną weryfikację (24h) zamiast anonimowego sandboxa. To celowy wybór — chroni reputację numerów nadawczych i jakość ruchu w sieci operatorów. Po weryfikacji możesz wysyłać prawdziwe SMS-y od pierwszego doładowania. Dla testów małe doładowanie (np. 100 zł) wystarczy na ~600 SMS-ów w planie Starter.
 
 ### Czy platforma obsługuje wysyłki zagraniczne?
-Tak, Przypominamy.com obsługuje wysyłki do wszystkich krajów UE (27 państw), Australii i Wielkiej Brytanii — łącznie ponad 30 krajów.
+Tak — wysyłki do wszystkich krajów UE (27 państw), Australii i Wielkiej Brytanii — łącznie ponad 30 krajów.
 
 ### Czy jest dostępne API do integracji?
-Tak, platforma udostępnia REST API v1.7 z tokenami Bearer do wysyłki SMS, MMS i IVR. Pełna dokumentacja dostępna jest w formacie PDF na stronie.
+Tak — REST API z 6 endpointami i autoryzacją Bearer token. Pełna dokumentacja: https://przypominamy.com/api/docs (Redoc). Specyfikacja maszynowa: https://przypominamy.com/openapi.json (OpenAPI 3.1).
 
 ### Jakie kanały komunikacji obsługuje platforma?
 Platforma obsługuje trzy kanały: SMS (masowa wysyłka z dwukierunkową komunikacją), MMS (wiadomości z grafiką i wideo) oraz IVR/TTS (automatyczne połączenia głosowe z syntezatorem mowy).
 
 ### Czy mogę używać własnej nazwy nadawcy?
-Tak, w planie Business i Enterprise możesz ustawić własny nadpis (np. nazwę firmy, max 11 znaków) lub dedykowany Shortcode numeryczny.
+Tak — własny nadpis (np. nazwę firmy, max 11 znaków) ustawiasz w panelu po weryfikacji. Bez własnego sender ID SMS-y wychodzą z domyślnego nadawcy.
 
 ### Jak działa dwukierunkowa komunikacja?
-Odbiorcy mogą odpowiadać na Twoje wiadomości SMS. Platforma zbiera odpowiedzi i prezentuje je w raporcie. Możesz też odbierać odpowiedzi przez API (webhook/callback).
+Odbiorcy mogą odpowiadać na Twoje wiadomości SMS. Platforma zbiera odpowiedzi i wysyła POST z payloadem `{"event":"incoming_sms",...}` na skonfigurowany webhook URL. Wymaga numeru dwukierunkowego — kontakt z supportem.
 
 ### Czy wysyłki mogą być zaplanowane na konkretną godzinę?
-Tak, możesz zaplanować kampanie z wyprzedzeniem. Możesz ustawić godziny nieaktywne (np. 22:00–06:00) — platforma automatycznie wstrzyma i wznowi wysyłkę.
+Tak — pole `date` (ISO 8601) w żądaniu API albo planowanie w panelu klienta. Max 60 dni w przyszłość. Możesz też ustawić godziny nieaktywne (np. 22:00–06:00).
+
+### Jakie języki programowania są wspierane?
+API to czysty REST z JSON — wywołasz go w dowolnym języku z klientem HTTP (Python, Node.js, Go, PHP, Ruby, Java, C#). W dokumentacji Redoc mamy code samples dla curl, Python (requests) i Node.js (fetch).
+
+---
+
+## Blog (przewodniki techniczne)
+
+- API SMS w Pythonie — przewodnik z requests, httpx, async, bulk, webhooki Flask: https://przypominamy.com/blog/api-sms-python
+- API SMS do 2FA i OTP — implementacja, bezpieczeństwo, RODO: https://przypominamy.com/blog/api-sms-2fa-otp
+- SMS w n8n bez kodu — HTTP Request node, webhooki, Stripe → SMS: https://przypominamy.com/blog/api-sms-n8n-bez-kodu
+- 7 kryteriów wyboru API SMS w Polsce: https://przypominamy.com/blog/api-sms-porownanie-dostawcow
+- Integracja API SMS z CRM — pełny przewodnik: https://przypominamy.com/blog/api-sms-integracja-crm
+- Personalizacja SMS i szablony: https://przypominamy.com/blog/personalizacja-sms-szablony
+- SMS potwierdzenia zamówień w WooCommerce: https://przypominamy.com/blog/sms-potwierdzenia-zamowien-woocommerce
+- Konfiguracja IVR i TTS: https://przypominamy.com/blog/konfiguracja-ivr-tts
 
 ---
 
@@ -197,7 +324,7 @@ Z platformy korzystają m.in.: BPH Bank, Wonga, Signal Iduna, Peugeot, Auchan, T
 - 15+ lat na rynku (od 2010)
 - 100M+ wysłanych wiadomości
 - 30+ krajów obsługi
-- 99% dostępność platformy
+- 99% dostępność platformy (99.9% w planie Enterprise)
 
 ---
 
@@ -206,6 +333,7 @@ Z platformy korzystają m.in.: BPH Bank, Wonga, Signal Iduna, Peugeot, Auchan, T
 - E-mail: support@przypominamy.com
 - Panel klienta: https://panel.przypominamy.com
 - Strona: https://przypominamy.com
+- Rejestracja: https://przypominamy.com/register
 
 Doradztwo Paweł Mamcarz
 ul. Jesionowa 18, 05-825 Grodzisk Mazowiecki

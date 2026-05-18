@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Jak wybrać API SMS w Polsce — 7 kryteriów dla deweloperów. REST vs SOAP, webhooki DLR, onboarding, cennik, wsparcie, SDK, SLA. Przewodnik bez vendor-bias." />
+  <meta name="keywords" content="porównanie API SMS Polska, wybór bramki SMS, jak wybrać API SMS, REST API SMS porównanie, kryteria API SMS, bramka SMS porównanie" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Zespół Przypominamy.com" />
+  <link rel="canonical" href="https://przypominamy.com/blog/api-sms-porownanie-dostawcow" />
+
+  <meta property="og:title" content="Jak wybrać API SMS w Polsce. 7 kryteriów dla deweloperów" />
+  <meta property="og:description" content="Praktyczny przewodnik wyboru API SMS — kryteria techniczne i biznesowe. REST vs SOAP, webhooki, cennik, wsparcie." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://przypominamy.com/blog/api-sms-porownanie-dostawcow" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <meta property="og:locale" content="pl_PL" />
+  <meta property="og:site_name" content="Przypominamy.com" />
+  <meta property="article:published_time" content="2026-05-18" />
+  <meta property="article:modified_time" content="2026-05-18" />
+  <meta property="article:author" content="Zespół Przypominamy.com" />
+  <meta property="article:section" content="Blog" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@przypominamy" />
+
+  <title>Jak wybrać API SMS w Polsce. 7 kryteriów dla deweloperów</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Jak wybrać API SMS w Polsce. 7 kryteriów dla deweloperów",
+    "description": "Praktyczny przewodnik wyboru API SMS — kryteria techniczne i biznesowe. REST vs SOAP, webhooki DLR, onboarding, cennik, wsparcie, SDK, SLA.",
+    "author": {"@type": "Organization", "name": "Zespół Przypominamy.com"},
+    "publisher": {
+      "@type": "Organization",
+      "name": "Doradztwo Paweł Mamcarz",
+      "url": "https://przypominamy.com",
+      "logo": {"@type":"ImageObject","url":"https://przypominamy.com/przypominamy-logo.png"}
+    },
+    "datePublished": "2026-05-18",
+    "dateModified": "2026-05-18",
+    "mainEntityOfPage": "https://przypominamy.com/blog/api-sms-porownanie-dostawcow",
+    "keywords": ["porównanie API SMS Polska", "wybór bramki SMS", "kryteria API SMS"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "REST czy SOAP — co wybrać dla nowego projektu?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "REST z JSON. SOAP to dziedzictwo lat 2000-2010 — wymaga generowania klas z WSDL, jest verbose, trudno debugować i większość nowych bibliotek HTTP nie wspiera go natywnie. REST z JSON wymaga tylko klienta HTTP (curl, requests, fetch) — to standard branżowy w 2026 roku."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy webhook DLR jest wystarczający, czy powinienem pollować status SMS-a?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Webhook DLR jest wystarczający dla 99% zastosowań. Polling co X minut jest waste of resources (rate limit), wymaga retry logic dla wszystkich SMS-ów, i przegapia szybkie zmiany statusu. Webhook push to natywny mechanizm asynchroniczny. Polling rozważ tylko, gdy nie masz endpointu publicznego do odbioru webhooków."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czym różni się sandbox od manualnej weryfikacji konta?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sandbox to środowisko testowe z symulowanymi SMS-ami — niski próg wejścia, brak ryzyka spamu, ale brak weryfikacji nadawcy. Manualna weryfikacja zajmuje 24h ale chroni reputację nadawcy w sieci operatorów — Twoje SMS-y dochodzą z lepszym delivery rate. Wybór zależy od priorytetu: szybkość onboardingu (sandbox) vs jakość dostarczenia (weryfikacja)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy abonament jest lepszy niż pay-as-you-go?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pay-as-you-go jest lepszy dla większości firm — płacisz tylko za wysłane SMS-y, bez minimum miesięcznego, bez ryzyka niewykorzystanego pakietu. Abonament ma sens tylko dla bardzo dużych, przewidywalnych wolumenów (100k+ SMS/mies.) gdzie negocjowana stawka per-SMS jest niższa od pay-as-you-go."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy potrzebuję dedykowanego SDK, czy wystarczy klient HTTP?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dla większości języków (Python, Node.js, Go, PHP, Ruby) klient HTTP wystarczy — API z 6 endpointami i autoryzacją Bearer można wywołać w 5-10 liniach kodu. SDK ma sens tylko dla bardziej egzotycznych języków (Elixir, Rust) lub gdy SDK dodaje wartość (retry, idempotency, async). Sprawdź czy dokumentacja ma code samples — to często ważniejsze niż dedykowane SDK."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --white:#fff; --gray:#888; --light:#ccc; --green:#4BC87A; --red:#E53E3E; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .container { max-width:800px; margin:0 auto; padding:0 24px; }
+    .content { padding:64px 0 96px; }
+    .breadcrumbs { font-size:.85rem; color:var(--gray); margin-bottom:24px; }
+    .breadcrumbs a { color:var(--gray); }
+    .breadcrumbs a:hover { color:var(--yellow); }
+    h1 { font-size:2rem; font-weight:800; margin-bottom:8px; line-height:1.3; }
+    .meta { color:var(--gray); font-size:.88rem; margin-bottom:40px; }
+    h2 { font-size:1.2rem; font-weight:700; margin:36px 0 12px; color:var(--yellow); }
+    h3 { font-size:1.05rem; font-weight:600; margin:24px 0 8px; }
+    p, li { color:var(--light); font-size:.95rem; margin-bottom:12px; }
+    ul, ol { padding-left:24px; }
+    li { margin-bottom:8px; }
+    strong { color:var(--white); }
+    .highlight-box { background:var(--surface); border-left:3px solid var(--yellow); padding:20px 24px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .highlight-box p { margin-bottom:4px; }
+    .criterion { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px 24px; margin:18px 0; }
+    .criterion h3 { color:var(--yellow); margin:0 0 10px; font-size:1.1rem; }
+    .criterion .badge-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+    .criterion .badge { padding:3px 10px; border-radius:999px; font-size:.75rem; font-weight:600; }
+    .criterion .b-good { background:rgba(75,200,122,.15); color:var(--green); }
+    .criterion .b-avoid { background:rgba(229,62,62,.15); color:var(--red); }
+    pre { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px 20px; overflow-x:auto; margin:16px 0; font-size:.85rem; line-height:1.6; color:var(--light); }
+    code { font-family:'JetBrains Mono','Courier New',monospace; }
+    .inline-code { background:var(--surface); border:1px solid var(--border); padding:2px 6px; border-radius:4px; font-size:.88rem; }
+    table { width:100%; border-collapse:collapse; margin:20px 0; font-size:.9rem; }
+    th { background:var(--surface); color:var(--yellow); text-align:left; padding:12px 16px; border:1px solid var(--border); font-weight:600; }
+    td { padding:12px 16px; border:1px solid var(--border); color:var(--light); }
+    .cta-box { background:var(--surface); border:1px solid var(--yellow); border-radius:12px; padding:32px; text-align:center; margin:48px 0 24px; }
+    .cta-box h3 { color:var(--white); margin-top:0; }
+    .cta-box p { color:var(--light); }
+    .cta-btn { display:inline-block; background:var(--yellow); color:#000; font-weight:700; padding:12px 32px; border-radius:8px; margin-top:12px; font-size:.95rem; }
+    .cta-btn:hover { text-decoration:none; opacity:.9; }
+    .related { margin-top:48px; padding-top:32px; border-top:1px solid var(--border); }
+    .related h3 { color:var(--white); margin-bottom:16px; }
+    .related ul { list-style:none; padding:0; }
+    .related li { margin-bottom:10px; }
+    details { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px 18px; margin-bottom:10px; }
+    details summary { font-weight:600; color:var(--white); cursor:pointer; }
+    details[open] summary { color:var(--yellow); margin-bottom:8px; }
+    .footer-mini { border-top:1px solid var(--border); padding:28px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    @media(max-width:600px){
+      h1 { font-size:1.4rem; }
+      pre { font-size:.78rem; padding:12px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/blog">&larr; Blog</a>
+  </div>
+</div>
+
+<div class="container content">
+  <nav class="breadcrumbs">
+    <a href="/">Strona główna</a> &rsaquo; <a href="/blog">Blog</a> &rsaquo; Jak wybrać API SMS w Polsce
+  </nav>
+
+<main>
+  <h1>Jak wybrać API SMS w Polsce. 7 kryteriów dla deweloperów</h1>
+  <p class="meta">Zespół Przypominamy.com &middot; 18 maja 2026 &middot; 11 min czytania</p>
+
+  <p>Wybór API SMS to decyzja na lata — koszt migracji w trakcie projektu jest znacznie wyższy niż dobre wybranie na początku. W tym przewodniku omawiamy <strong>7 kryteriów</strong> które warto sprawdzić przed integracją: cztery techniczne (REST, webhooki, onboarding, SDK) i trzy biznesowe (cennik, wsparcie, SLA). Skupiamy się na uniwersalnych zasadach — nie porównujemy poszczególnych dostawców z nazwy, bo dynamika rynku zmienia się szybciej niż artykuł nadąży.</p>
+
+  <div class="highlight-box">
+    <p><strong>Dla kogo ten przewodnik:</strong> dla deweloperów, CTO i tech leadów wybierających dostawcę SMS API dla aplikacji w Polsce. Niezależnie od skali — od MVP po system bankowy.</p>
+  </div>
+
+  <h2>Kryterium 1: REST z JSON vs SOAP/XML-RPC</h2>
+
+  <div class="criterion">
+    <h3>1. Protokół i format danych</h3>
+    <div class="badge-row">
+      <span class="badge b-good">Wybierz: REST + JSON</span>
+      <span class="badge b-avoid">Unikaj: SOAP, XML-RPC, własny format</span>
+    </div>
+    <p>SOAP to dziedzictwo lat 2000-2010 — wymaga generowania klas z WSDL, jest verbose (10× większy payload niż JSON), trudno debugować w przeglądarce i większość nowych bibliotek HTTP nie wspiera go natywnie. REST z JSON to standard branżowy w 2026 roku.</p>
+    <p><strong>Test:</strong> spróbuj wysłać przykładowy SMS jednym <span class="inline-code">curl</span>. Jeśli wymaga to generowania kodu z WSDL lub bindings, dostawca jest stary szkoły.</p>
+  </div>
+
+  <h2>Kryterium 2: Webhooki DLR jako natywny mechanizm</h2>
+
+  <div class="criterion">
+    <h3>2. Raporty doręczenia</h3>
+    <div class="badge-row">
+      <span class="badge b-good">Wybierz: webhook push DLR z payloadem JSON</span>
+      <span class="badge b-avoid">Unikaj: polling, tylko XML callbacki, brak DLR</span>
+    </div>
+    <p>Po wysłaniu SMS-a chcesz wiedzieć, czy dotarł. Trzy typowe podejścia:</p>
+    <ul>
+      <li><strong>Webhook push</strong> (DLR) — dostawca POSTuje JSON na Twój URL przy każdej zmianie statusu. Idealne.</li>
+      <li><strong>Polling</strong> — Ty co X minut pytasz <span class="inline-code">GET /status/:id</span>. Marnuje rate limit i opóźnia.</li>
+      <li><strong>Brak DLR</strong> — wysyłasz w ciemno. Niedopuszczalne dla 2FA, banków, e-commerce.</li>
+    </ul>
+    <p><strong>Test:</strong> sprawdź payload webhooka. Idealny zawiera: <span class="inline-code">message_id</span>, <span class="inline-code">status</span> (z enumami: delivered/failed/expired), <span class="inline-code">done_at</span> i <strong>Twój idempotency key</strong> (np. <span class="inline-code">idx</span>) — żebyś łatwo skojarzył raport z encją w bazie.</p>
+  </div>
+
+  <h2>Kryterium 3: Onboarding — sandbox vs manualna weryfikacja</h2>
+
+  <div class="criterion">
+    <h3>3. Czas i sposób startu</h3>
+    <div class="badge-row">
+      <span class="badge b-good">Wybierz: zgodnie z priorytetem (patrz niżej)</span>
+    </div>
+    <p>To kryterium, gdzie nie ma uniwersalnie lepszego wyboru — zależy od priorytetu:</p>
+    <table>
+      <thead><tr><th></th><th>Sandbox</th><th>Manualna weryfikacja (24-72h)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Czas startu</strong></td><td>Natychmiast</td><td>24-72h</td></tr>
+        <tr><td><strong>Antyfraud</strong></td><td>Słaby — anonim może spamować</td><td>Mocny — KYC przed aktywacją</td></tr>
+        <tr><td><strong>Reputacja nadawcy</strong></td><td>Słaba — operatorzy filtrują</td><td>Dobra — ruch zweryfikowany</td></tr>
+        <tr><td><strong>Delivery rate</strong></td><td>Niższy</td><td>Wyższy</td></tr>
+        <tr><td><strong>Dla kogo</strong></td><td>Prototypy, hackathony</td><td>Produkcja, bankowość, 2FA, e-commerce</td></tr>
+      </tbody>
+    </table>
+    <p>Sandbox dobry na pierwszy POC. Dla produkcji wybieraj dostawców z weryfikacją — wyższe delivery rate to większy ROI z każdej kampanii.</p>
+  </div>
+
+  <h2>Kryterium 4: Cennik — pay-as-you-go vs abonament</h2>
+
+  <div class="criterion">
+    <h3>4. Model rozliczeniowy</h3>
+    <div class="badge-row">
+      <span class="badge b-good">Wybierz: pay-as-you-go bez minimum miesięcznego</span>
+      <span class="badge b-avoid">Unikaj: pakiety z wygasaniem, ukryte opłaty za sender ID</span>
+    </div>
+    <p>Pay-as-you-go ma trzy zalety:</p>
+    <ol>
+      <li><strong>Brak ryzyka niewykorzystanego pakietu</strong> — jeśli w lipcu pojechałeś tylko 30% planowanego wolumenu, nie tracisz reszty.</li>
+      <li><strong>Skalowanie liniowe</strong> — kampania w Black Friday nie wymaga zmiany planu.</li>
+      <li><strong>Predykcja kosztów</strong> — wiesz dokładnie ile zapłacisz: <span class="inline-code">cena × liczba SMS-ów</span>.</li>
+    </ol>
+    <p>Abonament ma sens tylko dla bardzo dużych, przewidywalnych wolumenów (100k+ SMS/mies.) gdzie negocjowana stawka per-SMS jest niższa od pay-as-you-go.</p>
+    <p><strong>Ukryte opłaty których pilnuj:</strong> rejestracja sender ID (powinna być w cenie), opłata za webhooki (niedopuszczalne), opłata miesięczna za "utrzymanie konta" (red flag).</p>
+  </div>
+
+  <h2>Kryterium 5: Wsparcie w języku polskim</h2>
+
+  <div class="criterion">
+    <h3>5. Wsparcie i dokumentacja</h3>
+    <div class="badge-row">
+      <span class="badge b-good">Wybierz: polskie wsparcie, dokumentacja po polsku</span>
+      <span class="badge b-avoid">Unikaj: chat bot bez ludzi, support tylko EN</span>
+    </div>
+    <p>Wysyłka SMS w Polsce ma swoje specyfiki: polskie znaki diakrytyczne (utf-8 vs gsm encoding), regulacje UKE, sender ID dla numerów polskich, RODO. Polski support reaguje w tych obszarach znacznie szybciej niż międzynarodowy.</p>
+    <p><strong>Test:</strong> napisz przed integracją prosty email z pytaniem technicznym. Sprawdź:</p>
+    <ul>
+      <li>Czy odpowiedź przyszła w ciągu 24h? (Dla produkcji wymagaj &lt; 4h.)</li>
+      <li>Czy odpowiedź jest merytoryczna, czy to copy-paste z FAQ?</li>
+      <li>Czy odpowiada żywy człowiek czy bot?</li>
+    </ul>
+  </div>
+
+  <h2>Kryterium 6: SDK i integracje no-code</h2>
+
+  <div class="criterion">
+    <h3>6. Ekosystem narzędzi</h3>
+    <div class="badge-row">
+      <span class="badge b-good">Wybierz: code samples + 2-3 popularne no-code integracje</span>
+      <span class="badge b-avoid">Unikaj: tylko PDF z 2018 roku, brak code samples</span>
+    </div>
+    <p>Dedykowane SDK to <strong>nice-to-have</strong>, nie must-have. API z 6 endpointami można wywołać klientem HTTP w 5-10 liniach kodu. Ważniejsze są:</p>
+    <ul>
+      <li><strong>Code samples</strong> w dokumentacji (curl, Python, Node.js, ewentualnie PHP, Go). Jeśli są — kopiujesz i jedziesz.</li>
+      <li><strong>OpenAPI 3.x spec</strong> — importujesz do Postman, Insomnia, generujesz klienta w dowolnym języku w 30 sekund.</li>
+      <li><strong>Integracje no-code</strong> — Zapier, Make, n8n. Dla zespołów które nie chcą pisać kodu na każdą drobną automatyzację.</li>
+    </ul>
+    <p>SDK ma sens dla bardziej egzotycznych języków (Elixir, Rust) lub gdy SDK dodaje wartość (retry logic, idempotency, async).</p>
+  </div>
+
+  <h2>Kryterium 7: SLA i transparentność statusu</h2>
+
+  <div class="criterion">
+    <h3>7. Niezawodność i SLA</h3>
+    <div class="badge-row">
+      <span class="badge b-good">Wybierz: publiczna status page, SLA 99% dla produkcji</span>
+      <span class="badge b-avoid">Unikaj: brak status page, "SLA na życzenie"</span>
+    </div>
+    <p>SMS używa się tam gdzie inne kanały zawodzą — przypomnienia o wizytach, 2FA, krytyczne notyfikacje. Awaria dostawcy oznacza realne koszty (no-show, blokady kont, frustracja klientów).</p>
+    <p><strong>Co sprawdzić:</strong></p>
+    <ul>
+      <li>Czy jest publiczny status page (np. status.dostawca.pl)?</li>
+      <li>Jakie SLA jest w umowie? 99% = ~7h downtime/mies., 99.9% = ~45 min/mies., 99.99% = ~4 min/mies.</li>
+      <li>Czy SLA pokrywa też dostarczalność (nie tylko dostępność API)?</li>
+      <li>Czy jest mechanizm rekompensaty za przekroczenie SLA?</li>
+    </ul>
+    <p>Dla większości firm 99% SLA wystarczy. Dla bankowości i high-stakes 2FA — 99.9%+.</p>
+  </div>
+
+  <h2>Tabela podsumowująca — sprawdź swojego dostawcę</h2>
+
+  <table>
+    <thead><tr><th>Kryterium</th><th>Idealnie</th><th>Akceptowalnie</th><th>Czerwona flaga</th></tr></thead>
+    <tbody>
+      <tr><td>1. Protokół</td><td>REST + JSON</td><td>REST + XML</td><td>SOAP, własny format</td></tr>
+      <tr><td>2. DLR</td><td>Webhook JSON z idx</td><td>Webhook XML</td><td>Brak DLR / tylko polling</td></tr>
+      <tr><td>3. Onboarding</td><td>Manualna weryfikacja 24h</td><td>Sandbox + KYC przed produkcją</td><td>Sandbox bez kontroli</td></tr>
+      <tr><td>4. Cennik</td><td>Pay-as-you-go bez minimum</td><td>Pakiet bez wygasania</td><td>Abonament z karami, ukryte opłaty</td></tr>
+      <tr><td>5. Wsparcie</td><td>Polski, &lt; 4h response</td><td>Polski, &lt; 24h</td><td>Tylko EN, bot, brak SLA</td></tr>
+      <tr><td>6. SDK</td><td>Code samples + OpenAPI + no-code</td><td>Code samples + PDF</td><td>Tylko PDF z 2018</td></tr>
+      <tr><td>7. SLA</td><td>99.9%+ z status page</td><td>99% z status page</td><td>Brak SLA i status page</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Jak Przypominamy.com wypada w tej tabeli</h2>
+
+  <p>Skoro to nasz blog — uczciwie. Sprawdź sam i porównaj:</p>
+
+  <ul>
+    <li><strong>Kryterium 1 (REST + JSON):</strong> ✓ — 6 endpointów REST, JSON, Bearer token. Zobacz <a href="/openapi.json">openapi.json</a>.</li>
+    <li><strong>Kryterium 2 (DLR):</strong> ✓ — webhook DLR + incoming SMS jako native, z polem <span class="inline-code">idx</span>.</li>
+    <li><strong>Kryterium 3 (Onboarding):</strong> Manualna weryfikacja 24h. <strong>Bez sandboxa</strong> — świadomy wybór dla jakości ruchu.</li>
+    <li><strong>Kryterium 4 (Cennik):</strong> ✓ — pay-as-you-go od 100 zł, bez abonamentu, sender ID w cenie.</li>
+    <li><strong>Kryterium 5 (Wsparcie):</strong> ✓ — polski support, dokumentacja po polsku.</li>
+    <li><strong>Kryterium 6 (SDK):</strong> ✓ — <a href="/api/docs">Redoc</a> z code samples (curl/Python/Node), OpenAPI 3.1, integracje Zapier/Make/n8n.</li>
+    <li><strong>Kryterium 7 (SLA):</strong> 99% dla wszystkich planów. SLA wyższe (99.9%) negocjowane indywidualnie w Enterprise.</li>
+  </ul>
+
+  <p>Nie pasujemy do każdego use case'u — jeśli potrzebujesz instant sandboxa bez weryfikacji, wybierz innego dostawcę. Jeśli zależy Ci na jakości ruchu i polskim wsparciu — sprawdź nas.</p>
+
+  <h2>FAQ</h2>
+
+  <details>
+    <summary>REST czy SOAP — co wybrać dla nowego projektu?</summary>
+    <p>REST z JSON. SOAP to dziedzictwo, REST jest standardem branżowym w 2026.</p>
+  </details>
+
+  <details>
+    <summary>Czy webhook DLR jest wystarczający czy lepiej pollować status?</summary>
+    <p>Webhook wystarczy dla 99% zastosowań. Polling marnuje rate limit i opóźnia. Polling rozważ tylko gdy nie masz publicznego endpointu.</p>
+  </details>
+
+  <details>
+    <summary>Czym różni się sandbox od manualnej weryfikacji konta?</summary>
+    <p>Sandbox = szybki start, słaba reputacja nadawcy. Manualna weryfikacja = 24h start, dobra reputacja, wyższe delivery rate. Wybór zależy od priorytetu.</p>
+  </details>
+
+  <details>
+    <summary>Czy abonament jest lepszy niż pay-as-you-go?</summary>
+    <p>Pay-as-you-go lepszy dla większości. Abonament tylko dla bardzo dużych przewidywalnych wolumenów (100k+ SMS/mies.).</p>
+  </details>
+
+  <details>
+    <summary>Czy potrzebuję dedykowanego SDK?</summary>
+    <p>Dla popularnych języków (Python, Node.js, Go, PHP) klient HTTP wystarczy. Ważniejsze są code samples i OpenAPI spec niż dedykowane SDK.</p>
+  </details>
+
+  <div class="cta-box">
+    <h3>Sprawdź sam — pełna specyfikacja API</h3>
+    <p>Strona dla deweloperów z 6 endpointami, dokumentacja Redoc, openapi.json, code samples i FAQ. Wszystko bez rejestracji.</p>
+    <a href="/api" class="cta-btn">Zobacz API</a>
+  </div>
+
+  <div class="related">
+    <h3>Powiązane</h3>
+    <ul>
+      <li><a href="/api">Strona API: 6 endpointów, autoryzacja, webhooki</a></li>
+      <li><a href="/api/docs">Dokumentacja Redoc (OpenAPI 3.1)</a></li>
+      <li><a href="/blog/api-sms-python">API SMS w Pythonie. Kompletny przewodnik</a></li>
+      <li><a href="/blog/api-sms-2fa-otp">API SMS do 2FA i OTP</a></li>
+      <li><a href="/blog/api-sms-n8n-bez-kodu">Wysyłka SMS w n8n bez kodu</a></li>
+    </ul>
+  </div>
+</main>
+</div>
+
+<footer class="footer-mini">
+  <div class="container">
+    © Przypominamy.com — Doradztwo Paweł Mamcarz · <a href="/">Strona główna</a> · <a href="/api">API</a> · <a href="/regulamin">Regulamin</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Wysyłka SMS w n8n bez kodu — HTTP Request node + webhook DLR. Przykład workflow form → SMS i Stripe → potwierdzenie SMS. Krok po kroku, screenshoty." />
+  <meta name="keywords" content="n8n SMS, no-code SMS API, HTTP Request n8n, webhook DLR n8n, automatyzacja SMS, n8n wysyłka SMS, self-hosted automation SMS" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Zespół Przypominamy.com" />
+  <link rel="canonical" href="https://przypominamy.com/blog/api-sms-n8n-bez-kodu" />
+
+  <meta property="og:title" content="Wysyłka SMS w n8n bez kodu. HTTP Request node + webhook DLR" />
+  <meta property="og:description" content="Automatyzacja SMS w n8n bez linijki kodu — credentials, HTTP Request node, webhooki, przykład form → SMS i Stripe → SMS." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://przypominamy.com/blog/api-sms-n8n-bez-kodu" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <meta property="og:locale" content="pl_PL" />
+  <meta property="og:site_name" content="Przypominamy.com" />
+  <meta property="article:published_time" content="2026-05-18" />
+  <meta property="article:modified_time" content="2026-05-18" />
+  <meta property="article:author" content="Zespół Przypominamy.com" />
+  <meta property="article:section" content="Blog" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@przypominamy" />
+
+  <title>Wysyłka SMS w n8n bez kodu. HTTP Request node + webhook DLR</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Wysyłka SMS w n8n bez kodu. HTTP Request node + webhook DLR",
+    "description": "Automatyzacja SMS w n8n bez linijki kodu — credentials, HTTP Request node, webhooki, przykład Stripe → potwierdzenie SMS.",
+    "author": {"@type": "Organization", "name": "Zespół Przypominamy.com"},
+    "publisher": {
+      "@type": "Organization",
+      "name": "Doradztwo Paweł Mamcarz",
+      "url": "https://przypominamy.com",
+      "logo": {"@type":"ImageObject","url":"https://przypominamy.com/przypominamy-logo.png"}
+    },
+    "datePublished": "2026-05-18",
+    "dateModified": "2026-05-18",
+    "mainEntityOfPage": "https://przypominamy.com/blog/api-sms-n8n-bez-kodu",
+    "keywords": ["n8n SMS", "no-code SMS API", "HTTP Request n8n", "automatyzacja SMS"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Czy do wysyłki SMS w n8n potrzebuję dedykowanego node'a?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nie. Standardowy HTTP Request node n8n wystarczy do wysyłki SMS przez REST API. Wystarczy ustawić credentials Bearer Auth, URL endpointu i payload JSON. To samo dotyczy odbioru webhooków DLR — używasz wbudowanego Webhook node."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy n8n w wersji self-hosted obsługuje wysyłkę SMS przez API?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak. Self-hosted n8n (Docker, Kubernetes) obsługuje pełen zakres HTTP Request node bez ograniczeń. Możesz wysyłać SMS-y, odbierać webhooki DLR i przetwarzać incoming SMS — wszystko bez wychodzenia na zewnątrz."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Jak zabezpieczyć token API w n8n?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Twórz osobne Credentials w n8n (Settings → Credentials → New) typu HTTP Bearer Auth. n8n szyfruje tokeny w bazie i nigdy nie pokazuje ich w JSON workflow ani w logach. Nie wpisuj tokenu bezpośrednio w body HTTP Request node — zawsze używaj Credentials."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Jak obsłużyć rate limit 100 req/min w n8n?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dodaj node Wait między HTTP Request a kolejnym SMS-em (np. 600ms = max 100/min). Lub użyj node SplitInBatches z parametrem batchSize=10 i Wait 6s między batchami. Dla większej skali użyj n8n Queue Mode z workerami."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy webhooki DLR od Przypominamy.com są kompatybilne z n8n Webhook node?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak. Platforma wysyła POST application/json — to standardowy format który Webhook node obsługuje natywnie. Skopiuj Production URL z Webhook node i wklej w panelu klienta jako webhook_url. Pamiętaj że n8n w trybie self-hosted musi być dostępne publicznie (np. przez tunel, ngrok, reverse proxy)."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --white:#fff; --gray:#888; --light:#ccc; --green:#4BC87A; --blue:#5BA4E8; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .container { max-width:800px; margin:0 auto; padding:0 24px; }
+    .content { padding:64px 0 96px; }
+    .breadcrumbs { font-size:.85rem; color:var(--gray); margin-bottom:24px; }
+    .breadcrumbs a { color:var(--gray); }
+    .breadcrumbs a:hover { color:var(--yellow); }
+    h1 { font-size:2rem; font-weight:800; margin-bottom:8px; line-height:1.3; }
+    .meta { color:var(--gray); font-size:.88rem; margin-bottom:40px; }
+    h2 { font-size:1.2rem; font-weight:700; margin:36px 0 12px; color:var(--yellow); }
+    h3 { font-size:1.05rem; font-weight:600; margin:24px 0 8px; }
+    p, li { color:var(--light); font-size:.95rem; margin-bottom:12px; }
+    ul, ol { padding-left:24px; }
+    li { margin-bottom:8px; }
+    strong { color:var(--white); }
+    .highlight-box { background:var(--surface); border-left:3px solid var(--yellow); padding:20px 24px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .highlight-box p { margin-bottom:4px; }
+    pre { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px 20px; overflow-x:auto; margin:16px 0; font-size:.85rem; line-height:1.6; color:var(--light); }
+    code { font-family:'JetBrains Mono','Courier New',monospace; }
+    .inline-code { background:var(--surface); border:1px solid var(--border); padding:2px 6px; border-radius:4px; font-size:.88rem; }
+    table { width:100%; border-collapse:collapse; margin:20px 0; font-size:.9rem; }
+    th { background:var(--surface); color:var(--yellow); text-align:left; padding:12px 16px; border:1px solid var(--border); font-weight:600; }
+    td { padding:12px 16px; border:1px solid var(--border); color:var(--light); }
+    .cta-box { background:var(--surface); border:1px solid var(--yellow); border-radius:12px; padding:32px; text-align:center; margin:48px 0 24px; }
+    .cta-box h3 { color:var(--white); margin-top:0; }
+    .cta-box p { color:var(--light); }
+    .cta-btn { display:inline-block; background:var(--yellow); color:#000; font-weight:700; padding:12px 32px; border-radius:8px; margin-top:12px; font-size:.95rem; }
+    .cta-btn:hover { text-decoration:none; opacity:.9; }
+    .related { margin-top:48px; padding-top:32px; border-top:1px solid var(--border); }
+    .related h3 { color:var(--white); margin-bottom:16px; }
+    .related ul { list-style:none; padding:0; }
+    .related li { margin-bottom:10px; }
+    details { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px 18px; margin-bottom:10px; }
+    details summary { font-weight:600; color:var(--white); cursor:pointer; }
+    details[open] summary { color:var(--yellow); margin-bottom:8px; }
+    .node-diagram { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px 24px; margin:20px 0; font-family:'JetBrains Mono',monospace; font-size:.85rem; color:var(--light); line-height:1.9; }
+    .node-diagram .node { display:inline-block; background:var(--black); border:1px solid var(--blue); padding:6px 12px; border-radius:6px; color:var(--blue); }
+    .node-diagram .node.action { border-color:var(--yellow); color:var(--yellow); }
+    .node-diagram .node.trigger { border-color:var(--green); color:var(--green); }
+    .node-diagram .arrow { color:var(--gray); margin:0 8px; }
+    .footer-mini { border-top:1px solid var(--border); padding:28px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    @media(max-width:600px){
+      h1 { font-size:1.4rem; }
+      pre { font-size:.78rem; padding:12px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/blog">&larr; Blog</a>
+  </div>
+</div>
+
+<div class="container content">
+  <nav class="breadcrumbs">
+    <a href="/">Strona główna</a> &rsaquo; <a href="/blog">Blog</a> &rsaquo; SMS w n8n bez kodu
+  </nav>
+
+<main>
+  <h1>Wysyłka SMS w n8n bez kodu. HTTP Request node + webhook DLR</h1>
+  <p class="meta">Zespół Przypominamy.com &middot; 18 maja 2026 &middot; 8 min czytania</p>
+
+  <p>n8n to self-hosted alternatywa dla Zapiera i Make — pozwala automatyzować przepływy między aplikacjami bez kodu. W tym przewodniku pokazujemy, jak zintegrować Przypominamy.com z n8n używając wyłącznie wbudowanego HTTP Request node. Bez instalowania community nodes, bez wychodzenia poza standardowy n8n.</p>
+
+  <div class="highlight-box">
+    <p><strong>Co znajdziesz:</strong> konfiguracja Credentials dla Bearer token, wysyłka SMS przez HTTP Request, obsługa rate-limit, odbiór webhooków DLR i incoming SMS, dwa pełne workflowy (formularz → SMS i Stripe → potwierdzenie SMS).</p>
+  </div>
+
+  <h2>1. Po co n8n do SMS?</h2>
+
+  <p>Trzy typowe scenariusze, gdy automatyzacja SMS w n8n ma sens:</p>
+
+  <ul>
+    <li><strong>Self-hosted</strong> — nie chcesz wysyłać danych klientów do chmury Zapiera/Make. n8n na własnym serwerze (Docker, Kubernetes) trzyma wszystko u Ciebie.</li>
+    <li><strong>Złożone scenariusze</strong> — IF/SWITCH branche, dataset operations, Function nodes z JavaScript. Tam gdzie Zapier się zatyka, n8n daje radę.</li>
+    <li><strong>Open source</strong> — fork, customize, audit. Dla zespołów z compliance ISO 27001/SOC 2 to często wymóg.</li>
+  </ul>
+
+  <h2>2. Konfiguracja Credentials</h2>
+
+  <p>Najpierw zapisz token API jako Credentials w n8n. To pozwala używać go w wielu workflowach bez wpisywania na sztywno:</p>
+
+  <ol>
+    <li>W n8n: <strong>Settings → Credentials → Create New</strong>.</li>
+    <li>Wybierz typ: <strong>"HTTP Header Auth"</strong>.</li>
+    <li>Nazwa: <span class="inline-code">Przypominamy API</span>.</li>
+    <li>Header Name: <span class="inline-code">Authorization</span>.</li>
+    <li>Header Value: <span class="inline-code">Bearer pk_live_a1b2c3d4...</span> (Twój token z panelu klienta).</li>
+    <li>Save.</li>
+  </ol>
+
+  <p>n8n szyfruje wartość w bazie i nigdy nie pokazuje jej w JSON-ie workflow ani w logach. Nawet jeśli wyeksportujesz workflow, token tam nie pojedzie.</p>
+
+  <h2>3. HTTP Request node — pojedynczy SMS</h2>
+
+  <p>Dodaj nowy workflow i pierwszy node: <strong>HTTP Request</strong>. Konfiguracja:</p>
+
+  <table>
+    <thead><tr><th>Parametr</th><th>Wartość</th></tr></thead>
+    <tbody>
+      <tr><td>Method</td><td><span class="inline-code">POST</span></td></tr>
+      <tr><td>URL</td><td><span class="inline-code">https://api.przypominamy.com/v1/sms</span></td></tr>
+      <tr><td>Authentication</td><td>Generic Credential Type → HTTP Header Auth → "Przypominamy API"</td></tr>
+      <tr><td>Send Headers</td><td>ON → <span class="inline-code">Content-Type: application/json</span></td></tr>
+      <tr><td>Send Body</td><td>ON → Body Content Type: JSON</td></tr>
+      <tr><td>JSON Body</td><td>patrz niżej</td></tr>
+    </tbody>
+  </table>
+
+  <p>JSON Body:</p>
+
+<pre><code>{
+  "to": "+48600123456",
+  "message": "Cześć! Przypomnienie o wizycie jutro o 14:00.",
+  "from": "FIRMA",
+  "idx": "n8n-workflow-{{$workflow.id}}-{{$execution.id}}"
+}</code></pre>
+
+  <p>Zwróć uwagę na <span class="inline-code">idx</span> — n8n udostępnia <span class="inline-code">$workflow.id</span> i <span class="inline-code">$execution.id</span>, więc każdy SMS dostaje unikalny identyfikator. Przyda się w webhookach DLR (sekcja 6).</p>
+
+  <p>Kliknij <strong>Execute Node</strong> — w odpowiedzi zobaczysz <span class="inline-code">{"success": true, "data": {...}}</span> z message_id.</p>
+
+  <h2>4. Workflow #1: formularz → SMS</h2>
+
+  <p>Przykład praktyczny: użytkownik wypełnia formularz na stronie (np. Tally, Typeform, n8n Form Trigger) — automatycznie dostaje SMS z potwierdzeniem.</p>
+
+  <div class="node-diagram">
+    <span class="node trigger">Form Trigger</span><span class="arrow">→</span><span class="node">Set</span><span class="arrow">→</span><span class="node action">HTTP Request<br/>(SMS)</span>
+  </div>
+
+  <p><strong>Form Trigger</strong> (built-in trigger n8n) — definiujesz pola: <span class="inline-code">imie</span>, <span class="inline-code">telefon</span>, <span class="inline-code">godzina</span>.</p>
+
+  <p><strong>Set node</strong> — normalizuje numer telefonu (dodaje <span class="inline-code">+48</span> jeśli brakuje):</p>
+
+<pre><code>// Function w Set node, pole "phone_normalized"
+{{ $json.telefon.startsWith('+') ? $json.telefon : '+48' + $json.telefon.replace(/\s/g, '') }}</code></pre>
+
+  <p><strong>HTTP Request</strong> — wysyłka SMS z dynamicznymi polami:</p>
+
+<pre><code>{
+  "to": "{{ $node['Set'].json.phone_normalized }}",
+  "message": "Cześć {{ $node['Form Trigger'].json.imie }}, wizyta {{ $node['Form Trigger'].json.godzina }} potwierdzona. Pozdrawiamy!",
+  "from": "FIRMA",
+  "idx": "form-{{ $execution.id }}"
+}</code></pre>
+
+  <p>Po aktywacji workflow każda osoba wypełniająca formularz automatycznie dostaje SMS — bez Twojej ingerencji.</p>
+
+  <h2>5. Workflow #2: Stripe → SMS po zakupie</h2>
+
+  <p>Bardziej zaawansowany przykład: klient płaci w Stripe — Twój sklep wysyła SMS z potwierdzeniem i numerem zamówienia.</p>
+
+  <div class="node-diagram">
+    <span class="node trigger">Stripe Trigger<br/>(checkout.completed)</span><span class="arrow">→</span><span class="node">IF<br/>(amount &gt; 0)</span><span class="arrow">→</span><span class="node action">HTTP Request<br/>(SMS)</span>
+  </div>
+
+  <p><strong>Stripe Trigger</strong> — wybierz event <span class="inline-code">checkout.session.completed</span>. n8n dostaje pełen webhook payload z numerem klienta, kwotą, ID zamówienia.</p>
+
+  <p><strong>IF node</strong> — filtruj tylko płatności na żywo (nie testowe):</p>
+
+<pre><code>// Condition
+{{ $json.data.object.livemode }} === true
+AND
+{{ $json.data.object.amount_total }} &gt; 0</code></pre>
+
+  <p><strong>HTTP Request</strong> — wysyłka SMS z numerem zamówienia:</p>
+
+<pre><code>{
+  "to": "{{ $json.data.object.customer_details.phone }}",
+  "message": "Dziękujemy za zamówienie #{{ $json.data.object.id }}. Kwota: {{ ($json.data.object.amount_total / 100).toFixed(2) }} {{ $json.data.object.currency.toUpperCase() }}. Status: opłacone ✓",
+  "from": "TWOJSKLEP",
+  "idx": "stripe-{{ $json.data.object.id }}"
+}</code></pre>
+
+  <p>Pole <span class="inline-code">idx</span> używa pełnego Stripe Session ID — w razie potrzeby łatwo skorelujesz SMS z transakcją w bazie.</p>
+
+  <h2>6. Webhook DLR — czy SMS dotarł?</h2>
+
+  <p>Chcesz wiedzieć, czy SMS o zamówieniu faktycznie dotarł do klienta? Webhook DLR rozwiązuje to bezpośrednio w n8n:</p>
+
+  <ol>
+    <li>Stwórz nowy workflow z node'em <strong>Webhook</strong> (built-in trigger).</li>
+    <li>Method: <span class="inline-code">POST</span>, Path: <span class="inline-code">/przypominamy-dlr</span>.</li>
+    <li>Klik <strong>Listen for Test Event</strong> — n8n pokaże Production URL, np. <span class="inline-code">https://n8n.twojadomena.pl/webhook/przypominamy-dlr</span>.</li>
+    <li>Skopiuj URL i wklej w panelu klienta Przypominamy.com jako <span class="inline-code">webhook_url</span>.</li>
+    <li>Aktywuj workflow.</li>
+  </ol>
+
+  <p>Każda zmiana statusu SMS-a (queued → sent → delivered) wyzwala workflow. Payload jest dostępny jako <span class="inline-code">$json</span>:</p>
+
+<pre><code>{
+  "event": "delivery_report",
+  "message_id": "msg_abc123",
+  "to": "+48600123456",
+  "status": "delivered",
+  "sent_at": "2026-05-18T10:30:00.000Z",
+  "done_at": "2026-05-18T10:30:04.000Z",
+  "idx": "stripe-cs_test_xyz"
+}</code></pre>
+
+  <p>Dodaj kolejne nody: zapis do bazy (Postgres node), Slack notification gdy <span class="inline-code">status === "failed"</span>, retry przez VMS (połączenie głosowe) gdy SMS nie dotrze.</p>
+
+  <h2>7. Rate limit — jak nie wykosić limitu 100/min</h2>
+
+  <p>Domyślny limit Przypominamy.com to 100 żądań na minutę. W n8n masz dwa sposoby:</p>
+
+  <h3>Wait node między SMS-ami</h3>
+
+  <p>Dla małych volumenów (poniżej 100 SMS w workflow) wystarczy <strong>Wait node</strong> z parametrem <strong>amount: 700</strong>, <strong>unit: milliseconds</strong> — daje 85 req/min, z marginesem.</p>
+
+  <h3>SplitInBatches dla większych wolumenów</h3>
+
+  <p>Dla 100+ SMS-ów:</p>
+
+  <div class="node-diagram">
+    <span class="node">Lista numerów</span><span class="arrow">→</span><span class="node">SplitInBatches<br/>(batchSize: 50)</span><span class="arrow">→</span><span class="node action">HTTP Request</span><span class="arrow">→</span><span class="node">Wait (35s)</span>
+  </div>
+
+  <p>50 SMS-ów co 35 sekund daje ~85 SMS/min — bezpiecznie pod limitem.</p>
+
+  <h2>8. Obsługa błędów</h2>
+
+  <p>HTTP Request node w n8n zwraca kod HTTP i payload. Dodaj <strong>Error Trigger</strong> lub IF node sprawdzający <span class="inline-code">{{ $json.success === true }}</span>:</p>
+
+  <table>
+    <thead><tr><th>Kod</th><th>Co zrobić w n8n</th></tr></thead>
+    <tbody>
+      <tr><td>401</td><td>Slack alert do adminów — token wygasł</td></tr>
+      <tr><td>402</td><td>Slack alert + pauza workflow — brak środków</td></tr>
+      <tr><td>422</td><td>Loguj do Postgres jako "invalid payload" — nie ponawiaj</td></tr>
+      <tr><td>429</td><td>Wait node + retry (use Continue On Fail w HTTP Request)</td></tr>
+      <tr><td>5xx</td><td>Retry 3x z Wait, potem alert</td></tr>
+    </tbody>
+  </table>
+
+  <p>W ustawieniach HTTP Request node włącz <strong>Continue On Fail</strong> i <strong>Retry On Fail</strong> (3 próby, wait 60s) — najprostsza obrona przed transient errors.</p>
+
+  <h2>9. Przykład gotowego workflow do importu</h2>
+
+  <p>Możesz zaimportować ten przykład bezpośrednio do n8n: <strong>Workflow → Import from File</strong>. Najpierw skontaktuj się z nami (<a href="mailto:support@przypominamy.com">support@przypominamy.com</a>) — przygotowujemy dedykowany pakiet workflow templates dla popularnych use cases (przypomnienia o wizytach, potwierdzenia zamówień, 2FA).</p>
+
+  <h2>FAQ</h2>
+
+  <details>
+    <summary>Czy do wysyłki SMS w n8n potrzebuję dedykowanego node'a?</summary>
+    <p>Nie. Standardowy HTTP Request node wystarczy. To samo dotyczy odbioru webhooków DLR — używasz wbudowanego Webhook node.</p>
+  </details>
+
+  <details>
+    <summary>Czy n8n self-hosted obsługuje wysyłkę SMS przez API?</summary>
+    <p>Tak. Self-hosted n8n (Docker, Kubernetes) obsługuje pełen zakres HTTP Request node. Możesz wysyłać SMS-y i odbierać webhooki bez ograniczeń.</p>
+  </details>
+
+  <details>
+    <summary>Jak zabezpieczyć token API w n8n?</summary>
+    <p>Twórz osobne Credentials w n8n (Settings → Credentials → New) typu HTTP Header Auth. n8n szyfruje tokeny w bazie. Nie wpisuj tokenu bezpośrednio w body — zawsze przez Credentials.</p>
+  </details>
+
+  <details>
+    <summary>Jak obsłużyć rate limit 100 req/min w n8n?</summary>
+    <p>Dodaj Wait node między HTTP Request (600-700ms = ~85-100/min). Lub SplitInBatches z batchSize=50 i Wait 35s. Dla większej skali — Queue Mode z workerami.</p>
+  </details>
+
+  <details>
+    <summary>Czy webhooki DLR są kompatybilne z n8n Webhook node?</summary>
+    <p>Tak — POST application/json. Pamiętaj że n8n w trybie self-hosted musi być publicznie dostępne (tunel, ngrok, reverse proxy).</p>
+  </details>
+
+  <div class="cta-box">
+    <h3>Chcesz dedykowany community node n8n?</h3>
+    <p>Pracujemy nad oficjalnym node'em Przypominamy.com dla n8n marketplace. Zarejestruj się — damy znać gdy będzie gotowy.</p>
+    <a href="/register" class="cta-btn">Załóż konto</a>
+  </div>
+
+  <div class="related">
+    <h3>Powiązane</h3>
+    <ul>
+      <li><a href="/api">Strona API: endpointy, autoryzacja, webhooki</a></li>
+      <li><a href="/api/docs">Dokumentacja Redoc (OpenAPI 3.1)</a></li>
+      <li><a href="/blog/api-sms-python">API SMS w Pythonie. Kompletny przewodnik</a></li>
+      <li><a href="/integracje/zapier">Integracja z Zapier (7000+ aplikacji)</a></li>
+      <li><a href="/blog/api-sms-porownanie-dostawcow">Jak wybrać API SMS w Polsce: 7 kryteriów</a></li>
+    </ul>
+  </div>
+</main>
+</div>
+
+<footer class="footer-mini">
+  <div class="container">
+    © Przypominamy.com — Doradztwo Paweł Mamcarz · <a href="/">Strona główna</a> · <a href="/api">API</a> · <a href="/regulamin">Regulamin</a>
+  </div>
+</footer>
+
+</body>
+</html>

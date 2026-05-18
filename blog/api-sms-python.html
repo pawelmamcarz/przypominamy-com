@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="API SMS w Pythonie — pełny przewodnik. requests, httpx, async, bulk, webhooki DLR w Flask, obsługa błędów. Gotowy kod do skopiowania, przykłady dla przypominamy.com REST API." />
+  <meta name="keywords" content="API SMS Python, wysyłka SMS Python, Python requests SMS, Python httpx SMS, Python async SMS, webhook SMS Flask, REST API SMS Polska" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Zespół Przypominamy.com" />
+  <link rel="canonical" href="https://przypominamy.com/blog/api-sms-python" />
+
+  <meta property="og:title" content="API SMS w Pythonie. Kompletny przewodnik z requests i httpx" />
+  <meta property="og:description" content="Wysyłka SMS z Pythona przez REST API — requests, httpx, async, bulk, webhooki w Flask, obsługa błędów. Gotowy kod." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://przypominamy.com/blog/api-sms-python" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <meta property="og:locale" content="pl_PL" />
+  <meta property="og:site_name" content="Przypominamy.com" />
+  <meta property="article:published_time" content="2026-05-17" />
+  <meta property="article:modified_time" content="2026-05-17" />
+  <meta property="article:author" content="Zespół Przypominamy.com" />
+  <meta property="article:section" content="Blog" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@przypominamy" />
+
+  <title>API SMS w Pythonie. Kompletny przewodnik z requests, httpx i webhookami</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "API SMS w Pythonie. Kompletny przewodnik z requests, httpx i webhookami",
+    "description": "Wysyłka SMS z Pythona przez REST API. requests, httpx, async, bulk, webhooki DLR w Flask, obsługa błędów. Gotowy kod do skopiowania.",
+    "author": {"@type": "Organization", "name": "Zespół Przypominamy.com"},
+    "publisher": {
+      "@type": "Organization",
+      "name": "Doradztwo Paweł Mamcarz",
+      "url": "https://przypominamy.com",
+      "logo": {"@type":"ImageObject","url":"https://przypominamy.com/przypominamy-logo.png"}
+    },
+    "datePublished": "2026-05-17",
+    "dateModified": "2026-05-17",
+    "mainEntityOfPage": "https://przypominamy.com/blog/api-sms-python",
+    "keywords": ["API SMS Python", "wysyłka SMS Python", "Python httpx SMS", "webhook SMS Flask"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Czy do wysyłki SMS w Pythonie potrzebuję SDK?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nie. Standardowa biblioteka requests (synchroniczna) lub httpx (asynchroniczna) wystarczą. API jest na tyle proste, że SDK wprowadzałoby tylko dodatkowy maintenance burden — wystarczy POST JSON z nagłówkiem Authorization: Bearer."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Jak obsłużyć rate limit 100 req/min w Pythonie?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sprawdź kod HTTP 429 i nagłówek Retry-After. Najprostsze rozwiązanie to time.sleep(int(resp.headers['Retry-After'])) i ponów. Dla większej skali użyj biblioteki tenacity z exponential backoff lub asynchronicznego semaforu w httpx."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Jak odbierać webhooki DLR w Flask?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Wystaw endpoint @app.route('/webhook/dlr', methods=['POST']) który czyta request.get_json() i odpowiada 200 jak najszybciej. Cała ciężka logika (zapis do bazy, powiadomienie użytkownika) powinna iść w tle przez Celery, RQ lub asyncio task — webhook musi wrócić w <2 sekundy."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy w Pythonie da się wysłać SMS asynchronicznie?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak, użyj httpx z trybem async. httpx.AsyncClient() pozwala wysłać wiele SMS-ów równolegle przez asyncio.gather() — to znacznie szybsze niż sekwencyjne requests, gdy masz np. 50 niezależnych wysyłek do różnych odbiorców."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Jak zabezpieczyć token API w aplikacji produkcyjnej?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Token trzymaj w zmiennej środowiskowej (os.environ['PRZYPOMINAMY_API_KEY']) lub w secrets managerze (AWS Secrets Manager, GCP Secret Manager, HashiCorp Vault). Nigdy nie commituj tokena do gita. W razie wycieku unieważnij stary token w panelu klienta i wygeneruj nowy."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --white:#fff; --gray:#888; --light:#ccc; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .container { max-width:800px; margin:0 auto; padding:0 24px; }
+    .content { padding:64px 0 96px; }
+    .breadcrumbs { font-size:.85rem; color:var(--gray); margin-bottom:24px; }
+    .breadcrumbs a { color:var(--gray); }
+    .breadcrumbs a:hover { color:var(--yellow); }
+    h1 { font-size:2rem; font-weight:800; margin-bottom:8px; line-height:1.3; }
+    .meta { color:var(--gray); font-size:.88rem; margin-bottom:40px; }
+    h2 { font-size:1.2rem; font-weight:700; margin:36px 0 12px; color:var(--yellow); }
+    h3 { font-size:1.05rem; font-weight:600; margin:24px 0 8px; }
+    p, li { color:var(--light); font-size:.95rem; margin-bottom:12px; }
+    ul, ol { padding-left:24px; }
+    li { margin-bottom:8px; }
+    strong { color:var(--white); }
+    .highlight-box { background:var(--surface); border-left:3px solid var(--yellow); padding:20px 24px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .highlight-box p { margin-bottom:4px; }
+    pre { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px 20px; overflow-x:auto; margin:16px 0; font-size:.85rem; line-height:1.6; color:var(--light); }
+    code { font-family:'JetBrains Mono','Courier New',monospace; }
+    .inline-code { background:var(--surface); border:1px solid var(--border); padding:2px 6px; border-radius:4px; font-size:.88rem; }
+    table { width:100%; border-collapse:collapse; margin:20px 0; font-size:.9rem; }
+    th { background:var(--surface); color:var(--yellow); text-align:left; padding:12px 16px; border:1px solid var(--border); font-weight:600; }
+    td { padding:12px 16px; border:1px solid var(--border); color:var(--light); }
+    .cta-box { background:var(--surface); border:1px solid var(--yellow); border-radius:12px; padding:32px; text-align:center; margin:48px 0 24px; }
+    .cta-box h3 { color:var(--white); margin-top:0; }
+    .cta-box p { color:var(--light); }
+    .cta-btn { display:inline-block; background:var(--yellow); color:#000; font-weight:700; padding:12px 32px; border-radius:8px; margin-top:12px; font-size:.95rem; }
+    .cta-btn:hover { text-decoration:none; opacity:.9; }
+    .related { margin-top:48px; padding-top:32px; border-top:1px solid var(--border); }
+    .related h3 { color:var(--white); margin-bottom:16px; }
+    .related ul { list-style:none; padding:0; }
+    .related li { margin-bottom:10px; }
+    details { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px 18px; margin-bottom:10px; }
+    details summary { font-weight:600; color:var(--white); cursor:pointer; }
+    details[open] summary { color:var(--yellow); margin-bottom:8px; }
+    .footer-mini { border-top:1px solid var(--border); padding:28px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    @media(max-width:600px){
+      h1 { font-size:1.4rem; }
+      pre { font-size:.78rem; padding:12px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/blog">&larr; Blog</a>
+  </div>
+</div>
+
+<div class="container content">
+  <nav class="breadcrumbs">
+    <a href="/">Strona główna</a> &rsaquo; <a href="/blog">Blog</a> &rsaquo; API SMS w Pythonie
+  </nav>
+
+<main>
+  <h1>API SMS w Pythonie. Kompletny przewodnik z requests, httpx i webhookami</h1>
+  <p class="meta">Zespół Przypominamy.com &middot; 17 maja 2026 &middot; 10 min czytania</p>
+
+  <p>Jeśli budujesz w Pythonie aplikację, która ma wysyłać SMS-y — przypomnienia o wizytach, kody 2FA, powiadomienia transakcyjne — najprostszą drogą jest REST API z biblioteką <strong>requests</strong> lub jej asynchronicznym odpowiednikiem <strong>httpx</strong>. W tym przewodniku pokażemy, jak od zera zintegrować Pythona z REST API Przypominamy.com — od pierwszego SMS-a, przez bulk i obsługę błędów, po webhooki DLR w Flasku i asynchroniczne wysyłki przez asyncio.</p>
+
+  <div class="highlight-box">
+    <p><strong>Wymagania wstępne:</strong> Python 3.9+, konto na Przypominamy.com (weryfikacja w 24h), token Bearer wygenerowany w panelu klienta.</p>
+  </div>
+
+  <h2>1. Setup: jedna biblioteka, kilka sekund</h2>
+
+  <p>API jest na tyle proste, że nie potrzebujesz dedykowanego SDK. Wystarczy <span class="inline-code">requests</span> (synchroniczny) lub <span class="inline-code">httpx</span> (synchroniczny + asynchroniczny):</p>
+
+<pre><code>pip install requests
+# lub, gdy potrzebujesz async:
+pip install httpx</code></pre>
+
+  <p>Token API trzymaj w zmiennej środowiskowej — <strong>nigdy nie commituj go do gita</strong>:</p>
+
+<pre><code># .env (nie commituj!)
+PRZYPOMINAMY_API_KEY=pk_live_a1b2c3d4e5f6...
+
+# w kodzie:
+import os
+TOKEN = os.environ["PRZYPOMINAMY_API_KEY"]
+BASE_URL = "https://api.przypominamy.com"</code></pre>
+
+  <p>Dla aplikacji produkcyjnej rozważ secrets managera (AWS Secrets Manager, GCP Secret Manager, HashiCorp Vault) zamiast pliku <span class="inline-code">.env</span>.</p>
+
+  <h2>2. Pierwszy SMS w 10 liniach</h2>
+
+  <p>Najprostszy POST na <span class="inline-code">/v1/sms</span>:</p>
+
+<pre><code>import os, requests
+
+resp = requests.post(
+    "https://api.przypominamy.com/v1/sms",
+    headers={"Authorization": f"Bearer {os.environ['PRZYPOMINAMY_API_KEY']}"},
+    json={
+        "to": "+48600123456",
+        "message": "Cześć! Przypominamy o wizycie jutro o 14:00.",
+        "from": "FIRMA",
+    },
+    timeout=10,
+)
+resp.raise_for_status()
+print(resp.json())</code></pre>
+
+  <p>Odpowiedź:</p>
+
+<pre><code>{
+  "success": true,
+  "data": {
+    "count": 1,
+    "messages": [{
+      "id": "msg_abc123",
+      "to": "+48600123456",
+      "status": "queued",
+      "parts": 1,
+      "cost": 0.10,
+      "sent_at": "2026-05-17T10:30:00.000Z"
+    }]
+  }
+}</code></pre>
+
+  <p>Pole <span class="inline-code">status</span> może przyjąć wartości <span class="inline-code">queued</span> (w kolejce), <span class="inline-code">sent</span> (wysłany do sieci), <span class="inline-code">delivered</span> (potwierdzone doręczenie), <span class="inline-code">failed</span>, <span class="inline-code">expired</span>, <span class="inline-code">not_found</span>, <span class="inline-code">rejected</span> i kilka innych. Aktualizacje statusu otrzymasz przez webhook DLR (sekcja 6).</p>
+
+  <h3>Parametry warte zapamiętania</h3>
+
+  <ul>
+    <li><strong><span class="inline-code">from</span></strong> — własna nazwa nadawcy (do 11 znaków, wymaga rejestracji w panelu).</li>
+    <li><strong><span class="inline-code">date</span></strong> — planowana wysyłka (ISO 8601), np. <span class="inline-code">"2026-05-18T14:00:00Z"</span>.</li>
+    <li><strong><span class="inline-code">flash</span></strong> — Flash SMS, wyświetlany na ekranie bez otwierania.</li>
+    <li><strong><span class="inline-code">idx</span></strong> — Twój identyfikator (idempotency key). Wraca w webhookach DLR — pozwala skojarzyć raport z encją w Twojej bazie.</li>
+    <li><strong><span class="inline-code">encoding</span></strong> — <span class="inline-code">"utf-8"</span> (domyślnie, polskie znaki, 70 znaków/część) lub <span class="inline-code">"gsm"</span> (bez polskich znaków, 160 znaków/część).</li>
+  </ul>
+
+  <h2>3. Bulk: wysyłka do wielu odbiorców</h2>
+
+  <p>Dwa tryby. Jeśli wszyscy mają dostać tę samą treść (kampania, promocja), użyj <span class="inline-code">recipients + message</span> — maksymalnie 10 000 numerów jednym żądaniem:</p>
+
+<pre><code>resp = requests.post(
+    f"{BASE_URL}/v1/sms/bulk",
+    headers={"Authorization": f"Bearer {TOKEN}"},
+    json={
+        "recipients": ["+48600123456", "+48600234567", "+48600345678"],
+        "message": "Promocja -20% tylko do niedzieli! Kod: SMS20",
+        "from": "SKLEP",
+    },
+)</code></pre>
+
+  <p>Gdy każdy odbiorca ma dostać spersonalizowaną wiadomość (np. przypomnienia o wizytach), użyj <span class="inline-code">messages</span> — do 100 wiadomości jednym żądaniem:</p>
+
+<pre><code>wizyty = [
+    {"to": "+48600123456", "imie": "Anna",  "godzina": "14:00"},
+    {"to": "+48600234567", "imie": "Piotr", "godzina": "15:30"},
+    {"to": "+48600345678", "imie": "Maria", "godzina": "16:45"},
+]
+
+resp = requests.post(
+    f"{BASE_URL}/v1/sms/bulk",
+    headers={"Authorization": f"Bearer {TOKEN}"},
+    json={
+        "messages": [
+            {
+                "to": w["to"],
+                "message": f"Cześć {w['imie']}, wizyta jutro o {w['godzina']}. Potwierdź odpisując TAK.",
+                "idx": f"appointment-{w['to']}",
+            }
+            for w in wizyty
+        ]
+    },
+)
+for msg in resp.json()["data"]["messages"]:
+    print(msg["to"], "→", msg["status"])</code></pre>
+
+  <p>Gdy masz więcej niż 100 wiadomości, podziel na chunks i wyślij sekwencyjnie z respektowaniem rate limitu (sekcja 4).</p>
+
+  <h2>4. Obsługa błędów</h2>
+
+  <p>API zwraca standardowe kody HTTP. Zawsze sprawdzaj <span class="inline-code">status_code</span> przed parsowaniem JSON-a:</p>
+
+<pre><code>class SmsApiError(Exception):
+    def __init__(self, code: int, message: str):
+        self.code = code
+        self.message = message
+        super().__init__(f"[{code}] {message}")
+
+def send_sms(to: str, message: str, **kwargs) -&gt; dict:
+    resp = requests.post(
+        f"{BASE_URL}/v1/sms",
+        headers={"Authorization": f"Bearer {TOKEN}"},
+        json={"to": to, "message": message, **kwargs},
+        timeout=10,
+    )
+    if resp.status_code == 200:
+        return resp.json()
+    err = resp.json().get("error", {})
+    raise SmsApiError(resp.status_code, err.get("message", "Unknown error"))</code></pre>
+
+  <p>Kody, które warto rozróżnić:</p>
+
+  <table>
+    <thead><tr><th>Kod</th><th>Znaczenie</th><th>Co robić</th></tr></thead>
+    <tbody>
+      <tr><td>401</td><td>Nieprawidłowy token</td><td>Sprawdź zmienną środowiskową, wygeneruj nowy token w panelu</td></tr>
+      <tr><td>402</td><td>Brak środków</td><td>Powiadom administratora, doładuj konto, retry później</td></tr>
+      <tr><td>422</td><td>Błąd walidacji</td><td>Nie ponawiaj — popraw payload (numer, treść)</td></tr>
+      <tr><td>429</td><td>Rate limit</td><td><span class="inline-code">sleep(Retry-After)</span> i ponów</td></tr>
+      <tr><td>502/504</td><td>Błąd upstream / timeout</td><td>Retry z exponential backoff (max 3 próby)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Obsługa rate limit (429) z biblioteką tenacity</h3>
+
+<pre><code>from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=2, min=4, max=60),
+    retry=retry_if_exception_type(SmsApiError),
+)
+def send_with_retry(to: str, message: str, **kwargs):
+    return send_sms(to, message, **kwargs)</code></pre>
+
+  <p>Dla 429 możesz też ręcznie odczytać <span class="inline-code">Retry-After</span> i poczekać dokładnie tyle sekund — to przyjemniejsze dla API niż exponential backoff.</p>
+
+  <h2>5. Async: równoległa wysyłka z httpx</h2>
+
+  <p>Gdy masz np. 50 niezależnych SMS-ów do wysłania, asynchroniczny <span class="inline-code">httpx</span> jest znacznie szybszy od sekwencyjnego <span class="inline-code">requests</span> — wszystkie żądania lecą równolegle, a Ty czekasz tylko na najwolniejsze.</p>
+
+<pre><code>import asyncio, httpx, os
+
+TOKEN = os.environ["PRZYPOMINAMY_API_KEY"]
+
+async def send_one(client: httpx.AsyncClient, to: str, message: str):
+    resp = await client.post(
+        "/v1/sms",
+        json={"to": to, "message": message},
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+async def send_many(messages: list[dict]):
+    async with httpx.AsyncClient(
+        base_url="https://api.przypominamy.com",
+        headers={"Authorization": f"Bearer {TOKEN}"},
+        timeout=10.0,
+    ) as client:
+        tasks = [send_one(client, m["to"], m["message"]) for m in messages]
+        return await asyncio.gather(*tasks, return_exceptions=True)
+
+# użycie:
+messages = [
+    {"to": "+48600123456", "message": "SMS 1"},
+    {"to": "+48600234567", "message": "SMS 2"},
+    # ... 48 więcej
+]
+results = asyncio.run(send_many(messages))</code></pre>
+
+  <p><strong>Uwaga na rate limit</strong>: 100 req/min to twardy limit. Dla 100+ wiadomości równolegle dodaj <span class="inline-code">asyncio.Semaphore(50)</span> żeby ograniczyć liczbę jednoczesnych połączeń.</p>
+
+  <h2>6. Webhooki DLR w Flasku</h2>
+
+  <p>Po wysłaniu SMS-a chcesz wiedzieć, czy faktycznie dotarł. Webhook DLR (Delivery Report) wysyła POST <span class="inline-code">application/json</span> na Twój skonfigurowany URL przy każdej zmianie statusu.</p>
+
+  <p>W panelu klienta ustaw <span class="inline-code">webhook_url</span> wskazujący np. na <span class="inline-code">https://twojadomena.pl/webhook/dlr</span>. Najprostszy handler we Flasku:</p>
+
+<pre><code>from flask import Flask, request, jsonify
+import logging
+
+app = Flask(__name__)
+
+@app.route("/webhook/dlr", methods=["POST"])
+def dlr_webhook():
+    payload = request.get_json(silent=True) or {}
+    event = payload.get("event")
+
+    if event == "delivery_report":
+        msg_id = payload.get("message_id")
+        status = payload.get("status")
+        idx    = payload.get("idx")
+        # zapisz do bazy (najlepiej w tle przez Celery/RQ)
+        update_sms_status.delay(msg_id, status, idx)
+        logging.info("DLR: %s → %s (idx=%s)", msg_id, status, idx)
+
+    elif event == "incoming_sms":
+        # klient odpowiedział na Twoją wiadomość
+        from_ = payload.get("from")
+        text  = payload.get("message")
+        handle_incoming.delay(from_, text)
+
+    return jsonify({"received": True}), 200</code></pre>
+
+  <p><strong>Krytyczne:</strong> odpowiedz HTTP 200 jak najszybciej (&lt; 2 sekundy). Ciężka logika (zapis do bazy, wysłanie powiadomienia) musi iść do background workera (Celery, RQ, asyncio task). Platforma nie ponawia DLR-ów — jeśli Twój endpoint zwróci 5xx lub timeout, raport zostanie zgubiony.</p>
+
+  <p>Payload DLR:</p>
+
+<pre><code>{
+  "event": "delivery_report",
+  "message_id": "msg_abc123",
+  "to": "+48600123456",
+  "status": "delivered",
+  "sent_at": "2026-05-17T10:30:00.000Z",
+  "done_at": "2026-05-17T10:30:04.000Z",
+  "idx": "appointment-12345"
+}</code></pre>
+
+  <p>Pole <span class="inline-code">idx</span> to wartość, którą podałeś przy wysyłce — łatwo skojarzysz raport z encją (np. wizytą, zamówieniem, transakcją) w Twojej bazie.</p>
+
+  <h2>7. Najlepsze praktyki produkcyjne</h2>
+
+  <ul>
+    <li><strong>Idempotency przez <span class="inline-code">idx</span></strong>: zawsze podawaj unikalne <span class="inline-code">idx</span> per wiadomość (np. <span class="inline-code">f"order-{order_id}"</span>). Jeśli kod retry'uje wysyłkę z tym samym idx, łatwiej zorientujesz się w logach że to duplikat.</li>
+    <li><strong>Timeout 10 sekund</strong>: ustaw <span class="inline-code">timeout=10</span> w każdym żądaniu. API ma fetch timeout 10s; klient też powinien mieć.</li>
+    <li><strong>Logowanie nie payloadu, tylko ID</strong>: nie loguj <span class="inline-code">message</span> ani numerów w logach produkcyjnych (RODO). Loguj <span class="inline-code">message_id</span>, status, kod błędu.</li>
+    <li><strong>Walidacja numeru przez HLR</strong> przed dużą kampanią: <span class="inline-code">GET /v1/hlr?number=+48...</span> sprawdza, czy numer jest aktywny — eliminuje koszt wysyłki na martwe numery.</li>
+    <li><strong>Pula tokenów dla różnych environmentów</strong>: produkcja, staging, testy każde ma własny token. Łatwiej rotować przy wycieku.</li>
+  </ul>
+
+  <h2>8. Pełny gist do skopiowania</h2>
+
+  <p>Minimalna, produkcyjna klasa do wysyłki SMS — z retry, walidacją i obsługą rate limit:</p>
+
+<pre><code>"""Minimalny klient API SMS dla Przypominamy.com — wersja produkcyjna."""
+import os
+import time
+from typing import Optional
+import requests
+
+
+class SmsApiError(Exception):
+    def __init__(self, code: int, message: str):
+        self.code = code
+        self.message = message
+        super().__init__(f"[{code}] {message}")
+
+
+class PrzypominamySmsClient:
+    BASE_URL = "https://api.przypominamy.com"
+
+    def __init__(self, token: Optional[str] = None, timeout: float = 10.0):
+        self.token = token or os.environ["PRZYPOMINAMY_API_KEY"]
+        self.timeout = timeout
+        self.session = requests.Session()
+        self.session.headers["Authorization"] = f"Bearer {self.token}"
+
+    def _post(self, path: str, body: dict, max_retries: int = 3) -&gt; dict:
+        for attempt in range(max_retries):
+            resp = self.session.post(
+                f"{self.BASE_URL}{path}",
+                json=body,
+                timeout=self.timeout,
+            )
+            if resp.status_code == 200:
+                return resp.json()
+            if resp.status_code == 429:
+                wait = int(resp.headers.get("Retry-After", 1))
+                time.sleep(wait)
+                continue
+            err = resp.json().get("error", {})
+            raise SmsApiError(resp.status_code, err.get("message", "Unknown"))
+        raise SmsApiError(429, "Rate limit po 3 próbach")
+
+    def send(self, to: str, message: str, **kwargs) -&gt; dict:
+        return self._post("/v1/sms", {"to": to, "message": message, **kwargs})
+
+    def send_bulk(self, recipients: list[str], message: str, **kwargs) -&gt; dict:
+        return self._post(
+            "/v1/sms/bulk",
+            {"recipients": recipients, "message": message, **kwargs},
+        )
+
+    def balance(self) -&gt; float:
+        resp = self.session.get(f"{self.BASE_URL}/v1/balance", timeout=self.timeout)
+        resp.raise_for_status()
+        return resp.json()["data"]["balance"]
+
+
+if __name__ == "__main__":
+    client = PrzypominamySmsClient()
+    result = client.send(
+        to="+48600123456",
+        message="Hello Python!",
+        idx="test-001",
+    )
+    print(result)</code></pre>
+
+  <p>~80 linii, zero zewnętrznych zależności poza <span class="inline-code">requests</span>. Skopiuj do swojego projektu i rozszerzaj wedle potrzeb.</p>
+
+  <h2>FAQ</h2>
+
+  <details>
+    <summary>Czy do wysyłki SMS w Pythonie potrzebuję SDK?</summary>
+    <p>Nie. Standardowa biblioteka <span class="inline-code">requests</span> (synchroniczna) lub <span class="inline-code">httpx</span> (asynchroniczna) wystarczą. API jest na tyle proste, że SDK wprowadzałoby tylko dodatkowy maintenance burden.</p>
+  </details>
+
+  <details>
+    <summary>Jak obsłużyć rate limit 100 req/min?</summary>
+    <p>Sprawdź kod HTTP 429 i nagłówek <span class="inline-code">Retry-After</span>. Najprostsze rozwiązanie to <span class="inline-code">time.sleep(int(resp.headers["Retry-After"]))</span> i ponów. Dla większej skali użyj <span class="inline-code">tenacity</span> z exponential backoff lub asynchronicznego semaforu w <span class="inline-code">httpx</span>.</p>
+  </details>
+
+  <details>
+    <summary>Jak odbierać webhooki DLR w Flasku?</summary>
+    <p>Wystaw endpoint <span class="inline-code">@app.route('/webhook/dlr', methods=['POST'])</span> który odpowiada 200 jak najszybciej. Cała logika (zapis do bazy, powiadomienie) powinna iść w tle przez Celery, RQ lub asyncio task — webhook musi wrócić w &lt; 2 sekundy.</p>
+  </details>
+
+  <details>
+    <summary>Czy w Pythonie da się wysłać SMS asynchronicznie?</summary>
+    <p>Tak, użyj <span class="inline-code">httpx.AsyncClient()</span> i <span class="inline-code">asyncio.gather()</span>. To znacznie szybsze niż sekwencyjne <span class="inline-code">requests</span>, gdy masz wiele niezależnych wysyłek.</p>
+  </details>
+
+  <details>
+    <summary>Jak zabezpieczyć token API w aplikacji produkcyjnej?</summary>
+    <p>Token trzymaj w zmiennej środowiskowej lub w secrets managerze (AWS Secrets Manager, GCP Secret Manager, Vault). Nigdy nie commituj do gita. W razie wycieku unieważnij w panelu klienta i wygeneruj nowy.</p>
+  </details>
+
+  <div class="cta-box">
+    <h3>Gotowy na pierwszy POST?</h3>
+    <p>Załóż konto, w 24h zweryfikujemy zgłoszenie, generujesz token w panelu i piszesz pierwszy <span class="inline-code">requests.post(...)</span>.</p>
+    <a href="/register" class="cta-btn">Załóż konto</a>
+  </div>
+
+  <div class="related">
+    <h3>Powiązane</h3>
+    <ul>
+      <li><a href="/api">Strona API: 6 endpointów, autoryzacja, webhooki</a></li>
+      <li><a href="/api/docs">Dokumentacja Redoc (OpenAPI 3.1)</a></li>
+      <li><a href="/blog/api-sms-integracja-crm">Integracja API SMS z CRM. Od zera do wysyłki w 30 minut</a></li>
+      <li><a href="/blog/api-sms-2fa-otp">API SMS do 2FA i OTP: implementacja i bezpieczeństwo</a></li>
+      <li><a href="/blog/api-sms-porownanie-dostawcow">Jak wybrać API SMS w Polsce: 7 kryteriów dla deweloperów</a></li>
+    </ul>
+  </div>
+</main>
+</div>
+
+<footer class="footer-mini">
+  <div class="container">
+    © Przypominamy.com — Doradztwo Paweł Mamcarz · <a href="/">Strona główna</a> · <a href="/api">API</a> · <a href="/regulamin">Regulamin</a>
+  </div>
+</footer>
+
+</body>
+</html>

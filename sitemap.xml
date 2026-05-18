@@ -151,6 +151,30 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://przypominamy.com/blog/api-sms-python</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://przypominamy.com/blog/api-sms-2fa-otp</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://przypominamy.com/blog/api-sms-n8n-bez-kodu</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://przypominamy.com/blog/api-sms-porownanie-dostawcow</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://przypominamy.com/xmlapi_en_przypominamy2020v17.pdf</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>

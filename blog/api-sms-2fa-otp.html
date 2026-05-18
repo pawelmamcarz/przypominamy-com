@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="API SMS do 2FA i OTP — implementacja, bezpieczeństwo, RODO. Generowanie kodu, TTL, rate-limiting, webhooki DLR, integracja z Flask/FastAPI. Gotowy kod Python." />
+  <meta name="keywords" content="API SMS 2FA, OTP SMS API, 2FA Polska, dwuskładnikowe uwierzytelnianie SMS, weryfikacja kodem SMS, OTP Python, Flask 2FA SMS" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Zespół Przypominamy.com" />
+  <link rel="canonical" href="https://przypominamy.com/blog/api-sms-2fa-otp" />
+
+  <meta property="og:title" content="API SMS do 2FA i OTP. Implementacja i bezpieczeństwo" />
+  <meta property="og:description" content="Implementacja 2FA przez SMS API — generowanie kodu, TTL, rate-limiting per user, RODO, webhooki. Kod Python+Flask." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://przypominamy.com/blog/api-sms-2fa-otp" />
+  <meta property="og:image" content="https://przypominamy.com/preview-og.png" />
+  <meta property="og:locale" content="pl_PL" />
+  <meta property="og:site_name" content="Przypominamy.com" />
+  <meta property="article:published_time" content="2026-05-18" />
+  <meta property="article:modified_time" content="2026-05-18" />
+  <meta property="article:author" content="Zespół Przypominamy.com" />
+  <meta property="article:section" content="Blog" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@przypominamy" />
+
+  <title>API SMS do 2FA i OTP. Implementacja i bezpieczeństwo</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#F5A623" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "API SMS do 2FA i OTP. Implementacja i bezpieczeństwo",
+    "description": "Implementacja dwuskładnikowego uwierzytelniania przez SMS API — generowanie kodu, TTL, rate-limiting per user, RODO, webhooki DLR. Kod Python+Flask.",
+    "author": {"@type": "Organization", "name": "Zespół Przypominamy.com"},
+    "publisher": {
+      "@type": "Organization",
+      "name": "Doradztwo Paweł Mamcarz",
+      "url": "https://przypominamy.com",
+      "logo": {"@type":"ImageObject","url":"https://przypominamy.com/przypominamy-logo.png"}
+    },
+    "datePublished": "2026-05-18",
+    "dateModified": "2026-05-18",
+    "mainEntityOfPage": "https://przypominamy.com/blog/api-sms-2fa-otp",
+    "keywords": ["API SMS 2FA", "OTP SMS API", "dwuskładnikowe uwierzytelnianie SMS", "Flask 2FA"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Czy SMS jest bezpiecznym kanałem dla 2FA?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SMS jest słabszy od TOTP (Google Authenticator, 1Password) ze względu na ryzyko SIM swap i przechwycenia w sieci. Ale jest znacznie lepszy niż brak 2FA i często jedyną opcją dla użytkowników bez smartfona z aplikacją autentykacyjną. Dla wysokoryzykowych operacji warto połączyć SMS z dodatkowym czynnikiem."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Jakie powinno być TTL kodu OTP?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Standard branżowy to 5-10 minut. Krócej (np. 2 min) — wyższe bezpieczeństwo, ale więcej frustracji użytkownika (kod wygasa zanim doczyta SMS-a). Dłużej (np. 30 min) — więcej okazji do przechwycenia. 5 minut to dobry kompromis dla większości aplikacji."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Jak chronić się przed atakiem brute force na kod OTP?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Trzy warstwy: kod minimum 6 cyfr (1M kombinacji), rate-limit weryfikacji per user (np. max 5 prób w 15 min), automatyczne unieważnienie kodu po 3 nieudanych próbach z wymuszeniem regeneracji. Loguj wszystkie próby weryfikacji do audit log."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy 2FA SMS jest zgodne z RODO?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak, jeśli traktujesz numer telefonu jako dane osobowe (jest), zbierasz zgodę użytkownika i przetwarzasz dane wyłącznie do uwierzytelniania. Pamiętaj: kod OTP, treść SMS-a i timestamp wysyłki to dane osobowe — minimalizuj retencję (np. usuwaj po 30 dniach), nie loguj treści SMS-a w plain text."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Czy mogę używać flash SMS dla kodów OTP?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tak, parametr flash:1 wyświetla SMS na ekranie odbiorcy bez konieczności otwarcia aplikacji wiadomości. To podnosi UX — kod widzisz natychmiast. Wadą jest brak zapisu w historii wiadomości (jeśli użytkownik zamknie SMS bez przepisania, nie odzyska go)."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black:#0a0a0a; --dark:#111; --surface:#1a1a1a; --border:#2c2c2c; --yellow:#F5A623; --white:#fff; --gray:#888; --light:#ccc; --red:#E53E3E; --green:#4BC87A; }
+    body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.7; }
+    a { color:var(--yellow); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .top-bar { background:var(--dark); border-bottom:1px solid var(--border); padding:20px 0; }
+    .top-bar .container { display:flex; align-items:center; justify-content:space-between; }
+    .top-bar .logo { font-size:1.15rem; font-weight:700; color:var(--white); }
+    .top-bar .logo span { color:var(--yellow); }
+    .container { max-width:800px; margin:0 auto; padding:0 24px; }
+    .content { padding:64px 0 96px; }
+    .breadcrumbs { font-size:.85rem; color:var(--gray); margin-bottom:24px; }
+    .breadcrumbs a { color:var(--gray); }
+    .breadcrumbs a:hover { color:var(--yellow); }
+    h1 { font-size:2rem; font-weight:800; margin-bottom:8px; line-height:1.3; }
+    .meta { color:var(--gray); font-size:.88rem; margin-bottom:40px; }
+    h2 { font-size:1.2rem; font-weight:700; margin:36px 0 12px; color:var(--yellow); }
+    h3 { font-size:1.05rem; font-weight:600; margin:24px 0 8px; }
+    p, li { color:var(--light); font-size:.95rem; margin-bottom:12px; }
+    ul, ol { padding-left:24px; }
+    li { margin-bottom:8px; }
+    strong { color:var(--white); }
+    .highlight-box { background:var(--surface); border-left:3px solid var(--yellow); padding:20px 24px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .warning-box { background:rgba(229,62,62,.08); border-left:3px solid var(--red); padding:20px 24px; border-radius:0 8px 8px 0; margin:24px 0; }
+    .warning-box p { margin-bottom:4px; }
+    pre { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px 20px; overflow-x:auto; margin:16px 0; font-size:.85rem; line-height:1.6; color:var(--light); }
+    code { font-family:'JetBrains Mono','Courier New',monospace; }
+    .inline-code { background:var(--surface); border:1px solid var(--border); padding:2px 6px; border-radius:4px; font-size:.88rem; }
+    table { width:100%; border-collapse:collapse; margin:20px 0; font-size:.9rem; }
+    th { background:var(--surface); color:var(--yellow); text-align:left; padding:12px 16px; border:1px solid var(--border); font-weight:600; }
+    td { padding:12px 16px; border:1px solid var(--border); color:var(--light); }
+    .cta-box { background:var(--surface); border:1px solid var(--yellow); border-radius:12px; padding:32px; text-align:center; margin:48px 0 24px; }
+    .cta-box h3 { color:var(--white); margin-top:0; }
+    .cta-box p { color:var(--light); }
+    .cta-btn { display:inline-block; background:var(--yellow); color:#000; font-weight:700; padding:12px 32px; border-radius:8px; margin-top:12px; font-size:.95rem; }
+    .cta-btn:hover { text-decoration:none; opacity:.9; }
+    .related { margin-top:48px; padding-top:32px; border-top:1px solid var(--border); }
+    .related h3 { color:var(--white); margin-bottom:16px; }
+    .related ul { list-style:none; padding:0; }
+    .related li { margin-bottom:10px; }
+    details { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px 18px; margin-bottom:10px; }
+    details summary { font-weight:600; color:var(--white); cursor:pointer; }
+    details[open] summary { color:var(--yellow); margin-bottom:8px; }
+    .footer-mini { border-top:1px solid var(--border); padding:28px 0; text-align:center; color:var(--gray); font-size:.85rem; }
+    @media(max-width:600px){
+      h1 { font-size:1.4rem; }
+      pre { font-size:.78rem; padding:12px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="container">
+    <a href="/" class="logo">Przypominamy<span>.com</span></a>
+    <a href="/blog">&larr; Blog</a>
+  </div>
+</div>
+
+<div class="container content">
+  <nav class="breadcrumbs">
+    <a href="/">Strona główna</a> &rsaquo; <a href="/blog">Blog</a> &rsaquo; API SMS do 2FA i OTP
+  </nav>
+
+<main>
+  <h1>API SMS do 2FA i OTP. Implementacja i bezpieczeństwo</h1>
+  <p class="meta">Zespół Przypominamy.com &middot; 18 maja 2026 &middot; 9 min czytania</p>
+
+  <p>Dwuskładnikowe uwierzytelnianie (2FA) i jednorazowe kody (OTP) wysyłane SMS-em to standard branżowy dla bankowości, e-commerce, logowań do paneli administracyjnych i potwierdzeń transakcji. W tym przewodniku pokazujemy, jak zaimplementować 2FA z REST API Przypominamy.com — od generowania bezpiecznego kodu, przez wysyłkę i weryfikację, po obronę przed brute force, ochronę RODO i monitorowanie doręczenia.</p>
+
+  <div class="highlight-box">
+    <p><strong>Co znajdziesz w tym poście:</strong> generowanie kodu OTP, wysyłka jako flash SMS, TTL i unieważnianie, rate-limit per user, webhooki DLR jako potwierdzenie, audit log, RODO i retencja, pełny kod Flask+Redis.</p>
+  </div>
+
+  <h2>1. Czym jest 2FA przez SMS</h2>
+
+  <p>Dwuskładnikowe uwierzytelnianie wymaga od użytkownika dwóch niezależnych dowodów tożsamości: <strong>czegoś, co wie</strong> (hasło) i <strong>czegoś, co ma</strong> (telefon, na który przyszedł kod). SMS jako drugi czynnik jest słabszy od TOTP (Google Authenticator, Authy, 1Password) z dwóch powodów:</p>
+
+  <ul>
+    <li><strong>SIM swap</strong> — atakujący przekonuje operatora do przepisania numeru na inną kartę SIM.</li>
+    <li><strong>Przechwycenie w sieci</strong> — luki w protokole SS7 (rzadko, ale możliwe).</li>
+  </ul>
+
+  <p>Mimo to SMS jest <strong>znacznie lepszy niż brak 2FA</strong> i często jedynym wyborem dla użytkowników bez smartfona z aplikacją autentykacyjną. Dla operacji wysokiego ryzyka (transfer dużej kwoty, zmiana hasła) warto łączyć SMS z dodatkowym czynnikiem (push notification, biometria).</p>
+
+  <h2>2. Generowanie bezpiecznego kodu</h2>
+
+  <p>Pierwsza zasada: <strong>kod musi być losowy</strong>, generowany przez kryptograficzny PRNG. W Pythonie:</p>
+
+<pre><code>import secrets
+
+def generate_otp(length: int = 6) -&gt; str:
+    """Generuje 6-cyfrowy kod OTP. NIE używaj random.randint()."""
+    return "".join(str(secrets.randbelow(10)) for _ in range(length))</code></pre>
+
+  <div class="warning-box">
+    <p><strong>NIE używaj <span class="inline-code">random.randint()</span></strong> — to PRNG nieprzeznaczony do kryptografii. Atakujący może odzyskać seed po obserwacji kilku kodów.</p>
+  </div>
+
+  <p>Długość 6 cyfr daje 1 000 000 kombinacji — w połączeniu z rate-limit (sekcja 4) i krótkim TTL (sekcja 3) odporne na brute force.</p>
+
+  <h2>3. Wysyłka kodu jako flash SMS</h2>
+
+  <p>Flash SMS (parametr <span class="inline-code">flash: 1</span>) wyświetla treść bezpośrednio na ekranie odbiorcy bez konieczności otwierania aplikacji wiadomości — UX dla 2FA jest znacznie lepszy. Kod widzisz natychmiast.</p>
+
+<pre><code>import os, requests
+
+TOKEN = os.environ["PRZYPOMINAMY_API_KEY"]
+BASE = "https://api.przypominamy.com"
+
+def send_otp(phone: str, code: str, user_id: int) -&gt; str:
+    """Wysyła kod OTP i zwraca message_id."""
+    resp = requests.post(
+        f"{BASE}/v1/sms",
+        headers={"Authorization": f"Bearer {TOKEN}"},
+        json={
+            "to": phone,
+            "message": f"Twój kod logowania: {code}. Wygasa za 5 minut.",
+            "from": "TwojaApp",
+            "flash": True,
+            "idx": f"otp-{user_id}-{int(time.time())}",
+        },
+        timeout=10,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    return data["data"]["messages"][0]["id"]</code></pre>
+
+  <p>Pole <span class="inline-code">idx</span> łączy SMS z użytkownikiem i timestampem — przyda się w webhookach DLR (sekcja 5) i audit log (sekcja 7).</p>
+
+  <h3>TTL i unieważnianie</h3>
+
+  <p>Standard branżowy: <strong>5 minut</strong>. Krótszy TTL = wyższe bezpieczeństwo, ale więcej frustracji (kod wygasa zanim użytkownik doczyta SMS). Dłuższy = więcej okazji do przechwycenia.</p>
+
+  <p>Trzymaj kod w Redisie z TTL — wygasa automatycznie:</p>
+
+<pre><code>import redis, time
+
+r = redis.Redis()
+
+OTP_TTL = 5 * 60  # 5 minut
+def store_otp(user_id: int, code: str):
+    key = f"otp:{user_id}"
+    # SHA-256 zamiast plain text — gdyby Redis wyciekł, kod nie wycieka
+    import hashlib
+    code_hash = hashlib.sha256(code.encode()).hexdigest()
+    r.setex(key, OTP_TTL, code_hash)</code></pre>
+
+  <h2>4. Rate-limit i obrona przed brute force</h2>
+
+  <p>Trzy warstwy ochrony:</p>
+
+  <ol>
+    <li><strong>Limit wysyłki</strong>: max 3 kody w 10 minut per użytkownik. Zapobiega spamowi SMS-ami i wyczerpaniu budżetu API.</li>
+    <li><strong>Limit weryfikacji</strong>: max 5 prób w 15 minut per użytkownik. Zapobiega brute force na kod.</li>
+    <li><strong>Automatyczne unieważnienie</strong>: po 3 nieudanych próbach kod znika, użytkownik musi poprosić o nowy.</li>
+  </ol>
+
+<pre><code>def can_send_otp(user_id: int) -&gt; bool:
+    """Max 3 wysyłki w 10 minut."""
+    key = f"otp:send_count:{user_id}"
+    count = r.incr(key)
+    if count == 1:
+        r.expire(key, 10 * 60)
+    return count &lt;= 3
+
+def verify_otp(user_id: int, code_user: str) -&gt; bool:
+    """Weryfikacja z licznikiem prób."""
+    fail_key = f"otp:fails:{user_id}"
+    fails = int(r.get(fail_key) or 0)
+    if fails &gt;= 3:
+        # 3 nieudane → unieważnij kod
+        r.delete(f"otp:{user_id}")
+        return False
+
+    stored_hash = r.get(f"otp:{user_id}")
+    if not stored_hash:
+        return False
+
+    import hashlib
+    if hashlib.sha256(code_user.encode()).hexdigest() == stored_hash.decode():
+        r.delete(f"otp:{user_id}")
+        r.delete(fail_key)
+        return True
+
+    fails = r.incr(fail_key)
+    r.expire(fail_key, 15 * 60)
+    return False</code></pre>
+
+  <h2>5. Webhook DLR: czy SMS faktycznie dotarł</h2>
+
+  <p>Wysłaliśmy kod, ale czy klient go dostał? Zanim wymusimy ponowne logowanie, sprawdź webhook DLR — to potwierdzi rzeczywiste doręczenie.</p>
+
+<pre><code>from flask import Flask, request, jsonify
+import logging
+
+app = Flask(__name__)
+
+@app.route("/webhook/dlr", methods=["POST"])
+def dlr_webhook():
+    payload = request.get_json(silent=True) or {}
+
+    if payload.get("event") != "delivery_report":
+        return jsonify({"received": True}), 200
+
+    idx = payload.get("idx", "")
+    status = payload.get("status")
+    msg_id = payload.get("message_id")
+
+    if idx.startswith("otp-"):
+        # idx ma format: otp-{user_id}-{timestamp}
+        parts = idx.split("-")
+        user_id = int(parts[1])
+
+        if status == "delivered":
+            mark_otp_delivered(user_id, msg_id)
+        elif status in ("failed", "expired", "not_found", "undelivered"):
+            # SMS nie dotarł — możesz pokazać użytkownikowi opcję "Spróbuj inny kanał"
+            mark_otp_failed(user_id, msg_id, status)
+            logging.warning("OTP nie dostarczony user=%s status=%s", user_id, status)
+
+    return jsonify({"received": True}), 200</code></pre>
+
+  <p>Webhook wzbogaca UX: gdy SMS faktycznie nie dotrze (np. numer wyłączony), zaproponujesz alternatywę (rozmowa głosowa <span class="inline-code">/v1/vms</span>, email, fallback do TOTP).</p>
+
+  <h2>6. Pełny przepływ end-to-end</h2>
+
+  <p>Łącząc wszystko w działający endpoint Flaska:</p>
+
+<pre><code>@app.route("/auth/2fa/request", methods=["POST"])
+def request_2fa():
+    user = get_authenticated_user(request)  # po pierwszym hasłem
+    if not user:
+        return jsonify({"error": "unauthorized"}), 401
+
+    if not can_send_otp(user.id):
+        return jsonify({"error": "too_many_requests"}), 429
+
+    code = generate_otp(6)
+    store_otp(user.id, code)
+    audit_log(user.id, "otp_sent")
+
+    try:
+        msg_id = send_otp(user.phone, code, user.id)
+    except requests.HTTPError as e:
+        audit_log(user.id, "otp_send_failed", error=str(e))
+        return jsonify({"error": "send_failed"}), 502
+
+    return jsonify({"sent": True, "message_id": msg_id}), 200
+
+
+@app.route("/auth/2fa/verify", methods=["POST"])
+def verify_2fa():
+    user = get_authenticated_user(request)
+    code = request.json.get("code", "")
+
+    if not user or not code.isdigit() or len(code) != 6:
+        return jsonify({"error": "invalid_input"}), 400
+
+    if verify_otp(user.id, code):
+        audit_log(user.id, "otp_verified")
+        issue_session_token(user.id, second_factor=True)
+        return jsonify({"verified": True}), 200
+
+    audit_log(user.id, "otp_verify_failed")
+    return jsonify({"verified": False}), 401</code></pre>
+
+  <h2>7. Audit log</h2>
+
+  <p>Każda operacja związana z 2FA powinna być w audit log:</p>
+
+  <ul>
+    <li>Każda <strong>wysyłka kodu</strong>: user_id, timestamp, message_id, numer (zamaskowany: <span class="inline-code">+48***123456</span>).</li>
+    <li>Każda <strong>próba weryfikacji</strong>: user_id, timestamp, sukces/porażka.</li>
+    <li>Każde <strong>unieważnienie</strong> (3 nieudane próby): user_id, timestamp.</li>
+    <li>Każde <strong>potwierdzenie doręczenia</strong> z webhooka: message_id, status, done_at.</li>
+  </ul>
+
+  <p>Audit log pozwala odpowiedzieć na pytania: "Czy mój kod faktycznie dotarł?", "Czy ktoś inny próbował się logować na moje konto?", "Dlaczego konto zostało zablokowane?". Jest też wymagany przez większość audytów bezpieczeństwa (ISO 27001, SOC 2).</p>
+
+  <h2>8. RODO i retencja</h2>
+
+  <p>Numer telefonu, kod OTP, timestamp wysyłki i treść SMS-a to <strong>dane osobowe</strong>. Trzy zasady:</p>
+
+  <ol>
+    <li><strong>Zgoda</strong> — użytkownik musi świadomie wybrać 2FA SMS przy konfiguracji konta. Domyślnie nie włączaj.</li>
+    <li><strong>Minimalizacja retencji</strong> — kody usuwaj po użyciu, audit log trzymaj nie dłużej niż uzasadnione (zwykle 90-365 dni dla compliance).</li>
+    <li><strong>Nie loguj treści SMS-a w plain text</strong> — to obejmuje kod OTP. Loguj message_id i status, nie tekst.</li>
+  </ol>
+
+  <p>Pamiętaj też o <strong>prawie do usunięcia</strong> — gdy użytkownik usuwa konto, usuń też wszystkie powiązane wpisy w audit log (lub anonimizuj user_id).</p>
+
+  <h2>9. Cennik i koszty</h2>
+
+  <p>Przy planie Business (0,10 zł/SMS) jeden SMS OTP kosztuje 10 groszy. Typowa aplikacja z 10 000 użytkowników, gdzie 30% loguje się raz w tygodniu z 2FA, daje:</p>
+
+  <p style="text-align:center;font-size:1.05rem"><strong>3 000 SMS/tydzień × 0,10 zł = 300 zł/tydzień ≈ 1 300 zł/miesiąc</strong></p>
+
+  <p>Dla większej skali (100 000+ aktywnych użytkowników) warto rozważyć indywidualną wycenę Enterprise.</p>
+
+  <h2>FAQ</h2>
+
+  <details>
+    <summary>Czy SMS jest bezpiecznym kanałem dla 2FA?</summary>
+    <p>SMS jest słabszy od TOTP (Google Authenticator) ze względu na SIM swap i SS7. Ale jest znacznie lepszy niż brak 2FA. Dla wysokoryzykowych operacji łącz SMS z dodatkowym czynnikiem.</p>
+  </details>
+
+  <details>
+    <summary>Jakie powinno być TTL kodu OTP?</summary>
+    <p>Standard branżowy: 5-10 minut. 5 minut to dobry kompromis bezpieczeństwa i UX dla większości aplikacji.</p>
+  </details>
+
+  <details>
+    <summary>Jak chronić się przed brute force na kod OTP?</summary>
+    <p>Trzy warstwy: kod 6+ cyfr (1M kombinacji), rate-limit weryfikacji per user (5 prób / 15 min), automatyczne unieważnienie po 3 nieudanych próbach.</p>
+  </details>
+
+  <details>
+    <summary>Czy 2FA SMS jest zgodne z RODO?</summary>
+    <p>Tak, jeśli zbierasz zgodę, traktujesz numer jako dane osobowe, minimalizujesz retencję i nie logujesz treści SMS-a w plain text.</p>
+  </details>
+
+  <details>
+    <summary>Czy mogę używać flash SMS dla kodów OTP?</summary>
+    <p>Tak, parametr <span class="inline-code">flash: 1</span> wyświetla SMS na ekranie bez otwierania wiadomości. Wadą jest brak zapisu w historii — jeśli użytkownik zamknie SMS bez przepisania, nie odzyska go.</p>
+  </details>
+
+  <div class="cta-box">
+    <h3>Wdrażasz 2FA SMS? Sprawdź API.</h3>
+    <p>Załóż konto, w 24h zweryfikujemy zgłoszenie, generujesz token i wysyłasz pierwszy kod OTP.</p>
+    <a href="/register" class="cta-btn">Załóż konto</a>
+  </div>
+
+  <div class="related">
+    <h3>Powiązane</h3>
+    <ul>
+      <li><a href="/api">Strona API: endpointy, autoryzacja, webhooki</a></li>
+      <li><a href="/api/docs">Dokumentacja Redoc</a></li>
+      <li><a href="/blog/api-sms-python">API SMS w Pythonie. Kompletny przewodnik</a></li>
+      <li><a href="/blog/api-sms-integracja-crm">Integracja API SMS z CRM. Od zera do wysyłki w 30 minut</a></li>
+      <li><a href="/blog/rodo-wysylka-sms">RODO przy wysyłce SMS</a></li>
+    </ul>
+  </div>
+</main>
+</div>
+
+<footer class="footer-mini">
+  <div class="container">
+    © Przypominamy.com — Doradztwo Paweł Mamcarz · <a href="/">Strona główna</a> · <a href="/api">API</a> · <a href="/regulamin">Regulamin</a>
+  </div>
+</footer>
+
+</body>
+</html>
